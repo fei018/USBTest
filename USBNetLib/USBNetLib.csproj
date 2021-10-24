@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7DA52D66-7494-4F53-8B81-90E3C8CD693B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>USBNetLib</RootNamespace>
+    <AssemblyName>USBNetLib</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="NativeUsbLib, Version=1.4.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NativeUsbLib.1.4.9\lib\net46\NativeUsbLib.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Notify\NotifyHelperSetup.cs" />
+    <Compile Include="Notify\NotifyUSB.cs" />
+    <Compile Include="Policy\PolicyHelper.cs" />
+    <Compile Include="Policy\PolicyTable.cs" />
+    <Compile Include="Policy\PolicyUSB.cs" />
+    <Compile Include="USBConfig.cs" />
+    <Compile Include="USBManager.cs" />
+    <Compile Include="Win32API\USetupApi.cs" />
+    <Compile Include="Win32API\USetupApiFun.cs" />
+    <Compile Include="WinUSBNetNotifiter\API\APIException.cs" />
+    <Compile Include="WinUSBNetNotifiter\API\DeviceDetails.cs" />
+    <Compile Include="WinUSBNetNotifiter\API\DeviceManagement.cs" />
+    <Compile Include="WinUSBNetNotifiter\API\DeviceManagementAPI.cs" />
+    <Compile Include="WinUSBNetNotifiter\API\FileAPI.cs" />
+    <Compile Include="WinUSBNetNotifiter\DeviceNotifyHook.cs" />
+    <Compile Include="WinUSBNetNotifiter\USBException.cs" />
+    <Compile Include="WinUSBNetNotifiter\USBNotifier.cs" />
+    <Compile Include="Notify\NotifyHelper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Win32API\ProcessApi.cs" />
+    <Compile Include="Win32API\ProcessApiHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

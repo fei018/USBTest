@@ -54,8 +54,8 @@
     <Compile Include="Notify\NotifySetup.cs" />
     <Compile Include="Notify\NotifyTask.cs" />
     <Compile Include="Notify\NotifyUSB.cs" />
-    <Compile Include="Notify\NotifyUsbBus.cs" />
-    <Compile Include="Policy\PolicyHelper.cs" />
+    <Compile Include="USBBUSController\USBBusController.cs" />
+    <Compile Include="Policy\PolicyTableHelp.cs" />
     <Compile Include="Policy\PolicyTable.cs" />
     <Compile Include="Policy\PolicyUSB.cs" />
     <Compile Include="USBConfig.cs" />

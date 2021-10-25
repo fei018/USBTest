@@ -12,99 +12,7 @@ namespace USBNetLib
 {
     internal class NotifySetup
     {
-        #region Public NotifyUSBHandler
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="currentUsbList"></param>
-        /// <param name="interfaceGuid"></param>
-        /// <param name="notifyDevicePath"></param>
-        /// <returns>NotifyUSB 不會為Null, 最少有 DevicePath 值</returns>
-        public NotifyUSB NotifyUSBHandler(ref List<Device> currentUsbList, Guid interfaceGuid, string notifyDevicePath)
-        {
-            try
-            {
-                // can more way
-                var notifyUsb = Use_NotifyPath_Find_USBDeviceID(interfaceGuid, notifyDevicePath);
 
-                // 找不到 Parent ID
-                if (string.IsNullOrEmpty(notifyUsb.DeviceID))
-                {
-                    Console.WriteLine("error: "+ notifyUsb.DevicePath);
-                    Console.WriteLine();
-                }
-
-                // match policy table 處理過程
-                if (MatchPolicyTable(ref currentUsbList, ref notifyUsb))
-                {
-                    
-                }
-                // no match polcy table 處理過程
-                else
-                {
-                    Console.WriteLine("error: " + notifyUsb.DevicePath);
-                    Console.WriteLine(notifyUsb.DeviceID);
-                    Console.WriteLine();
-                }
-
-                return notifyUsb;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-
-
-        #endregion
-
-        #region MatchPolicyTable 
-
-        public bool MatchPolicyTable(ref List<Device> busUsbList, ref NotifyUSB notifyUsb)
-        {
-            if (!PolicyTable.HasUSBTable())
-            {
-                throw new Exception("Policy USB Table is Null or Empty.");
-            }
-
-            // find notifyusb in usb bus, set vid pid serial
-            FindParentVidPidSerialInUsbBus(ref busUsbList, ref notifyUsb);
-
-            if (notifyUsb.HasVidPidSerial())
-            {
-                foreach (PolicyUSB pu in PolicyTable.USBTable)
-                {
-                    if (pu.IsMatchNotifyUSB(notifyUsb))
-                    {
-                        return true;
-                    }
-                }
-                return false;
-            }
-            else
-            {
-                throw new Exception("cannot find notity device parent in usb bus."); // shall not happen
-            }
-        }
-
-        private void FindParentVidPidSerialInUsbBus(ref List<Device> busUsbList, ref NotifyUSB notifyUsb)
-        {
-            // find notifyusb in usb bus, set vid pid serial
-            foreach (Device d in busUsbList)
-            {
-                if (d.InstanceId.Equals(notifyUsb.DeviceID, StringComparison.OrdinalIgnoreCase))
-                {
-                    notifyUsb.Vid = d.DeviceDescriptor.idVendor;
-                    notifyUsb.Pid = d.DeviceDescriptor.idProduct;
-                    notifyUsb.SerialNumber = d.SerialNumber;
-                    notifyUsb.DevicePath = d.DevicePath;
-                }
-            }
-        }
-
-
-        #endregion
 
         #region + Use_NotifyPath_Find_USBDeviceID(Guid interfaceGuid, ref NotifyUSB notifyUsb)
         /// <summary>
@@ -229,6 +137,10 @@ namespace USBNetLib
                 return null;
             }
             if (Regex.Match(path, "^ACPI", RegexOptions.IgnoreCase).Success)
+            {
+                return null;
+            }
+            if (Regex.Match(path, "^ROOT", RegexOptions.IgnoreCase).Success)
             {
                 return null;
             }

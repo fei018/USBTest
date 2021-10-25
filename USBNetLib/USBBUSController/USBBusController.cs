@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace USBNetLib.Notify
+namespace USBNetLib
 {
-    internal class NotifyUsbBus
+    internal class USBBusController
     {
         private List<Device> _busUsbList;
 
@@ -78,6 +78,11 @@ namespace USBNetLib.Notify
         #endregion
 
         #region + Find_VidPidSerial_In_UsbBus(ref NotifyUSB notifyUsb)
+        /// <summary>
+        /// if found, set Vid, Pid, SerialNumber to notifyUsb
+        /// </summary>
+        /// <param name="notifyUsb"></param>
+        /// <returns></returns>
         public bool Find_VidPidSerial_In_UsbBus(ref NotifyUSB notifyUsb)
         {
             try

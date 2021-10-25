@@ -14,7 +14,7 @@ namespace USBNetLib
 
         public void Start()
         {
-            new PolicyTable().SetPolicyUSBList();
+            new PolicyTableHelp().SetPolicyUSBList();
             _notifyHelper.Start_Notifier();
         }
 

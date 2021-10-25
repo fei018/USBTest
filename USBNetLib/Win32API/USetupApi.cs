@@ -283,7 +283,7 @@ namespace USBNetLib.Win32API
             LocationPaths = 0x00000023
         }
 
-        public const int INVALID_HANDLE_VALUE = -1;
+        public static readonly IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
         public const int MAX_DEV_LEN = 200;
         public const int DEVICE_NOTIFY_WINDOW_HANDLE = 0x00000000;
         public const int DEVICE_NOTIFY_SERVICE_HANDLE = 0x00000001;

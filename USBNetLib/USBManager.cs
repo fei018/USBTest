@@ -5,11 +5,11 @@ namespace USBNetLib
 {
     public class USBManager
     {
-        private readonly NotifyHelper _notifyHelper;
+        private readonly NotifyService _notifyHelper;
 
         public USBManager()
         {
-            _notifyHelper = new NotifyHelper();
+            _notifyHelper = new NotifyService();
         }
 
         public void Start()

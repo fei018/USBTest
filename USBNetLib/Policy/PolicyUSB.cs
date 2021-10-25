@@ -4,15 +4,19 @@ namespace USBNetLib
 {
     internal class PolicyUSB
     {
-        public UInt16 VID { get; set; }
+        public UInt16 Vid { get; set; }
 
-        public string VID_Hex => "VID_" + VID.ToString("X");
+        public string Vid_Hex => "VID_" + Vid.ToString("X").PadLeft(4, '0');
 
-        public UInt16 PID { get; set; }
+        public UInt16 Pid { get; set; }
 
-        public string PID_Hex => "PID_" + PID.ToString("X");
+        public string Pid_Hex => "PID_" + Pid.ToString("X").PadLeft(4, '0');
 
         public string SerialNumber { get; set; }
 
+        public bool IsMatchNotifyUSB(NotifyUSB usb)
+        {
+            return Vid == usb.Vid && Pid == usb.Pid && SerialNumber == usb.SerialNumber;
+        }
     }
 }

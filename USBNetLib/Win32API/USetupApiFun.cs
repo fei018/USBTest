@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.Win32.SafeHandles;
+using System;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace USBNetLib.Win32API
 {
@@ -72,10 +70,10 @@ namespace USBNetLib.Win32API
         #region CfgMgr
 
         [DllImport("setupapi.dll")]
-        public static extern int CM_Get_Parent( out uint pdnDevInst, uint dnDevInst, int ulFlags);
+        public static extern int CM_Get_Parent(out uint pdnDevInst, uint dnDevInst, int ulFlags);
 
-        [DllImport("setupapi.dll", CharSet= CharSet.Auto)]
-        public static extern int CM_Get_Device_ID(uint dnDevInst,StringBuilder buffer, uint bufferLen,int ulFlags);
+        [DllImport("setupapi.dll", CharSet = CharSet.Auto)]
+        public static extern int CM_Get_Device_ID(uint dnDevInst, StringBuilder buffer, uint bufferLen, int ulFlags);
 
         [DllImport("setupapi.dll")]
         public static extern int CM_Get_Device_ID_Size(out uint pulLen, uint dnDevInst, uint ulFlags = 0);
@@ -84,11 +82,11 @@ namespace USBNetLib.Win32API
         public static extern int CM_Request_Device_Eject(uint dnDevInst, out PNP_VETO_TYPE pVetoType, StringBuilder pszVetoName, int ulNameLength, uint ulFlags);
 
         [DllImport("setupapi.dll", EntryPoint = "CM_Request_Device_Eject")]
-        public static extern int CM_Request_Device_Eject_NoUi( uint dnDevInst, IntPtr pVetoType, StringBuilder pszVetoName, uint ulNameLength, uint ulFlags);
+        public static extern int CM_Request_Device_Eject_NoUi(uint dnDevInst, IntPtr pVetoType, StringBuilder pszVetoName, uint ulNameLength, uint ulFlags);
         #endregion
 
         #region Extention
-        public static bool SetupDiGetDeviceInterfaceDetail(IntPtr devInfoSet,ref SP_DEVICE_INTERFACE_DATA devInterfaceData, out string devicePath, out SP_DEVINFO_DATA devInfoData)
+        public static bool SetupDiGetDeviceInterfaceDetail(IntPtr devInfoSet, ref SP_DEVICE_INTERFACE_DATA devInterfaceData, out string devicePath, out SP_DEVINFO_DATA devInfoData)
         {
             devInfoData = new SP_DEVINFO_DATA();
             devInfoData.cbSize = (uint)Marshal.SizeOf(devInfoData);
@@ -96,8 +94,8 @@ namespace USBNetLib.Win32API
             var devInterfaceDataDetail = new SP_DEVICE_INTERFACE_DETAIL_DATA { cbSize = IntPtr.Size == 4 ? 4U + (uint)Marshal.SystemDefaultCharSize : 8U };
 
             uint requiredsize = 0;
-            if(SetupDiGetDeviceInterfaceDetail(devInfoSet, ref devInterfaceData, ref devInterfaceDataDetail,
-                                               1024,ref requiredsize, ref devInfoData))
+            if (SetupDiGetDeviceInterfaceDetail(devInfoSet, ref devInterfaceData, ref devInterfaceDataDetail,
+                                               1024, ref requiredsize, ref devInfoData))
             {
                 devicePath = devInterfaceDataDetail.devicePath;
                 return true;
@@ -108,6 +106,10 @@ namespace USBNetLib.Win32API
                 return false;
             }
         }
+        #endregion
+
+        #region CreateFile
+
         #endregion
     }
 }

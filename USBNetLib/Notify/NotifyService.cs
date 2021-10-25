@@ -4,6 +4,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -11,14 +12,20 @@ using USBNetLib.Win32API;
 
 namespace USBNetLib
 {
-    internal partial class NotifyHelper
+    internal partial class NotifyService
     {
-
+        /// <summary>
+        /// 保存 Task cancel token
+        /// </summary>
         private CancellationTokenSource _tokenSource => new CancellationTokenSource();
 
+        /// <summary>
+        /// 保存所有 task, 可以控制取消任務
+        /// </summary>
         private ConcurrentBag<Task> _notifier_Tasks => new ConcurrentBag<Task>();
 
-        public NotifyHelper()
+
+        public NotifyService()
         {
 
         }
@@ -41,6 +48,8 @@ namespace USBNetLib
         {
             try
             {
+                DisposeCreateFileHandle();
+
                 Close_Notifier_Disk();
 
                 _tokenSource?.Cancel();
@@ -56,7 +65,9 @@ namespace USBNetLib
         }
         #endregion
 
+
         #region Disk Notify Task
+        #region Disk start close
         /// <summary>
         /// Disk Notifier
         /// </summary>
@@ -88,7 +99,9 @@ namespace USBNetLib
                 _notifier_Disk.Dispose();
             }
         }
+        #endregion
 
+        #region Notifier_Disk_Arrival
         /// <summary>
         /// Disk USB Arrival Event handler
         /// </summary>
@@ -98,15 +111,11 @@ namespace USBNetLib
         {
             _notifier_Tasks.Add(Task.Run(() =>
             {
-                if(IsNotifyUSBFindInPolicyTable(USetupApi.GUID_DEVINTERFACE.GUID_DEVINTERFACE_DISK, e.DevicePath, out NotifyUSB notifyUSB))
-                {
-                    Console.WriteLine(notifyUSB.Vid_Hex);
-                    Console.WriteLine(notifyUSB.Pid_Hex);
-                    Console.WriteLine(notifyUSB.SerialNumber);
-                }
+                ToNotifyUSBHandler(USetupApi.GUID_DEVINTERFACE.GUID_DEVINTERFACE_DISK, e.DevicePath, out NotifyUSB notifyUSB);
 
             }, _tokenSource.Token));
         }
+        #endregion
         #endregion
 
         #region Get All USB Devices from USB Bus + ScanUsbBus(out List<Device> currentUsbList, out UsbBus bus)
@@ -192,14 +201,15 @@ namespace USBNetLib
         }
         #endregion
 
-        #region Is Find notify usb in policy table + IsFindNotifyUSBInPolicyTable(string devicePath)
+        #region + ToNotifyUSBHandler(Guid interfaceGuid, string devicePath, out NotifyUSB notifyUsb)
         /// <summary>
         /// 判斷 user usb 是否在 policy table 里
         /// </summary>
         /// <param name="devicePath"></param>
         /// <returns></returns>
-        private bool IsNotifyUSBFindInPolicyTable(Guid interfaceGuid, string devicePath, out NotifyUSB notifyUsb)
+        private void ToNotifyUSBHandler(Guid interfaceGuid, string devicePath, out NotifyUSB notifyUsb)
         {
+            notifyUsb = new NotifyUSB();
             if (!ScanUsbBus(out List<Device> currentUsbList, out UsbBus bus))
             {
                 throw new Exception("Cannot find any usb device in USB Controller."); // shall not happen
@@ -207,50 +217,15 @@ namespace USBNetLib
 
             try
             {
-                notifyUsb = GetNotifyUSBbyInterfaceGuidAndPath(interfaceGuid,devicePath);
-
-                if (notifyUsb != null && !string.IsNullOrEmpty(notifyUsb.ParentDeviceID))
-                {
-                    return MatchPolicy(notifyUsb, ref currentUsbList);
-                }
-                else
-                {
-                    notifyUsb = null;
-                    return false;
-                }
+                notifyUsb = new NotifySetup().NotifyUSBHandler(ref currentUsbList, interfaceGuid, devicePath);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                Console.WriteLine(ex.Message);
             }
-            finally { DisposeUSB(ref currentUsbList, ref bus); }
-        }
-
-
-        private bool MatchPolicy(NotifyUSB notifyUsb, ref List<Device> currentUsbList)
-        {
-            foreach (Device d in currentUsbList)
+            finally
             {
-                if (d.InstanceId.Equals(notifyUsb.ParentDeviceID, StringComparison.OrdinalIgnoreCase))
-                {
-                    notifyUsb.Vid = d.DeviceDescriptor.idVendor;
-                    notifyUsb.Pid = d.DeviceDescriptor.idProduct;
-                    notifyUsb.SerialNumber = d.SerialNumber;
-                }
-            }
-
-            if (notifyUsb.HasVidPidSerial)
-            {
-               bool? isFindIntable = PolicyTable.USBList?.Any(p =>
-               {
-                   return p.PID == notifyUsb.Pid && p.VID == notifyUsb.Vid && p.SerialNumber == notifyUsb.SerialNumber;
-               });
-
-                return isFindIntable ?? false;
-            }
-            else
-            {
-                throw new Exception("cannot find notity device parent in usb bus."); // shall not happen
+                DisposeUSB(ref currentUsbList, ref bus);
             }
         }
         #endregion

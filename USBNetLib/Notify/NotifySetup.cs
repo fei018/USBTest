@@ -4,19 +4,118 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using USBNetLib.Win32API;
+using NativeUsbLib;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace USBNetLib
 {
-    internal partial class NotifyHelper
+    internal class NotifySetup
     {
-        #region GetNotifyUSBDevice
+        #region Public NotifyUSBHandler
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="currentUsbList"></param>
+        /// <param name="interfaceGuid"></param>
         /// <param name="notifyDevicePath"></param>
-        /// <returns></returns>
-        private NotifyUSB GetNotifyUSBbyInterfaceGuidAndPath(Guid interfaceGuid, string notifyDevicePath)
+        /// <returns>NotifyUSB 不會為Null, 最少有 DevicePath 值</returns>
+        public NotifyUSB NotifyUSBHandler(ref List<Device> currentUsbList, Guid interfaceGuid, string notifyDevicePath)
         {
+            try
+            {
+                // can more way
+                var notifyUsb = Use_NotifyPath_Find_USBDeviceID(interfaceGuid, notifyDevicePath);
+
+                // 找不到 Parent ID
+                if (string.IsNullOrEmpty(notifyUsb.DeviceID))
+                {
+                    Console.WriteLine("error: "+ notifyUsb.DevicePath);
+                    Console.WriteLine();
+                }
+
+                // match policy table 處理過程
+                if (MatchPolicyTable(ref currentUsbList, ref notifyUsb))
+                {
+                    
+                }
+                // no match polcy table 處理過程
+                else
+                {
+                    Console.WriteLine("error: " + notifyUsb.DevicePath);
+                    Console.WriteLine(notifyUsb.DeviceID);
+                    Console.WriteLine();
+                }
+
+                return notifyUsb;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
+        #endregion
+
+        #region MatchPolicyTable 
+
+        public bool MatchPolicyTable(ref List<Device> busUsbList, ref NotifyUSB notifyUsb)
+        {
+            if (!PolicyTable.HasUSBTable())
+            {
+                throw new Exception("Policy USB Table is Null or Empty.");
+            }
+
+            // find notifyusb in usb bus, set vid pid serial
+            FindParentVidPidSerialInUsbBus(ref busUsbList, ref notifyUsb);
+
+            if (notifyUsb.HasVidPidSerial())
+            {
+                foreach (PolicyUSB pu in PolicyTable.USBTable)
+                {
+                    if (pu.IsMatchNotifyUSB(notifyUsb))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            else
+            {
+                throw new Exception("cannot find notity device parent in usb bus."); // shall not happen
+            }
+        }
+
+        private void FindParentVidPidSerialInUsbBus(ref List<Device> busUsbList, ref NotifyUSB notifyUsb)
+        {
+            // find notifyusb in usb bus, set vid pid serial
+            foreach (Device d in busUsbList)
+            {
+                if (d.InstanceId.Equals(notifyUsb.DeviceID, StringComparison.OrdinalIgnoreCase))
+                {
+                    notifyUsb.Vid = d.DeviceDescriptor.idVendor;
+                    notifyUsb.Pid = d.DeviceDescriptor.idProduct;
+                    notifyUsb.SerialNumber = d.SerialNumber;
+                    notifyUsb.DevicePath = d.DevicePath;
+                }
+            }
+        }
+
+
+        #endregion
+
+        #region + Use_NotifyPath_Find_USBDeviceID(Guid interfaceGuid, ref NotifyUSB notifyUsb)
+        /// <summary>
+        /// ref NotifyUSB notifyUsb 需要賦值 notifyUsb.NotifyDevicePath
+        /// </summary>
+        /// <param name="notifyPath"></param>
+        public bool Use_NotifyPath_Find_USBDeviceID(Guid interfaceGuid, ref NotifyUSB notifyUsb)
+        {
+            if (string.IsNullOrEmpty(notifyUsb.NotifyDevicePath))
+                throw new Exception("notifyUsb.NotifyDevicePath IsNullOrEmpty.");
+
             int dicfg = (int)(USetupApi.DICFG.PRESENT | USetupApi.DICFG.DEVICEINTERFACE);
             //Guid guid = USetupApi.GUID_DEVINTERFACE.GUID_DEVINTERFACE_DISK;
 
@@ -24,7 +123,8 @@ namespace USBNetLib
 
             try
             {
-                if (devInfoSet.ToInt32() == USetupApi.INVALID_HANDLE_VALUE) return null;
+                if (devInfoSet == USetupApi.INVALID_HANDLE_VALUE)
+                    throw new Exception("SetupDiGetClassDevs handl = INVALID_HANDLE_VALUE");
 
                 bool success = true;
                 int index = 0;
@@ -40,30 +140,55 @@ namespace USBNetLib
                                                                                 out USetupApi.SP_DEVINFO_DATA devInfoData);
                         if (isDetail)
                         {
-                            if (devPath.Trim().ToLower() == notifyDevicePath.Trim().ToLower())
+                            // match enum path and notify path
+                            if (devPath.ToLower() == notifyUsb.NotifyDevicePath.ToLower())
                             {
-                                var deviceID = GetParentDeviceID(devInfoData.devInst);
-                                if (!string.IsNullOrEmpty(deviceID))
-                                {
-                                    return new NotifyUSB { ParentDeviceID = deviceID, DevicePath = devPath };
-                                }
+                                notifyUsb.NotifyDeviceID = GetNotifyDeviceID(devInfoData.devInst);
+                                notifyUsb.DeviceID = GetUSBDeviceIDbyNotifyDevice(devInfoData.devInst);
+
+                                return true; // 結束循環
                             }
                         }
                     }
                 }
-                return null;
+                return false;
             }
-            catch (Exception)
+            catch (Win32Exception)
             {
                 throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+            catch (Exception)
+            {
+                throw;
+            }
             finally
             {
-                USetupApi.SetupDiDestroyDeviceInfoList(devInfoSet);
+                if (devInfoSet != USetupApi.INVALID_HANDLE_VALUE)
+                {
+                    USetupApi.SetupDiDestroyDeviceInfoList(devInfoSet);
+                }
             }
         }
+        #endregion
 
-        private string GetParentDeviceID(uint devInst)
+        #region + GetNotifyDeviceID(uint devInst)
+        private string GetNotifyDeviceID(uint devInst)
+        {
+            if (USetupApi.CM_Get_Device_ID_Size(out uint size, devInst, 0) == 0)
+            {
+                StringBuilder deviceID = new StringBuilder { Length = (int)size };
+
+                if (USetupApi.CM_Get_Device_ID(devInst, deviceID, size, 0) == 0)
+                {
+                    return deviceID.ToString();
+                }
+            }
+            return null;
+        }
+        #endregion
+
+        #region + GetUSBDeviceIDbyNotifyDevice(uint devInst)
+        private string GetUSBDeviceIDbyNotifyDevice(uint devInst)
         {
             if (USetupApi.CM_Get_Parent(out uint parentInst, devInst, 0) == 0)
             {
@@ -73,14 +198,14 @@ namespace USBNetLib
 
                     if (USetupApi.CM_Get_Device_ID(parentInst, deviceID, size, 0) == 0)
                     {
-                        var regex = RegexPath(deviceID.ToString());
+                        var regex = RegexDeviceIDPrefix(deviceID.ToString());
 
                         if (!string.IsNullOrEmpty(regex))
                         {
                             return regex;
                         }
 
-                        return GetParentDeviceID(parentInst);
+                        return GetUSBDeviceIDbyNotifyDevice(parentInst);
                     }
                 }
             }
@@ -88,7 +213,7 @@ namespace USBNetLib
             return null;
         }
 
-        private string RegexPath(string path)
+        private string RegexDeviceIDPrefix(string path)
         {
             if (string.IsNullOrEmpty(path)) return null;
 

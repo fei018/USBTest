@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using USBNetLib.Notify;
 
 namespace USBNetLib
 {
@@ -11,42 +12,31 @@ namespace USBNetLib
     {
         public UInt16 Vid { get; set; }
 
-        public string Vid_Hex => "Vid_" + Vid.ToString("X");
+        public string Vid_Hex => "Vid_" + Vid.ToString("X").PadLeft(4,'0');
 
         public UInt16 Pid { get; set; }
 
-        public string Pid_Hex => "Pid_" + Pid.ToString("X");
+        public string Pid_Hex => "Pid_" + Pid.ToString("X").PadLeft(4, '0');
 
-        public string ParentDeviceID { get; set; }
+        public string DeviceID { get; set; }
 
         public string DevicePath { get; set; }
 
+        public string NotifyDeviceID { get; set; }
+
+        public string NotifyDevicePath { get; set; }
+
         public string SerialNumber { get; set; }
 
-        public bool HasUSBParent
+        public bool HasVidPidSerial()
         {
-            get
+            if (Vid != 0 && Pid != 0 && !string.IsNullOrEmpty(SerialNumber))
             {
-                if (!string.IsNullOrEmpty(ParentDeviceID) && ParentDeviceID.StartsWith("USB\\", StringComparison.OrdinalIgnoreCase))
-                {
-                    return true;
-                }
-                return false;
+                return true;
             }
-        }
-
-        public bool HasVidPidSerial
-        {
-            get
+            else
             {
-                if (Vid != 0 && Pid != 0 && !string.IsNullOrEmpty(SerialNumber))
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return false;
             }
         }
     }

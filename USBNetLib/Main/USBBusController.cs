@@ -94,7 +94,7 @@ namespace USBNetLib
 
                 foreach (Device d in _busUsbList)
                 {
-                    if (d.InstanceId.Equals(notifyUsb.DeviceID, StringComparison.OrdinalIgnoreCase))
+                    if (d.InstanceId.Equals(notifyUsb.DeviceId, StringComparison.OrdinalIgnoreCase))
                     {
                         notifyUsb.Vid = d.DeviceDescriptor.idVendor;
                         notifyUsb.Pid = d.DeviceDescriptor.idProduct;

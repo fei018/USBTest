@@ -109,7 +109,7 @@ namespace USBNetLib
         {
             _notifier_Tasks.Add(Task.Run(() =>
             {
-                new NotifyDiskHelp().DiskHandler(e.DevicePath, out NotifyDisk disk);
+                new NotifyDiskHelp().DiskHandler(e.DevicePath, out NotifyUSB usb);
 
             }, _tokenSource.Token));
         }

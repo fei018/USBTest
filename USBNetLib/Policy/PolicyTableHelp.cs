@@ -52,26 +52,21 @@ namespace USBNetLib
         #region + public bool MatchPolicyTable(ref NotifyUSB notifyUsb) 
         private static object _locker = new object();
 
-        public bool IsMatchPolicyTable(ref NotifyUSB notifyUsb)
+        public bool IsMatchPolicyTable(NotifyUSB notifyUsb)
         {
             lock (_locker)
             {
                 if (!PolicyTable.IsAny())
                 {
-                    throw new Exception("Policy USB Table is Null or Empty.");
+                    throw new Exception("PolicyTable.USBTable is Null.");
                 }
 
-                if (notifyUsb.HasVidPidSerial())
+                foreach (PolicyUSB pu in PolicyTable.USBTable)
                 {
-                    foreach (PolicyUSB pu in PolicyTable.USBTable)
+                    if (pu.IsMatchNotifyUSB(notifyUsb))
                     {
-                        if (pu.IsMatchNotifyUSB(notifyUsb))
-                        {
-                            return true;
-                        }
+                        return true;
                     }
-
-                    _policyRule.IsNotMatch_In_PolicyTable(notifyUsb);
                 }
                 return false;
             }

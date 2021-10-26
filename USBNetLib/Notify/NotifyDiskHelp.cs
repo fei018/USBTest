@@ -25,37 +25,30 @@ namespace USBNetLib
         }
 
         #region + public bool DiskHandler(string devicePath, out NotifyDisk disk)
-        public bool DiskHandler(string devicePath, out NotifyDisk disk)
+        public bool DiskHandler(string devicePath, out NotifyUSB usb)
         {
-            disk = new NotifyDisk { Path = devicePath };
+            usb = new NotifyUSB { DiskPath = devicePath };
             try
-            {               
-                if (Use_DiskPath_Find_UsbDeviceID_SetupDi(devicePath,out NotifyUSB notifyUsb))
+            {
+                if (!Find_UsbDeviceId_By_DiskPath_SetupDi(ref usb))
                 {
-                    if (_UsbBus.Find_VidPidSerial_In_UsbBus(ref notifyUsb))
-                    {
-                        if (_policyTableHelp.IsMatchPolicyTable(ref notifyUsb))
-                        {
-                            disk.ParentUSB = notifyUsb;
-                            USBLogger.Log(disk.ToString());
-                            return true;
-                        }
-                        else
-                        {
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        _policyRule.NotityUSB_NotFound_VidPidSerial_In_UsbBus(notifyUsb);
-                        return false;
-                    }
-                }
-                else
-                {
-                    _policyRule.DiskPath_NotFound_UsbDeviceId_SetupDi(devicePath);
+                    _policyRule.NotFound_UsbDeviceID_By_DiskPath_SetupDi(devicePath);
                     return false;
-                }              
+                }
+
+                if (!_UsbBus.Find_VidPidSerial_In_UsbBus(ref usb))
+                {
+                    _policyRule.NotFound_NotityUSB_VidPidSerial_In_UsbBus(usb);
+                    return false;
+                }
+
+                if (!_policyTableHelp.IsMatchPolicyTable(usb))
+                {
+                    _policyRule.NotMatch_In_PolicyTable(usb);
+                    return false;
+                }
+
+                return true;
             }
             catch (Exception ex)
             {
@@ -67,22 +60,16 @@ namespace USBNetLib
 
 
         #region SetupDi
-        #region + Use_DiskPath_Find_UsbDeviceID(Guid interfaceGuid, ref NotifyUSB notifyUsb)
+        #region + Find_UsbDeviceId_By_DiskPath_SetupDi(ref NotifyUSB notifyUsb)
         /// <summary>
-        /// ref NotifyUSB notifyUsb 需要賦值 notifyUsb.NotifyDevicePath
+        /// ref NotifyUSB notifyUsb 需要賦值 notifyUsb.DiskPath
         /// </summary>
         /// <param name="notifyPath"></param>
-        private bool Use_DiskPath_Find_UsbDeviceID_SetupDi(string diskPath, out NotifyUSB notifyUsb)
+        public bool Find_UsbDeviceId_By_DiskPath_SetupDi(ref NotifyUSB notifyUsb)
         {
-            notifyUsb = new NotifyUSB { DiskPath = diskPath };
-
             Guid interfaceGuid = USetupApi.GUID_DEVINTERFACE.GUID_DEVINTERFACE_DISK;
 
-            if (string.IsNullOrEmpty(notifyUsb.DiskPath))
-                throw new Exception("notifyUsb.NotifyDevicePath IsNullOrEmpty.");
-
             int dicfg = (int)(USetupApi.DICFG.PRESENT | USetupApi.DICFG.DEVICEINTERFACE);
-            //Guid guid = USetupApi.GUID_DEVINTERFACE.GUID_DEVINTERFACE_DISK;
 
             var devInfoSet = USetupApi.SetupDiGetClassDevs(ref interfaceGuid, IntPtr.Zero, IntPtr.Zero, dicfg);
 
@@ -108,9 +95,9 @@ namespace USBNetLib
                             // match enum path and notify path
                             if (devPath.ToLower() == notifyUsb.DiskPath.ToLower())
                             {
-                                notifyUsb.DiskDeviceID = GetDiskDeviceID(devInfoData.devInst);
-                                notifyUsb.DeviceID = GetUsbDeviceIDbyChildDiskInstance(devInfoData.devInst);
-                                if (string.IsNullOrEmpty(notifyUsb.DeviceID))
+                                notifyUsb.DiskDeviceId = GetDiskDeviceId(devInfoData.devInst);
+                                notifyUsb.DeviceId = GetUsbDeviceIdByChildDiskInstance(devInfoData.devInst);
+                                if (string.IsNullOrEmpty(notifyUsb.DeviceId))
                                 {
                                     return false;
                                 }
@@ -143,7 +130,7 @@ namespace USBNetLib
         #endregion
 
         #region + GetDiskDeviceID(uint devInst)
-        private string GetDiskDeviceID(uint devInst)
+        private string GetDiskDeviceId(uint devInst)
         {
             if (USetupApi.CM_Get_Device_ID_Size(out uint size, devInst, 0) == 0)
             {
@@ -159,7 +146,7 @@ namespace USBNetLib
         #endregion
 
         #region + GetUsbDeviceIDbyChildDiskInstance(uint devInst)
-        private string GetUsbDeviceIDbyChildDiskInstance(uint devInst)
+        private string GetUsbDeviceIdByChildDiskInstance(uint devInst)
         {
             if (USetupApi.CM_Get_Parent(out uint parentInst, devInst, 0) == 0)
             {
@@ -169,14 +156,14 @@ namespace USBNetLib
 
                     if (USetupApi.CM_Get_Device_ID(parentInst, deviceID, size, 0) == 0)
                     {
-                        var regex = RegexDeviceIDPrefix(deviceID.ToString());
+                        var regex = RegexDeviceIdPrefix(deviceID.ToString());
 
                         if (!string.IsNullOrEmpty(regex))
                         {
                             return regex;
                         }
 
-                        return GetUsbDeviceIDbyChildDiskInstance(parentInst);
+                        return GetUsbDeviceIdByChildDiskInstance(parentInst);
                     }
                 }
             }
@@ -184,14 +171,14 @@ namespace USBNetLib
             return null;
         }
 
-        private string RegexDeviceIDPrefix(string path)
+        private string RegexDeviceIdPrefix(string path)
         {
             if (string.IsNullOrEmpty(path)) return null;
 
             var match = Regex.Match(path, "^USB\\\\VID_([0-9A-F]{4})&PID_([0-9A-F]{4})", RegexOptions.IgnoreCase);
             if (match.Success)
             {
-                return path.Trim();
+                return path.TrimEnd();
             }
 
             // 匹配路徑高於 USB 返回

@@ -12,7 +12,7 @@ namespace USBNetLib
 
         public static bool IsAny()
         {
-            return USBTable != null && USBTable.Count > 0;
+            return USBTable != null;
         }
     }
 }

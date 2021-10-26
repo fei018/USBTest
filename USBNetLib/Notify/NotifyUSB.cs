@@ -18,11 +18,11 @@ namespace USBNetLib
 
         public string Pid_Hex => "Pid_" + Pid.ToString("X").PadLeft(4, '0');
 
-        public string DeviceID { get; set; }
+        public string DeviceId { get; set; }
 
         public string Path { get; set; }
 
-        public string DiskDeviceID { get; set; }
+        public string DiskDeviceId { get; set; }
 
         public string DiskPath { get; set; }
 
@@ -42,12 +42,14 @@ namespace USBNetLib
 
         public override string ToString()
         {
-            string s = "* NotifyUSB" + Environment.NewLine +
+            string s = "*** NotifyUSB ***" + Environment.NewLine +
                        Vid_Hex + Environment.NewLine +
                        Pid_Hex + Environment.NewLine +
-                       "SerialNumber: "+SerialNumber + Environment.NewLine +
-                       "DeviceID: "+DeviceID + Environment.NewLine + 
-                       "Device Path: "+ Path + Environment.NewLine;
+                       "SerialNumber: " + SerialNumber + Environment.NewLine +
+                       "DeviceId: " + DeviceId + Environment.NewLine +
+                       "Device Path: " + Path + Environment.NewLine +
+                       "Disk DeviceId: " + DiskDeviceId + Environment.NewLine +
+                       "Disk Path: " + DiskPath + Environment.NewLine;
             return s;
         }
     }

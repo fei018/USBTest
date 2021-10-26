@@ -6,6 +6,13 @@ namespace USBNetLib
 {
     internal class PolicyTableHelp
     {
+        private PolicyRule _policyRule;
+
+        public PolicyTableHelp()
+        {
+            _policyRule = new PolicyRule();
+        }
+
         #region + SetPolicyUSBList()
         public void SetPolicyUSBList()
         {
@@ -63,7 +70,8 @@ namespace USBNetLib
                             return true;
                         }
                     }
-                    IsNoMatch_InPolicyTable(ref notifyUsb);
+
+                    _policyRule.IsNotMatch_In_PolicyTable(notifyUsb);
                 }
                 return false;
             }
@@ -77,12 +85,6 @@ namespace USBNetLib
         }
         #endregion
 
-        #region 
-        private void IsNoMatch_InPolicyTable(ref NotifyUSB notifyUsb)
-        {
-            USBLogger.Log("Usb no match in policy table:");
-            USBLogger.Log(notifyUsb.ToString());
-        }
-        #endregion
+
     }
 }

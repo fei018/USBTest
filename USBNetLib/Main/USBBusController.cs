@@ -99,7 +99,7 @@ namespace USBNetLib
                         notifyUsb.Vid = d.DeviceDescriptor.idVendor;
                         notifyUsb.Pid = d.DeviceDescriptor.idProduct;
                         notifyUsb.SerialNumber = d.SerialNumber;
-                        notifyUsb.DevicePath = d.DevicePath;
+                        notifyUsb.Path = d.DevicePath;
                         return true;
                     }
                 }

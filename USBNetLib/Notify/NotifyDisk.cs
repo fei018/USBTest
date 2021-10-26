@@ -16,14 +16,15 @@ namespace USBNetLib
         {
             get
             {
-                return ParentUSB?.NotifyDeviceID;
+                return ParentUSB?.DiskDeviceID;
             }
         }
 
         public override string ToString()
         {
             string s = "* NotifyDisk" + Environment.NewLine +
-                        "DeviceID: "+DeviceID + Environment.NewLine + Environment.NewLine+
+                        "DeviceID: "+DeviceID + Environment.NewLine + 
+                        "Device Path: " + Path + Environment.NewLine + Environment.NewLine +
                         ParentUSB.ToString();
             return s;
 

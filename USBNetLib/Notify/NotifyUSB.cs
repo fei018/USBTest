@@ -20,11 +20,11 @@ namespace USBNetLib
 
         public string DeviceID { get; set; }
 
-        public string DevicePath { get; set; }
+        public string Path { get; set; }
 
-        public string NotifyDeviceID { get; set; }
+        public string DiskDeviceID { get; set; }
 
-        public string NotifyDevicePath { get; set; }
+        public string DiskPath { get; set; }
 
         public string SerialNumber { get; set; }
 
@@ -46,7 +46,8 @@ namespace USBNetLib
                        Vid_Hex + Environment.NewLine +
                        Pid_Hex + Environment.NewLine +
                        "SerialNumber: "+SerialNumber + Environment.NewLine +
-                       "DeviceID: "+DeviceID + Environment.NewLine + Environment.NewLine;
+                       "DeviceID: "+DeviceID + Environment.NewLine + 
+                       "Device Path: "+ Path + Environment.NewLine;
             return s;
         }
     }

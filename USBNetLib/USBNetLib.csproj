@@ -33,12 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NativeUsbLib, Version=1.4.9.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NativeUsbLib.1.4.9\lib\net46\NativeUsbLib.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
@@ -56,6 +54,7 @@
     <Compile Include="Notify\NotifyTask.cs" />
     <Compile Include="Notify\NotifyUSB.cs" />
     <Compile Include="Main\USBBusController.cs" />
+    <Compile Include="Policy\PolicyRule.cs" />
     <Compile Include="Policy\PolicyTableHelp.cs" />
     <Compile Include="Policy\PolicyTable.cs" />
     <Compile Include="Policy\PolicyUSB.cs" />
@@ -78,7 +77,12 @@
     <Compile Include="Win32API\ProcessApiHelper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <Folder Include="WMI\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="NativeUsbLib">
+      <Version>1.4.9</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

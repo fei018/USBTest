@@ -15,12 +15,13 @@ namespace USBNetLib
     {
         private readonly USBBusController _UsbBus;
         private readonly PolicyTableHelp _policyTableHelp;
-
+        private readonly PolicyRule _policyRule;
 
         public NotifyDiskHelp()
         {
             _UsbBus = new USBBusController();
             _policyTableHelp = new PolicyTableHelp();
+            _policyRule = new PolicyRule();
         }
 
         #region + public bool DiskHandler(string devicePath, out NotifyDisk disk)
@@ -29,11 +30,7 @@ namespace USBNetLib
             disk = new NotifyDisk { Path = devicePath };
             try
             {               
-                Guid guid = USetupApi.GUID_DEVINTERFACE.GUID_DEVINTERFACE_DISK;
-
-                var notifyUsb = new NotifyUSB { NotifyDevicePath = devicePath };
-
-                if (Use_NotifyPath_Find_USBDeviceID(guid, ref notifyUsb))
+                if (Use_DiskPath_Find_UsbDeviceID_SetupDi(devicePath,out NotifyUSB notifyUsb))
                 {
                     if (_UsbBus.Find_VidPidSerial_In_UsbBus(ref notifyUsb))
                     {
@@ -43,9 +40,22 @@ namespace USBNetLib
                             USBLogger.Log(disk.ToString());
                             return true;
                         }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        _policyRule.NotityUSB_NotFound_VidPidSerial_In_UsbBus(notifyUsb);
+                        return false;
                     }
                 }
-                return false;
+                else
+                {
+                    _policyRule.DiskPath_NotFound_UsbDeviceId_SetupDi(devicePath);
+                    return false;
+                }              
             }
             catch (Exception ex)
             {
@@ -57,14 +67,18 @@ namespace USBNetLib
 
 
         #region SetupDi
-        #region + Use_NotifyPath_Find_USBDeviceID(Guid interfaceGuid, ref NotifyUSB notifyUsb)
+        #region + Use_DiskPath_Find_UsbDeviceID(Guid interfaceGuid, ref NotifyUSB notifyUsb)
         /// <summary>
         /// ref NotifyUSB notifyUsb 需要賦值 notifyUsb.NotifyDevicePath
         /// </summary>
         /// <param name="notifyPath"></param>
-        private bool Use_NotifyPath_Find_USBDeviceID(Guid interfaceGuid, ref NotifyUSB notifyUsb)
+        private bool Use_DiskPath_Find_UsbDeviceID_SetupDi(string diskPath, out NotifyUSB notifyUsb)
         {
-            if (string.IsNullOrEmpty(notifyUsb.NotifyDevicePath))
+            notifyUsb = new NotifyUSB { DiskPath = diskPath };
+
+            Guid interfaceGuid = USetupApi.GUID_DEVINTERFACE.GUID_DEVINTERFACE_DISK;
+
+            if (string.IsNullOrEmpty(notifyUsb.DiskPath))
                 throw new Exception("notifyUsb.NotifyDevicePath IsNullOrEmpty.");
 
             int dicfg = (int)(USetupApi.DICFG.PRESENT | USetupApi.DICFG.DEVICEINTERFACE);
@@ -92,12 +106,18 @@ namespace USBNetLib
                         if (isDetail)
                         {
                             // match enum path and notify path
-                            if (devPath.ToLower() == notifyUsb.NotifyDevicePath.ToLower())
+                            if (devPath.ToLower() == notifyUsb.DiskPath.ToLower())
                             {
-                                notifyUsb.NotifyDeviceID = GetNotifyDeviceID(devInfoData.devInst);
-                                notifyUsb.DeviceID = GetUSBDeviceIDbyNotifyDevice(devInfoData.devInst);
-
-                                return true; // 結束循環
+                                notifyUsb.DiskDeviceID = GetDiskDeviceID(devInfoData.devInst);
+                                notifyUsb.DeviceID = GetUsbDeviceIDbyChildDiskInstance(devInfoData.devInst);
+                                if (string.IsNullOrEmpty(notifyUsb.DeviceID))
+                                {
+                                    return false;
+                                }
+                                else
+                                {
+                                    return true; // 結束循環
+                                }
                             }
                         }
                     }
@@ -122,8 +142,8 @@ namespace USBNetLib
         }
         #endregion
 
-        #region + GetNotifyDeviceID(uint devInst)
-        private string GetNotifyDeviceID(uint devInst)
+        #region + GetDiskDeviceID(uint devInst)
+        private string GetDiskDeviceID(uint devInst)
         {
             if (USetupApi.CM_Get_Device_ID_Size(out uint size, devInst, 0) == 0)
             {
@@ -138,8 +158,8 @@ namespace USBNetLib
         }
         #endregion
 
-        #region + GetUSBDeviceIDbyNotifyDevice(uint devInst)
-        private string GetUSBDeviceIDbyNotifyDevice(uint devInst)
+        #region + GetUsbDeviceIDbyChildDiskInstance(uint devInst)
+        private string GetUsbDeviceIDbyChildDiskInstance(uint devInst)
         {
             if (USetupApi.CM_Get_Parent(out uint parentInst, devInst, 0) == 0)
             {
@@ -156,7 +176,7 @@ namespace USBNetLib
                             return regex;
                         }
 
-                        return GetUSBDeviceIDbyNotifyDevice(parentInst);
+                        return GetUsbDeviceIDbyChildDiskInstance(parentInst);
                     }
                 }
             }

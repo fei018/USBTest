@@ -49,17 +49,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Main\USBLogger.cs" />
     <Compile Include="Notify\NotifyDisk.cs" />
     <Compile Include="Notify\NotifyDiskHelp.cs" />
     <Compile Include="Notify\NotifySetup.cs" />
     <Compile Include="Notify\NotifyTask.cs" />
     <Compile Include="Notify\NotifyUSB.cs" />
-    <Compile Include="USBBUSController\USBBusController.cs" />
+    <Compile Include="Main\USBBusController.cs" />
     <Compile Include="Policy\PolicyTableHelp.cs" />
     <Compile Include="Policy\PolicyTable.cs" />
     <Compile Include="Policy\PolicyUSB.cs" />
-    <Compile Include="USBConfig.cs" />
-    <Compile Include="USBManager.cs" />
+    <Compile Include="Main\USBConfig.cs" />
+    <Compile Include="Main\USBManager.cs" />
     <Compile Include="Win32API\UFileApi.cs" />
     <Compile Include="Win32API\USetupApi.cs" />
     <Compile Include="Win32API\USetupApiFun.cs" />

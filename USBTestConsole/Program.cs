@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-
+using USBNetLib;
 
 namespace USBTestConsole
 {
@@ -14,7 +13,15 @@ namespace USBTestConsole
         {
             try
             {
-                new USBHelp().Test2();
+                Console.WriteLine("Start...");
+
+                USBManager usb = new USBManager();
+                usb.Start();
+
+
+                Console.ReadLine();
+                usb.Close();
+
             }
             catch (Exception ex)
             {

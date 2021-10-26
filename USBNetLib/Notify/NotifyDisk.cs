@@ -19,5 +19,14 @@ namespace USBNetLib
                 return ParentUSB?.NotifyDeviceID;
             }
         }
+
+        public override string ToString()
+        {
+            string s = "* NotifyDisk" + Environment.NewLine +
+                        "DeviceID: "+DeviceID + Environment.NewLine + Environment.NewLine+
+                        ParentUSB.ToString();
+            return s;
+
+        }
     }
 }

@@ -45,7 +45,7 @@ namespace USBNetLib
         #region + public bool MatchPolicyTable(ref NotifyUSB notifyUsb) 
         private static object _locker = new object();
 
-        public bool MatchPolicyTable(ref NotifyUSB notifyUsb)
+        public bool IsMatchPolicyTable(ref NotifyUSB notifyUsb)
         {
             lock (_locker)
             {
@@ -63,6 +63,7 @@ namespace USBNetLib
                             return true;
                         }
                     }
+                    IsNoMatch_InPolicyTable(ref notifyUsb);
                 }
                 return false;
             }
@@ -76,6 +77,12 @@ namespace USBNetLib
         }
         #endregion
 
-
+        #region 
+        private void IsNoMatch_InPolicyTable(ref NotifyUSB notifyUsb)
+        {
+            USBLogger.Log("Usb no match in policy table:");
+            USBLogger.Log(notifyUsb.ToString());
+        }
+        #endregion
     }
 }

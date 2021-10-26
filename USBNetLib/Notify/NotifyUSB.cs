@@ -39,5 +39,15 @@ namespace USBNetLib
                 return false;
             }
         }
+
+        public override string ToString()
+        {
+            string s = "* NotifyUSB" + Environment.NewLine +
+                       Vid_Hex + Environment.NewLine +
+                       Pid_Hex + Environment.NewLine +
+                       "SerialNumber: "+SerialNumber + Environment.NewLine +
+                       "DeviceID: "+DeviceID + Environment.NewLine + Environment.NewLine;
+            return s;
+        }
     }
 }

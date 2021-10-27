@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Management;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -7,59 +9,92 @@ using USBNetLib.Win32API;
 
 namespace USBNetLib
 {
-    internal class NotifyDiskHelp
+    internal partial class RuleFilter
     {
-        private readonly USBBusController _UsbBus;
-        private readonly RuleFilter _filterRule;
-
-        public NotifyDiskHelp()
+        #region + private void Set_Disk_IsReadOnly(string diskPath, bool isReadOnly)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="diskPath"></param>
+        /// <param name="isReadOnly"></param>
+        /// <exception cref="no admin right throw error access denied"></exception>
+        private void Set_Disk_IsReadOnly_WMI(string diskPath, bool isReadOnly)
         {
-            _UsbBus = new USBBusController();
-            _filterRule = new RuleFilter();
-        }
-
-        #region + public bool DiskHandler(string devicePath, out NotifyDisk disk)
-        public bool DiskHandler(string devicePath, out NotifyUSB usb)
-        {
-            usb = new NotifyUSB { DiskPath = devicePath };
             try
             {
-                if (!Find_UsbDeviceId_By_DiskPath_SetupDi(ref usb))
+                using (ManagementObject disk = Get_Disk_ManagementObject_ByPath_WMI(diskPath))
                 {
-                    _filterRule.NotFound_UsbDeviceID_By_DiskPath_SetupDi(devicePath);
-                    return false;
-                }
+                    if (disk == null) return;
 
-                if (!_UsbBus.Find_VidPidSerial_In_UsbBus(ref usb))
-                {
-                    _filterRule.NotFound_NotityUSB_VidPidSerial_In_UsbBus(usb);
-                    return false;
-                }
+                    bool IsReadOnly = bool.Parse(disk["IsReadOnly"].ToString());
+                    bool IsSystem = bool.Parse(disk["IsSystem"].ToString());
+                    bool IsBoot = bool.Parse(disk["IsBoot"].ToString());
 
-                if (!_filterRule.Filter_NotifyUSB(usb))
-                {
-                    _filterRule.NotMatch_In_FilterUSBTable(usb);
-                    return false;
+                    if (IsReadOnly != isReadOnly && !IsBoot && !IsSystem)
+                    {
+                        var inParams = disk.GetMethodParameters("SetAttributes");
+                        inParams["IsReadOnly"] = isReadOnly;
+                        var r = disk.InvokeMethod("SetAttributes", inParams, null)["ReturnValue"].ToString();
+                        USBLogger.Log(r);
+                    }
                 }
-
-                return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                USBLogger.Error(ex.Message);
-                return false;
+                throw;
             }
+        }
+
+        private ManagementObject Get_Disk_ManagementObject_ByPath_WMI(string diskPath)
+        {
+            string path = diskPath.TrimStart('\\', '\\', '?', '\\');
+            var scope = new ManagementScope(@"\\.\ROOT\Microsoft\Windows\Storage");
+            var query = new ObjectQuery($"SELECT * FROM MSFT_Disk WHERE Path LIKE '%{path}'");
+            var searcher = new ManagementObjectSearcher(scope, query);
+            var disks = searcher.Get();
+
+            if (disks.Count == 1)
+            {
+                foreach (ManagementObject d in disks)
+                {
+                    return d;
+                }
+            }
+            return null;
         }
         #endregion
 
 
+        #region + private List<NotifyUSB> Get_DiskPath_List_BusType_USB_WMI()
+        private List<NotifyUSB> Get_All_NotifyUSB_DiskPath_List_BusType_USB_WMI()
+        {
+            var scope = new ManagementScope(@"\\.\ROOT\Microsoft\Windows\Storage");
+            var query = new ObjectQuery("SELECT * FROM MSFT_Disk where BusType=7"); // "BusType=7", 7=USB
+            using (var searcher = new ManagementObjectSearcher(scope, query))
+            {
+                using (var disks = searcher.Get())
+                {
+                    var list = new List<NotifyUSB>();
+
+                    foreach (ManagementObject disk in disks)
+                    {
+                        var usb = new NotifyUSB { DiskPath = Convert.ToString((disk["Path"])) };
+                        list.Add(usb);
+                    }
+                    return list;
+                }
+            }
+        }
+        #endregion
+
         #region SetupDi
+
         #region + Find_UsbDeviceId_By_DiskPath_SetupDi(ref NotifyUSB notifyUsb)
         /// <summary>
         /// ref NotifyUSB notifyUsb 需要賦值 notifyUsb.DiskPath
         /// </summary>
         /// <param name="notifyPath"></param>
-        public bool Find_UsbDeviceId_By_DiskPath_SetupDi(ref NotifyUSB notifyUsb)
+        private bool Find_UsbDeviceId_By_DiskPath_SetupDi(NotifyUSB notifyUsb)
         {
             Guid interfaceGuid = USetupApi.GUID_DEVINTERFACE.GUID_DEVINTERFACE_DISK;
 
@@ -70,7 +105,7 @@ namespace USBNetLib
             try
             {
                 if (devInfoSet == USetupApi.INVALID_HANDLE_VALUE)
-                    throw new Exception("SetupDiGetClassDevs handl = INVALID_HANDLE_VALUE");
+                    return false;
 
                 bool success = true;
                 int index = 0;

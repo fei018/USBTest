@@ -10,37 +10,6 @@ namespace USBNetLib
 {
     public class BootDiskHelper
     {
-        private readonly NotifyDiskHelp _notifyDiskHelp;
-        private readonly RuleFilter _filterRule;
-        private readonly USBBusController _usbBus;
-
-        public BootDiskHelper()
-        {
-            _notifyDiskHelp = new NotifyDiskHelp();
-            _usbBus = new USBBusController();
-            _filterRule = new RuleFilter();
-        }
-
-        private List<MSFT_Disk> Get_USB_Disk_List()
-        {
-            var scope = new ManagementScope(@"\\.\ROOT\Microsoft\Windows\Storage");
-            var query = new ObjectQuery("SELECT * FROM MSFT_Disk where BusType='USB'");
-            using (var searcher = new ManagementObjectSearcher(scope, query))
-            {
-                var disks = searcher.Get();
-
-                var list = new List<MSFT_Disk>();
-
-                foreach (ManagementObject disk in disks)
-                {
-                    var d = Set_MSFT_Disk_Info(disk);
-
-                    list.Add(d);
-                }
-
-                return list;
-            }
-        }
 
         private MSFT_Disk Get_Disk_By_Path(string diskPath)
         {
@@ -110,22 +79,6 @@ namespace USBNetLib
             };
             return d;
         }
-
-        private void Get_UsbDisk_ParentDeviceId(string diskPath)
-        {
-            var usb = new NotifyUSB { DiskPath = diskPath };
-            if(_notifyDiskHelp.Find_UsbDeviceId_By_DiskPath_SetupDi(ref usb))
-            {
-                if (_usbBus.Find_VidPidSerial_In_UsbBus(ref usb))
-                {
-                    if ( !_filterRule.Filter_NotifyUSB(usb) )
-                    {
-                        _filterRule.NotMatch_In_FilterUSBTable(usb);
-                    }
-                }                
-            }
-        }
-
 
 
         #region powershell

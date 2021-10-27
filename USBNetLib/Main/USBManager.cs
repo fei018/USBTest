@@ -14,15 +14,34 @@ namespace USBNetLib
 
         public void Start()
         {
-            new RuleFilter().Set_Filter_USBTable();
-            _notifyService.Start_Notifier();
+            try
+            {
+                new RuleFilter().Set_Filter_USBTable();
+
+                new RuleFilter().Filter_Scan_All_USB_Disk();
+
+                _notifyService.Start_Notifier();
+            }
+            catch (Exception ex)
+            {
+
+                USBLogger.Log(ex.Message);
+            }
         }
 
         public void Close()
         {
-            _notifyService.Close_Notifier();
+            try
+            {
+                _notifyService.Close_Notifier();
 
-            ExitWinFormEnvironment();
+                ExitWinFormEnvironment();
+            }
+            catch (Exception ex)
+            {
+
+                USBLogger.Log(ex.Message);
+            }
             
         }
 

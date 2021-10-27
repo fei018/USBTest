@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,20 +9,34 @@ namespace USBNetLib
 {
     public class USBLogger
     {
-        public static void Log(params string[] logs)
+        public static void Log()
         {
-            if (logs.Length > 0)
+
+        }
+
+        public static void Log(string log)
+        {
+            
+            LogToFile(log);
+        }
+
+
+        static void ConsoleLog(string log)
+        {
+            if (string.IsNullOrEmpty(log))
             {
-                foreach (var l in logs)
-                {
-                    Console.WriteLine(l);
-                }
+                Console.WriteLine();
+            }
+            else
+            {
+                Console.WriteLine(log);
             }
         }
 
-        public static void Error(string error)
+        static void LogToFile(string log)
         {
-            Console.WriteLine(error);
+            var l = Environment.NewLine + DateTime.Now.ToString("yyyy-MM-dd HH:ss") + Environment.NewLine + log;
+            File.AppendAllText(USBConfig.LogFile,l);
         }
     }
 }

@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "USBTestConsole", "USBTestCo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "USBNetLib", "USBNetLib\USBNetLib.csproj", "{7DA52D66-7494-4F53-8B81-90E3C8CD693B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotifyUsbWinService", "NotifyUsbWinService\NotifyUsbWinService.csproj", "{07BE3525-DFAD-46A1-843B-611A47B04BDD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{7DA52D66-7494-4F53-8B81-90E3C8CD693B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7DA52D66-7494-4F53-8B81-90E3C8CD693B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7DA52D66-7494-4F53-8B81-90E3C8CD693B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07BE3525-DFAD-46A1-843B-611A47B04BDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07BE3525-DFAD-46A1-843B-611A47B04BDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07BE3525-DFAD-46A1-843B-611A47B04BDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07BE3525-DFAD-46A1-843B-611A47B04BDD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

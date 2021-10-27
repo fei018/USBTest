@@ -65,6 +65,7 @@ namespace USBNetLib
 
 
         #region Disk Notify Task
+
         #region Disk start close
         /// <summary>
         /// Disk Notifier
@@ -109,11 +110,13 @@ namespace USBNetLib
         {
             _notifier_Tasks.Add(Task.Run(() =>
             {
-                new NotifyDiskHelp().DiskHandler(e.DevicePath, out NotifyUSB usb);
-
+                var usb = new NotifyUSB { DiskPath = e.DevicePath };
+                new RuleFilter().Filter_NotifyUSB_Use_DiskPath(usb);
+                
             }, _tokenSource.Token));
         }
         #endregion
+
         #endregion
     }
 }

@@ -1,12 +1,8 @@
-﻿using NativeUsbLib;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using USBNetLib.Win32API;
 
 namespace USBNetLib
@@ -14,14 +10,12 @@ namespace USBNetLib
     internal class NotifyDiskHelp
     {
         private readonly USBBusController _UsbBus;
-        private readonly PolicyTableHelp _policyTableHelp;
-        private readonly PolicyRule _policyRule;
+        private readonly RuleFilter _filterRule;
 
         public NotifyDiskHelp()
         {
             _UsbBus = new USBBusController();
-            _policyTableHelp = new PolicyTableHelp();
-            _policyRule = new PolicyRule();
+            _filterRule = new RuleFilter();
         }
 
         #region + public bool DiskHandler(string devicePath, out NotifyDisk disk)
@@ -32,19 +26,19 @@ namespace USBNetLib
             {
                 if (!Find_UsbDeviceId_By_DiskPath_SetupDi(ref usb))
                 {
-                    _policyRule.NotFound_UsbDeviceID_By_DiskPath_SetupDi(devicePath);
+                    _filterRule.NotFound_UsbDeviceID_By_DiskPath_SetupDi(devicePath);
                     return false;
                 }
 
                 if (!_UsbBus.Find_VidPidSerial_In_UsbBus(ref usb))
                 {
-                    _policyRule.NotFound_NotityUSB_VidPidSerial_In_UsbBus(usb);
+                    _filterRule.NotFound_NotityUSB_VidPidSerial_In_UsbBus(usb);
                     return false;
                 }
 
-                if (!_policyTableHelp.IsMatchPolicyTable(usb))
+                if (!_filterRule.Filter_NotifyUSB(usb))
                 {
-                    _policyRule.NotMatch_In_PolicyTable(usb);
+                    _filterRule.NotMatch_In_FilterUSBTable(usb);
                     return false;
                 }
 

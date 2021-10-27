@@ -11,6 +11,6 @@ namespace USBNetLib
     {
         private static readonly string _baseDir = AppDomain.CurrentDomain.BaseDirectory;
 
-        public static readonly string PolicyTableFile = Path.Combine(_baseDir, "policytable.txt");
+        public static string FilterUSBTablePath => Path.Combine(_baseDir, "policytable.txt");
     }
 }

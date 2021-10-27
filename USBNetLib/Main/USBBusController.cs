@@ -89,7 +89,7 @@ namespace USBNetLib
             {
                 if (!ScanUsbBus())
                 {
-                    throw new Exception("Cannot find any usb device in USB Controller."); // shall not happen
+                    throw new Exception("Cannot find any usb device in USB Controller."); // should not happen
                 }
 
                 foreach (Device d in _busUsbList)

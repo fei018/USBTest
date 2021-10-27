@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using USBNetLib.Notify;
 
 namespace USBNetLib
 {
@@ -12,7 +6,7 @@ namespace USBNetLib
     {
         public UInt16 Vid { get; set; }
 
-        public string Vid_Hex => "Vid_" + Vid.ToString("X").PadLeft(4,'0');
+        public string Vid_Hex => "Vid_" + Vid.ToString("X").PadLeft(4, '0');
 
         public UInt16 Pid { get; set; }
 
@@ -49,7 +43,7 @@ namespace USBNetLib
                        "DeviceId: " + DeviceId + Environment.NewLine +
                        "Device Path: " + Path + Environment.NewLine +
                        "Disk DeviceId: " + DiskDeviceId + Environment.NewLine +
-                       "Disk Path: " + DiskPath + Environment.NewLine;
+                       "Disk Path: " + DiskPath + Environment.NewLine + Environment.NewLine;
             return s;
         }
     }

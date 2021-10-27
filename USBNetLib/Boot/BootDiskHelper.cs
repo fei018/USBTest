@@ -11,22 +11,20 @@ namespace USBNetLib
     public class BootDiskHelper
     {
         private readonly NotifyDiskHelp _notifyDiskHelp;
-        private readonly PolicyTableHelp _policyTableHelp;
-        private readonly PolicyRule _policyRule;
+        private readonly RuleFilter _filterRule;
         private readonly USBBusController _usbBus;
 
         public BootDiskHelper()
         {
             _notifyDiskHelp = new NotifyDiskHelp();
-            _policyTableHelp = new PolicyTableHelp();
             _usbBus = new USBBusController();
-            _policyRule = new PolicyRule();
+            _filterRule = new RuleFilter();
         }
 
         private List<MSFT_Disk> Get_USB_Disk_List()
         {
             var scope = new ManagementScope(@"\\.\ROOT\Microsoft\Windows\Storage");
-            var query = new ObjectQuery("SELECT * FROM MSFT_Disk where BusType=\"USB\"");
+            var query = new ObjectQuery("SELECT * FROM MSFT_Disk where BusType='USB'");
             using (var searcher = new ManagementObjectSearcher(scope, query))
             {
                 var disks = searcher.Get();
@@ -120,14 +118,17 @@ namespace USBNetLib
             {
                 if (_usbBus.Find_VidPidSerial_In_UsbBus(ref usb))
                 {
-                    if ( !_policyTableHelp.IsMatchPolicyTable(usb) )
+                    if ( !_filterRule.Filter_NotifyUSB(usb) )
                     {
-                        _policyRule.NotMatch_In_PolicyTable(usb);
+                        _filterRule.NotMatch_In_FilterUSBTable(usb);
                     }
                 }                
             }
         }
-        
+
+
+
+        #region powershell
         // Powershell
         //public void SetDiskIsReadOnly(MSFT_Disk disk, bool isReadOnly)
         //{
@@ -156,8 +157,7 @@ namespace USBNetLib
         //        }
         //    }
         //}
+        #endregion
 
-
-        
     }
 }

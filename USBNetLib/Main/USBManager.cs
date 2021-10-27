@@ -5,22 +5,22 @@ namespace USBNetLib
 {
     public class USBManager
     {
-        private readonly NotifyService _notifyHelper;
+        private readonly NotifyService _notifyService;
 
         public USBManager()
         {
-            _notifyHelper = new NotifyService();
+            _notifyService = new NotifyService();
         }
 
         public void Start()
         {
-            new PolicyTableHelp().SetPolicyUSBList();
-            _notifyHelper.Start_Notifier();
+            new RuleFilter().Set_Filter_USBTable();
+            _notifyService.Start_Notifier();
         }
 
         public void Close()
         {
-            _notifyHelper.Close_Notifier();
+            _notifyService.Close_Notifier();
 
             ExitWinFormEnvironment();
             

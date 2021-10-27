@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using USBNetLib.Win32API;
 
 namespace USBNetLib
 {
@@ -16,11 +17,12 @@ namespace USBNetLib
         {
             try
             {
+                _notifyService.Start_Notifier();
+
                 new RuleFilter().Set_Filter_USBTable();
 
                 new RuleFilter().Filter_Scan_All_USB_Disk();
 
-                _notifyService.Start_Notifier();
             }
             catch (Exception ex)
             {

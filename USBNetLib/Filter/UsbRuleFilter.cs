@@ -9,24 +9,45 @@ using System.IO;
 
 namespace USBNetLib
 {
-    internal partial class RuleFilter
+    internal partial class UsbRuleFilter
     {
         /// <summary>
         /// 
         /// </summary>
         private static List<RuleUSB> Filter_USBTable;
 
+        private static readonly object _locker_USBTable = new object();
+
         private readonly USBBusController _UsbBus;
 
-        public RuleFilter()
+        public UsbRuleFilter()
         {
             _UsbBus = new USBBusController();
         }
 
+        #region MyRegion
+        public void Filter_NotifyUSB_Use_DriveLetter(char driveLetter)
+        {
+            try
+            {
+                var usb = Get_NotityUSb_DiskPath_by_DriveLetter_WMI(driveLetter);
+                if (usb != null)
+                {
+                    Filter_NotifyUSB_Use_DiskPath(usb);
+                }
+                else
+                {
+                    throw new Exception("Cannot find disk by driveLetter: " + driveLetter);
+                }
+            }
+            catch (Exception ex)
+            {
+                USBLogger.Error(ex.Message);
+            }
+        }
+        #endregion
 
         #region + public viod Filter_NotifyUSB_Use_DiskPath(NotifyUSB notifyUsb)
-        private static readonly object _locker_USBTable = new object();
-
         /// <summary>
         /// 只需 notifyUsb.DiskPath 賦值
         /// </summary>
@@ -56,7 +77,7 @@ namespace USBNetLib
                 {
                     if (Filter_USBTable.Count <= 0)
                     {
-                        //?
+                        USBLogger.Error("Filter_USBTable.Count <= 0 .");
                     }
 
                     foreach (RuleUSB f in Filter_USBTable)
@@ -89,7 +110,7 @@ namespace USBNetLib
         {
             try
             {
-                var usbList = Get_All_NotifyUSB_DiskPath_List_BusType_USB_WMI();
+                var usbList = Get_All_NotifyUSB_DiskPath_List_by_BusType_USB_WMI();
                 if (usbList.Count > 0)
                 {
                     foreach (var usb in usbList)
@@ -172,12 +193,12 @@ namespace USBNetLib
         #region + private void Match_In_FilterUSBTable(NotifyUSB usb)
         private void Match_In_FilterUSBTable(NotifyUSB usb)
         {
-            USBLogger.Log("=== Match In Filter USB Table ===");
-            USBLogger.Log(usb.ToString());
-
             try
             {
-                Set_Disk_IsReadOnly_WMI(usb.DiskPath, false);
+                Set_Disk_IsReadOnly_by_DiskPath_WMI(usb.DiskPath, false);
+                USBLogger.Log("=== Match In USB ===");
+                USBLogger.Log(usb.ToString());
+                USBLogger.Log("------");
             }
             catch (Exception)
             {
@@ -192,11 +213,11 @@ namespace USBNetLib
         {
             try
             {
-                Set_Disk_IsReadOnly_WMI(usb.DiskPath, true);
-                USBLogger.Log("=== Not Match In Filter USB Table ===");
+                Set_Disk_IsReadOnly_by_DiskPath_WMI(usb.DiskPath, true);
+                USBLogger.Log("=== Not Match USB ===");
                 USBLogger.Log(usb.ToString());
                 USBLogger.Log("Set Disk ReadOnly Success.");
-                USBLogger.Log();
+                USBLogger.Log("------");
             }
             catch (Exception)
             {

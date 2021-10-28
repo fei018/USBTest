@@ -20,6 +20,8 @@ namespace USBNetLib
 
         public string DiskPath { get; set; }
 
+        public uint DiskNumber { get; set; }
+
         public string SerialNumber { get; set; }
 
         public bool HasVidPidSerial()

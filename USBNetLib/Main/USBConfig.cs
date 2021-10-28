@@ -13,6 +13,8 @@ namespace USBNetLib
 
         public static string FilterUSBTablePath => Path.Combine(_baseDir, "FilterUSBTable.txt");
 
-        public static string LogFile => Path.Combine(_baseDir, "log.txt");
+        public static string LogPath => Path.Combine(_baseDir, "log.txt");
+
+        public static string ErrorPath => Path.Combine(_baseDir, "log.txt");
     }
 }

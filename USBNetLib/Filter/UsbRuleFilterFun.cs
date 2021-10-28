@@ -9,8 +9,113 @@ using USBNetLib.Win32API;
 
 namespace USBNetLib
 {
-    internal partial class RuleFilter
+    internal partial class UsbRuleFilter
     {
+        #region MyRegion
+
+        #endregion
+
+        #region + private NotifyUSB Get_NotityUSb_DiskPath_by_DriveLetter_WMI(char driveLetter)
+        /// <summary>
+        /// NotifyUSB 可能為 Null
+        /// </summary>
+        /// <param name="driveLetter"></param>
+        /// <returns>DiskPath, DiskNumber</returns>
+        private NotifyUSB Get_NotityUSb_DiskPath_by_DriveLetter_WMI(char driveLetter)
+        {
+            try
+            {
+                var scope = new ManagementScope(@"\\.\ROOT\Microsoft\Windows\Storage");
+                var query = new ObjectQuery($"SELECT * FROM MSFT_Partition WHERE DriveLetter='{driveLetter}''");
+                using (var searcher = new ManagementObjectSearcher(scope, query))
+                {
+                    using (var partitions = searcher.Get())
+                    {
+                        foreach (ManagementObject p in partitions)
+                        {
+                            var number = Convert.ToUInt32(p["DiskNumber"]);
+                            return Get_NotityUSB_DiskPath_by_DiskNumber_WMI(number);
+                        }
+                    }
+                }
+                return null;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        #region + private NotifyUSB Get_NotityUSB_DiskPath_by_DiskNumber_WMI(uint diskNumber)
+        /// <summary>
+        /// NotifyUSB 可能為 Null
+        /// </summary>
+        /// <param name="diskNumber"></param>
+        /// <returns>DiskPath, DiskNumber</returns>
+        private NotifyUSB Get_NotityUSB_DiskPath_by_DiskNumber_WMI(uint diskNumber)
+        {
+            try
+            {
+                var scope = new ManagementScope(@"\\.\ROOT\Microsoft\Windows\Storage");
+                var query = new ObjectQuery($"SELECT * FROM MSFT_Disk WHERE Number={diskNumber}");
+                using (var searcher = new ManagementObjectSearcher(scope, query))
+                {
+                    using (var disks = searcher.Get())
+                    {
+                        // one disk only
+                        foreach (ManagementObject disk in disks)
+                        {
+                            var path = Convert.ToString(disk["Path"]);
+                            return new NotifyUSB { DiskPath = path, DiskNumber = diskNumber };
+                        }
+                    }
+                }
+                return null;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        #region + private void Set_Disk_IsReadOnly_by_DiskNumber(uint diskNumber, bool isReadOnly)
+        private void Set_Disk_IsReadOnly_by_DiskNumber(uint diskNumber, bool isReadOnly)
+        {
+            try
+            {
+                var scope = new ManagementScope(@"\\.\ROOT\Microsoft\Windows\Storage");
+                var query = new ObjectQuery($"SELECT * FROM MSFT_Disk WHERE Number={diskNumber}");
+                using (var searcher = new ManagementObjectSearcher(scope, query))
+                {
+                    using (var disks = searcher.Get())
+                    {
+                        foreach (ManagementObject disk in disks)
+                        {
+                            bool IsReadOnly = bool.Parse(disk["IsReadOnly"].ToString());
+                            bool IsSystem = bool.Parse(disk["IsSystem"].ToString());
+                            bool IsBoot = bool.Parse(disk["IsBoot"].ToString());
+
+                            if (IsReadOnly != isReadOnly && !IsBoot && !IsSystem)
+                            {
+                                var inParams = disk.GetMethodParameters("SetAttributes");
+                                inParams["IsReadOnly"] = isReadOnly;
+                                var r = disk.InvokeMethod("SetAttributes", inParams, null)["ReturnValue"].ToString();
+                                USBLogger.Log(r);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+
         #region + private void Set_Disk_IsReadOnly(string diskPath, bool isReadOnly)
         /// <summary>
         /// 
@@ -18,7 +123,7 @@ namespace USBNetLib
         /// <param name="diskPath"></param>
         /// <param name="isReadOnly"></param>
         /// <exception cref="no admin right throw error access denied"></exception>
-        private void Set_Disk_IsReadOnly_WMI(string diskPath, bool isReadOnly)
+        private void Set_Disk_IsReadOnly_by_DiskPath_WMI(string diskPath, bool isReadOnly)
         {
             try
             {
@@ -65,8 +170,8 @@ namespace USBNetLib
         #endregion
 
 
-        #region + private List<NotifyUSB> Get_DiskPath_List_BusType_USB_WMI()
-        private List<NotifyUSB> Get_All_NotifyUSB_DiskPath_List_BusType_USB_WMI()
+        #region + private List<NotifyUSB> Get_All_NotifyUSB_DiskPath_List_by_BusType_USB_WMI()
+        private List<NotifyUSB> Get_All_NotifyUSB_DiskPath_List_by_BusType_USB_WMI()
         {
             var scope = new ManagementScope(@"\\.\ROOT\Microsoft\Windows\Storage");
             var query = new ObjectQuery("SELECT * FROM MSFT_Disk where BusType=7"); // "BusType=7", 7=USB

@@ -120,7 +120,7 @@ namespace USBNetLib
         {
             _notifier_Tasks.Add(Task.Run(() =>
             {
-                new RuleFilter().Filter_Scan_All_USB_Disk();
+                new UsbRuleFilter().Filter_Scan_All_USB_Disk();
 
             }, _tokenSource.Token));
         }
@@ -175,7 +175,7 @@ namespace USBNetLib
             _notifier_Tasks.Add(Task.Run(() =>
             {
                 var usb = new NotifyUSB { DiskPath = e.DevicePath };
-                new RuleFilter().Filter_NotifyUSB_Use_DiskPath(usb);
+                new UsbRuleFilter().Filter_NotifyUSB_Use_DiskPath(usb);
                 
             }, _tokenSource.Token));
         }

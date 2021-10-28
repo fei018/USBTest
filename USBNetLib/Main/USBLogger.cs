@@ -9,15 +9,17 @@ namespace USBNetLib
 {
     public class USBLogger
     {
-        public static void Log()
-        {
-
-        }
 
         public static void Log(string log)
         {
             ConsoleLog(log);
             //LogToFile(log);
+        }
+
+        public static void Error(string error)
+        {
+            var l = Environment.NewLine + DateTime.Now.ToString("yyyy-MM-dd HH:ss") + Environment.NewLine + error + Environment.NewLine;
+            LogToFile(USBConfig.ErrorPath, l);
         }
 
 
@@ -33,10 +35,10 @@ namespace USBNetLib
             }
         }
 
-        static void LogToFile(string log)
+        static void LogToFile(string path, string log)
         {
-            var l = Environment.NewLine + DateTime.Now.ToString("yyyy-MM-dd HH:ss") + Environment.NewLine + log;
-            File.AppendAllText(USBConfig.LogFile,l);
+            var l = Environment.NewLine + DateTime.Now.ToString("yyyy-MM-dd HH:ss") + Environment.NewLine + log + Environment.NewLine;
+            File.AppendAllText(USBConfig.LogPath,l);
         }
     }
 }

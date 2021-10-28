@@ -39,7 +39,7 @@ namespace NotifyUsbWinService
             // 
             // serviceInstaller1
             // 
-            this.serviceInstaller1.ServiceName = "nuwsvr";
+            this.serviceInstaller1.ServiceName = "nuwsrv";
             this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
             // 
             // ProjectInstaller

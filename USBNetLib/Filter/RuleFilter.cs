@@ -25,7 +25,7 @@ namespace USBNetLib
 
 
         #region + public viod Filter_NotifyUSB_Use_DiskPath(NotifyUSB notifyUsb)
-        private static object _locker_USBTable = new object();
+        private static readonly object _locker_USBTable = new object();
 
         /// <summary>
         /// 只需 notifyUsb.DiskPath 賦值
@@ -75,7 +75,8 @@ namespace USBNetLib
             }
             catch (Exception ex)
             {
-                USBLogger.Log(ex.Message);
+                USBLogger.Log("=== "+ex.Message+" ===");
+                USBLogger.Log(notifyUsb.ToString());               
             }
         }
         #endregion
@@ -171,7 +172,7 @@ namespace USBNetLib
         #region + private void Match_In_FilterUSBTable(NotifyUSB usb)
         private void Match_In_FilterUSBTable(NotifyUSB usb)
         {
-            USBLogger.Log("Match in policy table:");
+            USBLogger.Log("=== Match In Filter USB Table ===");
             USBLogger.Log(usb.ToString());
 
             try
@@ -192,7 +193,7 @@ namespace USBNetLib
             try
             {
                 Set_Disk_IsReadOnly_WMI(usb.DiskPath, true);
-                USBLogger.Log("USB Not Match In Filter USB Table:");
+                USBLogger.Log("=== Not Match In Filter USB Table ===");
                 USBLogger.Log(usb.ToString());
                 USBLogger.Log("Set Disk ReadOnly Success.");
                 USBLogger.Log();

@@ -37,8 +37,8 @@ namespace USBNetLib
         public override string ToString()
         {
             string s = "*** NotifyUSB ***" + Environment.NewLine +
-                       Vid_Hex + Environment.NewLine +
-                       Pid_Hex + Environment.NewLine +
+                       Vid_Hex + " - " + Vid + Environment.NewLine +
+                       Pid_Hex + " - " + Pid + Environment.NewLine +
                        "SerialNumber: " + SerialNumber + Environment.NewLine +
                        "DeviceId: " + DeviceId + Environment.NewLine +
                        "Device Path: " + Path + Environment.NewLine +

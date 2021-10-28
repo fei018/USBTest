@@ -38,7 +38,7 @@ namespace MadWizard.WinUSBNet.API
 
             Marshal.PtrToStructure(m.LParam, devBroadcastHeader);
 
-            if ((devBroadcastHeader.dbch_devicetype == DBT_DEVTYP_VOLUME)) //DBT_DEVTYP_DEVICEINTERFACE
+            if ((devBroadcastHeader.dbch_devicetype == DBT_DEVTYP_DEVICEINTERFACE))
             {
                 // The dbch_devicetype parameter indicates that the event applies to a device interface.
                 // So the structure in LParam is actually a DEV_BROADCAST_INTERFACE structure,

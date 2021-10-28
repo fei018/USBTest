@@ -16,8 +16,8 @@ namespace USBNetLib
 
         public static void Log(string log)
         {
-            
-            LogToFile(log);
+            ConsoleLog(log);
+            //LogToFile(log);
         }
 
 

@@ -4,18 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A160B38C-8995-44C9-96E2-BF81CDFB4C6D}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>USBTestConsole</RootNamespace>
-    <AssemblyName>USBTestConsole</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <ProjectGuid>{A745C616-238E-41EF-8EF0-9F0BEB4F925D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UsbMonitorLib</RootNamespace>
+    <AssemblyName>UsbMonitorLib</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -25,7 +23,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -36,7 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -45,14 +42,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="FormsUsbMonitorShare\UsbMonitorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormsUsbMonitorShare\UsbMonitorManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\USBNetLib\USBNetLib.csproj">
-      <Project>{7da52d66-7494-4f53-8b81-90e3c8cd693b}</Project>
-      <Name>USBNetLib</Name>
-    </ProjectReference>
+    <Compile Include="UsbMonitorShare\DeviceChangeManager.cs" />
+    <Compile Include="UsbMonitorShare\EnumGuidAttribute.cs" />
+    <Compile Include="UsbMonitorShare\IUsbMonitor.cs" />
+    <Compile Include="UsbMonitorShare\IUsbMonitorCommands.cs" />
+    <Compile Include="UsbMonitorShare\IUsbMonitorEvents.cs" />
+    <Compile Include="UsbMonitorShare\IUsbMonitorOverrides.cs" />
+    <Compile Include="UsbMonitorShare\UsbDeviceChangeEvent.cs" />
+    <Compile Include="UsbMonitorShare\UsbDeviceClass.cs" />
+    <Compile Include="UsbMonitorShare\UsbDeviceInterface.cs" />
+    <Compile Include="UsbMonitorShare\UsbDeviceType.cs" />
+    <Compile Include="UsbMonitorShare\UsbEventArgs.cs" />
+    <Compile Include="UsbMonitorShare\UsbEventDeviceInterfaceArgs.cs" />
+    <Compile Include="UsbMonitorShare\UsbEventHandleArgs.cs" />
+    <Compile Include="UsbMonitorShare\UsbEventOemArgs.cs" />
+    <Compile Include="UsbMonitorShare\UsbEventPortArgs.cs" />
+    <Compile Include="UsbMonitorShare\UsbEventVolumeArgs.cs" />
+    <Compile Include="UsbMonitorShare\UsbMonitorManager.cs" />
+    <Compile Include="UsbMonitorShare\UsbVolumeFlags.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

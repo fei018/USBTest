@@ -35,7 +35,9 @@ namespace USBNetLib
         {
             try
             {
-                Start_Notifier_Disk();
+                //Start_Notifier_Disk();
+
+                Start_Notifier_Volume();
             }
             catch (Exception)
             {
@@ -48,7 +50,9 @@ namespace USBNetLib
         {
             try
             {
-                Close_Notifier_Disk();
+                //Close_Notifier_Disk();
+
+                Close_Notifier_Volume();
 
                 _tokenSource?.Cancel();
 
@@ -63,6 +67,66 @@ namespace USBNetLib
         }
         #endregion
 
+        #region Volume Notify Task
+
+        #region Volume start close
+        /// <summary>
+        /// Disk Notifier
+        /// </summary>
+        private USBNotifier _notifier_Volume;
+
+        /// <summary>
+        /// Start Disk USB notifier
+        /// </summary>
+        private void Start_Notifier_Volume()
+        {
+            _notifier_Tasks.Add(Task.Run(() =>
+            {
+                Form volumeForm = new Form();
+                _notifier_Volume = new USBNotifier(volumeForm.Handle, USetupApi.GUID_DEVINTERFACE.GUID_DEVINTERFACE_VOLUME);
+                _notifier_Volume.Arrival += Notifier_Volume_Arrival;
+                _notifier_Volume.Removal += _notifier_Volume_Removal;
+                Application.Run(volumeForm);
+
+            }, _tokenSource.Token));
+        }
+
+        private void _notifier_Volume_Removal(object sender, USBEvent e)
+        {
+            Console.WriteLine(e.Type);
+            Console.WriteLine(e.DevicePath);
+        }
+
+        /// <summary>
+        /// Close Disk USB notifier
+        /// </summary>
+        private void Close_Notifier_Volume()
+        {
+            if (_notifier_Volume != null)
+            {
+                _notifier_Volume.Arrival -= Notifier_Volume_Arrival;
+                _notifier_Volume.Dispose();
+            }
+        }
+        #endregion
+
+        #region Notifier_Volume_Arrival
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Notifier_Volume_Arrival(object sender, USBEvent e)
+        {
+            _notifier_Tasks.Add(Task.Run(() =>
+            {
+                new RuleFilter().Filter_Scan_All_USB_Disk();
+
+            }, _tokenSource.Token));
+        }
+        #endregion
+
+        #endregion
 
         #region Disk Notify Task
 

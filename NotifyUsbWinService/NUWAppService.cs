@@ -1,50 +1,34 @@
-﻿using NotifyUSBFormApp;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
+using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
+using NotifyUSBFormApp;
 using USBNetLib;
 
-namespace USBTestConsole
+namespace NotifyUsbWinService
 {
-    class Program
+    public partial class NUWAppService : ServiceBase
     {
-        static void Main(string[] args)
+        public NUWAppService()
         {
-            try
-            {
-                Console.WriteLine("Start...");
-
-                var p = new Program();
-
-                p.OnStart();
-
-                Console.ReadLine();
-
-                p.OnStop();
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-
-            Console.ReadLine();
+            InitializeComponent();
         }
-
 
         private Process _usbFormProcess;
         private bool IsBootUsbForm = true;
 
-        void OnStart()
+        protected override void OnStart(string[] args)
         {
             IsBootUsbForm = true;
             StartUsbFormProcess();
         }
 
-        void OnStop()
+        protected override void OnStop()
         {
             IsBootUsbForm = false;
             CloseUsbFormProcess();
@@ -92,6 +76,11 @@ namespace USBTestConsole
             }
         }
 
+        /// <summary>
+        /// 意外結束process, 可以自己啟動
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void usbProcess_Exited(object sender, EventArgs e)
         {
             if (IsBootUsbForm)

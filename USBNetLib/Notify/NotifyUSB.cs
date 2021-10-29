@@ -2,7 +2,7 @@
 
 namespace USBNetLib
 {
-    internal class NotifyUSB
+    public class NotifyUSB
     {
         public UInt16 Vid { get; set; }
 

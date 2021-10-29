@@ -1,7 +1,7 @@
 ﻿
 namespace NotifyUsbWinService
 {
-    partial class UsbService
+    partial class NUWAppService
     {
         /// <summary> 
         /// 設計工具所需的變數。

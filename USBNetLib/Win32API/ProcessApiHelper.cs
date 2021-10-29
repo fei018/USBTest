@@ -166,7 +166,6 @@ namespace USBNetLib.Win32API
 
                 WindowsIdentity.RunImpersonated(WindowsIdentity.GetCurrent().AccessToken, () =>
                 {
-
                     if (!ProcessApi.CreateProcessAsUser(
                                           dupedToken, // user token
                                           filePath, // app name or path

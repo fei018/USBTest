@@ -8,10 +8,11 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>NotifyUsbWinService</RootNamespace>
     <AssemblyName>NotifyUsbWinService</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -52,11 +53,11 @@
     <Compile Include="ProjectInstaller.Designer.cs">
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </Compile>
-    <Compile Include="UsbService.cs">
+    <Compile Include="NUWAppService.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="UsbService.Designer.cs">
-      <DependentUpon>UsbService.cs</DependentUpon>
+    <Compile Include="NUWAppService.Designer.cs">
+      <DependentUpon>NUWAppService.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -67,6 +68,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NotifyUSBFormApp\NotifyUSBFormApp.csproj">
+      <Project>{a18b2a24-1b37-4ff5-aa66-44d7016dcf08}</Project>
+      <Name>NotifyUSBFormApp</Name>
+    </ProjectReference>
     <ProjectReference Include="..\USBNetLib\USBNetLib.csproj">
       <Project>{7da52d66-7494-4f53-8b81-90e3c8cd693b}</Project>
       <Name>USBNetLib</Name>

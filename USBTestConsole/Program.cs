@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using USBNetLib;
+using USBNetLib.Win32API;
 
 namespace USBTestConsole
 {
@@ -17,13 +18,17 @@ namespace USBTestConsole
             {
                 Console.WriteLine("Start...");
 
-                var p = new Program();
+                //var p = new Program();
 
-                p.OnStart();
+                //p.OnStart();
 
+                //Console.ReadLine();
+
+                //p.OnStop();
+
+                CreateFile_OnlyRead();
                 Console.ReadLine();
-
-                p.OnStop();
+                ClosedFileHanle();
 
             }
             catch (Exception ex)
@@ -34,7 +39,7 @@ namespace USBTestConsole
             Console.ReadLine();
         }
 
-
+        #region UsbFormProcess
         private Process _usbFormProcess;
         private bool IsBootUsbForm = true;
 
@@ -101,5 +106,22 @@ namespace USBTestConsole
 
             USBLogger.Log("USBFormApp Process Exied Event.");
         }
+        #endregion
+
+        #region CreateFile test
+        static IntPtr _fileHandle;
+        static void CreateFile_OnlyRead()
+        {
+            //string path = @"\\?\scsi#disk&ven_samsung&prod_mzvlb512hbjq-000#6&25097e69&0&000000#{53f56307-b6bf-11d0-94f2-00a0c91efb8b}";
+            string path = @"\\?\Volume{be78ed29-f508-11eb-9ebd-5065f3353293}";
+            _fileHandle = UFileApi.CreateFile_ReadOnly(path);
+            Console.WriteLine(_fileHandle.ToInt32().ToString("0x"));
+        }
+
+        static void ClosedFileHanle()
+        {
+            UFileApi.CloseHandle(_fileHandle);
+        }
+        #endregion
     }
 }

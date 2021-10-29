@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace USBNetLib.Win32API
 {
-    internal sealed class UFileApi
+    public sealed class UFileApi
     {
         public static readonly IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
 
@@ -22,6 +22,7 @@ namespace USBNetLib.Win32API
         public const int CREATE_ALWAYS = 0x2;
 
         // dwFlagsAndAttributes
+        public const int FILE_ATTRIBUTE_READONLY = 0x1;
         public const int FILE_ATTRIBUTE_NORMAL = 0x80;
         public const int FILE_FLAG_OVERLAPPED = 0x40000000;
 
@@ -29,7 +30,7 @@ namespace USBNetLib.Win32API
 
 
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        public static extern IntPtr CreateFile(string lpFileName, uint dwDesiredAccess, int dwShareMode,
+        public static extern IntPtr CreateFileW(string lpFileName, uint dwDesiredAccess, int dwShareMode,
            IntPtr lpSecurityAttributes, int dwCreationDisposition, int dwFlagsAndAttributes, IntPtr hTemplateFile);
 
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
@@ -38,7 +39,7 @@ namespace USBNetLib.Win32API
         #region readonly
         public static IntPtr CreateFile_ReadOnly(string devicePath)
         {
-            return CreateFile(devicePath, GENERIC_READ, FILE_SHARE_READ, IntPtr.Zero, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, IntPtr.Zero);
+            return CreateFileW(devicePath, GENERIC_READ, FILE_SHARE_READ, IntPtr.Zero, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL| FILE_FLAG_OVERLAPPED, IntPtr.Zero);
         }
         #endregion
     }

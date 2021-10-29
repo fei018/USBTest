@@ -2,7 +2,7 @@
 
 namespace USBNetLib
 {
-    internal class RuleUSB
+    public class RuleUSB
     {
         public UInt16 Vid { get; set; }
 

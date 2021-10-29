@@ -9,11 +9,8 @@ using USBNetLib.Win32API;
 
 namespace USBNetLib
 {
-    internal partial class UsbRuleFilter
+    public partial class UsbRuleFilter
     {
-        #region MyRegion
-
-        #endregion
 
         #region + private NotifyUSB Get_NotityUSb_DiskPath_by_DriveLetter_WMI(char driveLetter)
         /// <summary>
@@ -26,7 +23,8 @@ namespace USBNetLib
             try
             {
                 var scope = new ManagementScope(@"\\.\ROOT\Microsoft\Windows\Storage");
-                var query = new ObjectQuery($"SELECT * FROM MSFT_Partition WHERE DriveLetter='{driveLetter}''");
+                var query = new ObjectQuery($"SELECT * FROM MSFT_Partition WHERE DriveLetter='{driveLetter}'");
+                //var query = new ObjectQuery($"SELECT * FROM MSFT_Partition");
                 using (var searcher = new ManagementObjectSearcher(scope, query))
                 {
                     using (var partitions = searcher.Get())
@@ -34,7 +32,8 @@ namespace USBNetLib
                         foreach (ManagementObject p in partitions)
                         {
                             var number = Convert.ToUInt32(p["DiskNumber"]);
-                            return Get_NotityUSB_DiskPath_by_DiskNumber_WMI(number);
+                            var diskId = Convert.ToString(p["DiskId"]);
+                            return new NotifyUSB { DiskPath = diskId, DiskNumber = number };
                         }
                     }
                 }
@@ -80,6 +79,7 @@ namespace USBNetLib
         }
         #endregion
 
+
         #region + private void Set_Disk_IsReadOnly_by_DiskNumber(uint diskNumber, bool isReadOnly)
         private void Set_Disk_IsReadOnly_by_DiskNumber(uint diskNumber, bool isReadOnly)
         {
@@ -101,8 +101,11 @@ namespace USBNetLib
                             {
                                 var inParams = disk.GetMethodParameters("SetAttributes");
                                 inParams["IsReadOnly"] = isReadOnly;
-                                var r = disk.InvokeMethod("SetAttributes", inParams, null)["ReturnValue"].ToString();
-                                USBLogger.Log(r);
+                                var result = disk.InvokeMethod("SetAttributes", inParams, null)["ReturnValue"].ToString();
+                                if (!string.IsNullOrWhiteSpace(result))
+                                {
+                                    USBLogger.Log("DiskNumber: "+ diskNumber + "\r\n" + "Set readOnly result: \r\n");
+                                }
                             }
                         }
                     }
@@ -115,57 +118,58 @@ namespace USBNetLib
         }
         #endregion
 
-
-        #region + private void Set_Disk_IsReadOnly(string diskPath, bool isReadOnly)
+        #region + private void Set_Disk_IsReadOnly_by_DiskPath_WMI(string diskPath, bool isReadOnly)
         /// <summary>
-        /// 
+        /// need admin right to set read only
         /// </summary>
         /// <param name="diskPath"></param>
         /// <param name="isReadOnly"></param>
-        /// <exception cref="no admin right throw error access denied"></exception>
         private void Set_Disk_IsReadOnly_by_DiskPath_WMI(string diskPath, bool isReadOnly)
         {
             try
             {
-                using (ManagementObject disk = Get_Disk_ManagementObject_ByPath_WMI(diskPath))
+                string path = diskPath.TrimStart('\\', '\\', '?', '\\');
+                var scope = new ManagementScope(@"\\.\ROOT\Microsoft\Windows\Storage");
+                var query = new ObjectQuery($"SELECT * FROM MSFT_Disk WHERE Path LIKE '%{path}'");
+                using (var searcher = new ManagementObjectSearcher(scope, query))
                 {
-                    if (disk == null) return;
-
-                    bool IsReadOnly = bool.Parse(disk["IsReadOnly"].ToString());
-                    bool IsSystem = bool.Parse(disk["IsSystem"].ToString());
-                    bool IsBoot = bool.Parse(disk["IsBoot"].ToString());
-
-                    if (IsReadOnly != isReadOnly && !IsBoot && !IsSystem)
+                    using (var disks = searcher.Get())
                     {
-                        var inParams = disk.GetMethodParameters("SetAttributes");
-                        inParams["IsReadOnly"] = isReadOnly;
-                        var r = disk.InvokeMethod("SetAttributes", inParams, null)["ReturnValue"].ToString();
-                        USBLogger.Log(r);
+                        foreach (ManagementObject d in disks)
+                        {
+                            var result = Set_Disk_IsReadOnly_WMI(d, isReadOnly);
+                            if (!string.IsNullOrWhiteSpace(result))
+                            {
+                                USBLogger.Log(diskPath + "\r\n" + "Set readOnly result: \r\n");
+                            }
+                        }
                     }
                 }
             }
             catch (Exception)
             {
                 throw;
-            }
+            }     
         }
 
-        private ManagementObject Get_Disk_ManagementObject_ByPath_WMI(string diskPath)
+        private string Set_Disk_IsReadOnly_WMI(ManagementObject disk, bool isReadOnly)
         {
-            string path = diskPath.TrimStart('\\', '\\', '?', '\\');
-            var scope = new ManagementScope(@"\\.\ROOT\Microsoft\Windows\Storage");
-            var query = new ObjectQuery($"SELECT * FROM MSFT_Disk WHERE Path LIKE '%{path}'");
-            var searcher = new ManagementObjectSearcher(scope, query);
-            var disks = searcher.Get();
+            if (disk == null) return null;
 
-            if (disks.Count == 1)
+            bool IsReadOnly = bool.Parse(disk["IsReadOnly"].ToString());
+            bool IsSystem = bool.Parse(disk["IsSystem"].ToString());
+            bool IsBoot = bool.Parse(disk["IsBoot"].ToString());
+
+            if (IsReadOnly != isReadOnly && !IsBoot && !IsSystem)
             {
-                foreach (ManagementObject d in disks)
-                {
-                    return d;
-                }
+                var inParams = disk.GetMethodParameters("SetAttributes");
+                inParams["IsReadOnly"] = isReadOnly;
+                return Convert.ToString(disk.InvokeMethod("SetAttributes", inParams, null)["ReturnValue"]);
             }
-            return null;
+            else
+            {
+                return null;
+            }
         }
         #endregion
 
@@ -196,7 +200,8 @@ namespace USBNetLib
 
         #region + Find_UsbDeviceId_By_DiskPath_SetupDi(ref NotifyUSB notifyUsb)
         /// <summary>
-        /// ref NotifyUSB notifyUsb 需要賦值 notifyUsb.DiskPath
+        /// ref NotifyUSB notifyUsb 需要賦值 notifyUsb.DiskPath <br />
+        /// 只匹配 DeviceId format: ^USB\xxxx 
         /// </summary>
         /// <param name="notifyPath"></param>
         private bool Find_UsbDeviceId_By_DiskPath_SetupDi(NotifyUSB notifyUsb)

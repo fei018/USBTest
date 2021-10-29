@@ -15,6 +15,8 @@ namespace USBNetLib
 
         public static string LogPath => Path.Combine(_baseDir, "log.txt");
 
-        public static string ErrorPath => Path.Combine(_baseDir, "log.txt");
+        public static string ErrorPath => Path.Combine(_baseDir, "error.txt");
+
+        public static string NUWAppPath => Path.Combine(_baseDir, "nuwapp.exe");
     }
 }

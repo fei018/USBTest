@@ -9,7 +9,7 @@ using System.IO;
 
 namespace USBNetLib
 {
-    internal partial class UsbRuleFilter
+    public partial class UsbRuleFilter
     {
         /// <summary>
         /// 
@@ -25,7 +25,7 @@ namespace USBNetLib
             _UsbBus = new USBBusController();
         }
 
-        #region MyRegion
+        #region + public void Filter_NotifyUSB_Use_DriveLetter(char driveLetter)
         public void Filter_NotifyUSB_Use_DriveLetter(char driveLetter)
         {
             try
@@ -96,8 +96,8 @@ namespace USBNetLib
             }
             catch (Exception ex)
             {
-                USBLogger.Log("=== "+ex.Message+" ===");
-                USBLogger.Log(notifyUsb.ToString());               
+                USBLogger.Error(ex.Message);
+                USBLogger.Error(notifyUsb.ToString());               
             }
         }
         #endregion
@@ -119,9 +119,9 @@ namespace USBNetLib
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                USBLogger.Error(ex.Message);
             }
         }
         #endregion
@@ -129,39 +129,46 @@ namespace USBNetLib
         #region + public Set_Filter_USBTable()
         public void Set_Filter_USBTable()
         {
-            var file = USBConfig.FilterUSBTablePath;
-            if (!File.Exists(file))
+            try
             {
-                throw new Exception("FilterUSBTable.txt not exist.");
-            }
-
-            var lines = File.ReadAllLines(file);
-
-            var table = new List<RuleUSB>();
-            if (lines.Length > 0)
-            {              
-                foreach (var line in lines)
+                var file = USBConfig.FilterUSBTablePath;
+                if (!File.Exists(file))
                 {
-                    if (line.Split(',').Length == 3)
+                    throw new Exception("FilterUSBTable.txt not exist.");
+                }
+
+                var lines = File.ReadAllLines(file);
+
+                var table = new List<RuleUSB>();
+                if (lines.Length > 0)
+                {
+                    foreach (var line in lines)
                     {
-                        var vid = UInt16.Parse(line.Split(',')[0]);
-                        var pid = UInt16.Parse(line.Split(',')[1]);
-                        var serial = line.Split(',')[2];
-
-                        var usb = new RuleUSB
+                        if (line.Split(',').Length == 3)
                         {
-                            Vid = vid,
-                            Pid = pid,
-                            SerialNumber = serial
-                        };
+                            var vid = UInt16.Parse(line.Split(',')[0]);
+                            var pid = UInt16.Parse(line.Split(',')[1]);
+                            var serial = line.Split(',')[2];
 
-                        table.Add(usb);
+                            var usb = new RuleUSB
+                            {
+                                Vid = vid,
+                                Pid = pid,
+                                SerialNumber = serial
+                            };
+
+                            table.Add(usb);
+                        }
                     }
-                }               
+                }
+                lock (_locker_USBTable)
+                {
+                    Filter_USBTable = table;
+                }
             }
-            lock (_locker_USBTable)
+            catch (Exception ex)
             {
-                Filter_USBTable = table;
+                USBLogger.Error(ex.Message);
             }
         }
         #endregion
@@ -177,16 +184,24 @@ namespace USBNetLib
         //* Filter Rule *//
 
         #region + private void NotFound_UsbDeviceID_By_DiskPath_SetupDi(NotifyUSB usb)
+        /// <summary>
+        /// 找不到 大多數係 非 USB device
+        /// </summary>
+        /// <param name="usb"></param>
         private void NotFound_UsbDeviceID_By_DiskPath_SetupDi(NotifyUSB usb)
         {
-
+            USBLogger.Log("Not Found In SetupDi Usb DeviceId: " + usb.ToString());
         }
         #endregion
 
         #region + private void NotFound_NotityUSB_VidPidSerial_In_UsbBus(NotifyUSB notifyUsb)
+        /// <summary>
+        /// should not happen
+        /// </summary>
+        /// <param name="notifyUsb"></param>
         private void NotFound_NotityUSB_VidPidSerial_In_UsbBus(NotifyUSB notifyUsb)
         {
-
+            // should not happen
         }
         #endregion
 

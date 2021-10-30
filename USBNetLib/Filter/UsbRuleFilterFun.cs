@@ -196,6 +196,14 @@ namespace USBNetLib
         }
         #endregion
 
+        #region + private void NotMatchSendMessage(NotifyUSB usb)
+        private void NotMatchSendMessage(NotifyUSB usb)
+        {
+            string s = "No Register USB Device:\r\n\r\n" + usb.ToString();
+            WTSSendMessageApi.ShowMessageBox(s, "USB Warning");
+        }
+        #endregion
+
         #region SetupDi
 
         #region + Find_UsbDeviceId_By_DiskPath_SetupDi(ref NotifyUSB notifyUsb)

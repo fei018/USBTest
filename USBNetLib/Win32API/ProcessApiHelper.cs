@@ -12,7 +12,8 @@ using System.Text;
 namespace USBNetLib.Win32API
 {
     //// Ref: https://stackoverflow.com/questions/19776716/c-sharp-windows-service-creates-process-but-doesnt-executes-it
-    
+    ///  https://www.cnblogs.com/gnielee/archive/2010/04/08/session0-isolation-part2.html
+
     [SuppressUnmanagedCodeSecurity]
     public partial class ProcessApiHelper
     {

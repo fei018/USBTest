@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UsbMonitorLib", "UsbMonitor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotifyUSBFormApp", "NotifyUSBFormApp\NotifyUSBFormApp.csproj", "{A18B2A24-1B37-4FF5-AA66-44D7016DCF08}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{8A96E5C6-931B-4C6E-91CE-D8EDA890BC6A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ClientApp", "ClientApp", "{22E2B7D4-8A33-4BD9-9649-B6DF6175206D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +46,13 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A160B38C-8995-44C9-96E2-BF81CDFB4C6D} = {22E2B7D4-8A33-4BD9-9649-B6DF6175206D}
+		{7DA52D66-7494-4F53-8B81-90E3C8CD693B} = {8A96E5C6-931B-4C6E-91CE-D8EDA890BC6A}
+		{07BE3525-DFAD-46A1-843B-611A47B04BDD} = {22E2B7D4-8A33-4BD9-9649-B6DF6175206D}
+		{A745C616-238E-41EF-8EF0-9F0BEB4F925D} = {8A96E5C6-931B-4C6E-91CE-D8EDA890BC6A}
+		{A18B2A24-1B37-4FF5-AA66-44D7016DCF08} = {22E2B7D4-8A33-4BD9-9649-B6DF6175206D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {55F982B7-5BDB-4B26-BF12-27C4E1A6407F}

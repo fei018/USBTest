@@ -30,7 +30,7 @@ namespace USBNetLib.Win32API
 
 
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        public static extern IntPtr CreateFileW(string lpFileName, uint dwDesiredAccess, int dwShareMode,
+        public static extern IntPtr CreateFile(string lpFileName, uint dwDesiredAccess, int dwShareMode,
            IntPtr lpSecurityAttributes, int dwCreationDisposition, int dwFlagsAndAttributes, IntPtr hTemplateFile);
 
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
@@ -39,7 +39,7 @@ namespace USBNetLib.Win32API
         #region readonly
         public static IntPtr CreateFile_ReadOnly(string devicePath)
         {
-            return CreateFileW(devicePath, GENERIC_READ, FILE_SHARE_READ, IntPtr.Zero, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL| FILE_FLAG_OVERLAPPED, IntPtr.Zero);
+            return CreateFile(devicePath, FILE_SHARE_READ, FILE_SHARE_READ, IntPtr.Zero, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, IntPtr.Zero);
         }
         #endregion
     }

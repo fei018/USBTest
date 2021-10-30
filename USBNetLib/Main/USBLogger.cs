@@ -9,6 +9,10 @@ namespace USBNetLib
 {
     public class USBLogger
     {
+        public static void LogTime()
+        {
+            
+        }
 
         public static void Log(string log)
         {

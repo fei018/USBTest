@@ -14,7 +14,7 @@ namespace USBNetLib
         /// <summary>
         /// 
         /// </summary>
-        private static List<RuleUSB> Filter_USBTable;
+        private static List<RuleUSB> Table_RuleUSB;
 
         private static readonly object _locker_USBTable = new object();
 
@@ -56,43 +56,41 @@ namespace USBNetLib
         {
             try
             {
-                if (Filter_USBTable == null)
+                if (Table_RuleUSB == null)
                 {
-                    throw new Exception("RuleTable.USBTable is Null.");
+                    Rule_FilterUSBTable();
                 }
 
                 if (!Find_UsbDeviceId_By_DiskPath_SetupDi(notifyUsb))
                 {
-                    NotFound_UsbDeviceID_By_DiskPath_SetupDi(notifyUsb);
+                    Rule_NotFound_UsbDeviceID_By_DiskPath_SetupDi(notifyUsb);
                     return;
                 }
 
                 if (!_UsbBus.Find_VidPidSerial_In_UsbBus(notifyUsb))
                 {
-                    NotFound_NotityUSB_VidPidSerial_In_UsbBus(notifyUsb);
+                    Rule_NotFound_NotityUSB_VidPidSerial_In_UsbBus(notifyUsb);
                     return;
                 }
 
                 lock (_locker_USBTable)
                 {
-                    if (Filter_USBTable.Count <= 0)
+                    if (Table_RuleUSB.Count <= 0)
                     {
-                        USBLogger.Error("Filter_USBTable.Count <= 0 .");
+                        Rule_FilterUSBTable();
                     }
 
-                    foreach (RuleUSB f in Filter_USBTable)
+                    foreach (var rule in Table_RuleUSB)
                     {
-                        if (f.IsMatchNotifyUSB(notifyUsb))
+                        if (rule.IsMatchNotifyUSB(notifyUsb))
                         {
-                            Match_In_FilterUSBTable(notifyUsb);
-                        }
-                        else
-                        {
-                            NotMatch_In_FilterUSBTable(notifyUsb);
+                            Rule_Match_In_FilterUSBTable(notifyUsb);
+                            return;
                         }
                     }
+
+                    Rule_NotMatch_In_FilterUSBTable(notifyUsb);
                 }
-
             }
             catch (Exception ex)
             {
@@ -146,9 +144,9 @@ namespace USBNetLib
                     {
                         if (line.Split(',').Length == 3)
                         {
-                            var vid = UInt16.Parse(line.Split(',')[0]);
-                            var pid = UInt16.Parse(line.Split(',')[1]);
-                            var serial = line.Split(',')[2];
+                            var vid = UInt16.Parse(line.Split(',')[0]?.Trim());
+                            var pid = UInt16.Parse(line.Split(',')[1]?.Trim());
+                            var serial = line.Split(',')[2]?.Trim();
 
                             var usb = new RuleUSB
                             {
@@ -163,12 +161,13 @@ namespace USBNetLib
                 }
                 lock (_locker_USBTable)
                 {
-                    Filter_USBTable = table;
+                    Table_RuleUSB = table;
                 }
             }
             catch (Exception ex)
             {
                 USBLogger.Error(ex.Message);
+                throw;
             }
         }
         #endregion
@@ -183,30 +182,44 @@ namespace USBNetLib
 
         //* Filter Rule *//
 
-        #region + private void NotFound_UsbDeviceID_By_DiskPath_SetupDi(NotifyUSB usb)
+        #region + private void Rule_FilterUSBTable()
+        private void Rule_FilterUSBTable()
+        {
+            if (Table_RuleUSB == null)
+            {
+                Set_Filter_USBTable();
+            }
+            if (Table_RuleUSB.Count <= 0)
+            {
+                // get table form server
+            }
+        }
+        #endregion
+
+        #region + private void Rule_NotFound_UsbDeviceID_By_DiskPath_SetupDi(NotifyUSB usb)
         /// <summary>
         /// 找不到 大多數係 非 USB device
         /// </summary>
         /// <param name="usb"></param>
-        private void NotFound_UsbDeviceID_By_DiskPath_SetupDi(NotifyUSB usb)
+        private void Rule_NotFound_UsbDeviceID_By_DiskPath_SetupDi(NotifyUSB usb)
         {
             USBLogger.Log("Not Found In SetupDi Usb DeviceId: " + usb.ToString());
         }
         #endregion
 
-        #region + private void NotFound_NotityUSB_VidPidSerial_In_UsbBus(NotifyUSB notifyUsb)
+        #region + private void Rule_NotFound_NotityUSB_VidPidSerial_In_UsbBus(NotifyUSB notifyUsb)
         /// <summary>
         /// should not happen
         /// </summary>
         /// <param name="notifyUsb"></param>
-        private void NotFound_NotityUSB_VidPidSerial_In_UsbBus(NotifyUSB notifyUsb)
+        private void Rule_NotFound_NotityUSB_VidPidSerial_In_UsbBus(NotifyUSB notifyUsb)
         {
             // should not happen
         }
         #endregion
 
-        #region + private void Match_In_FilterUSBTable(NotifyUSB usb)
-        private void Match_In_FilterUSBTable(NotifyUSB usb)
+        #region + private void Rule_Match_In_FilterUSBTable(NotifyUSB usb)
+        private void Rule_Match_In_FilterUSBTable(NotifyUSB usb)
         {
             try
             {
@@ -223,12 +236,14 @@ namespace USBNetLib
         }
         #endregion
 
-        #region + private void NotMatch_In_FilterUSBTable(NotifyUSB usb)
-        private void NotMatch_In_FilterUSBTable(NotifyUSB usb)
+        #region + private void Rule_NotMatch_In_FilterUSBTable(NotifyUSB usb)
+        private void Rule_NotMatch_In_FilterUSBTable(NotifyUSB usb)
         {
             try
             {
                 Set_Disk_IsReadOnly_by_DiskPath_WMI(usb.DiskPath, true);
+                NotMatchSendMessage(usb);
+
                 USBLogger.Log("=== Not Match USB ===");
                 USBLogger.Log(usb.ToString());
                 USBLogger.Log("Set Disk ReadOnly Success.");
@@ -236,7 +251,7 @@ namespace USBNetLib
             }
             catch (Exception)
             {
-
+                
                 throw;
             }
         }

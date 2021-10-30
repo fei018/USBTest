@@ -77,7 +77,7 @@ namespace NotifyUsbWinService
         }
 
         /// <summary>
-        /// 意外結束process, 可以自己啟動
+        /// 如果意外結束process, 可以自己啟動
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -88,7 +88,7 @@ namespace NotifyUsbWinService
                 StartUsbFormProcess();
             }
 
-            USBLogger.Log("USBFormApp Process Exied Event.");
+            USBLogger.Log("USBFormApp Process Exited Event.");
         }
     }
 }

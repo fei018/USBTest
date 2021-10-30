@@ -58,6 +58,7 @@
     <Compile Include="Win32API\UFileApi.cs" />
     <Compile Include="Win32API\USetupApi.cs" />
     <Compile Include="Win32API\USetupApiFun.cs" />
+    <Compile Include="Win32API\WTSSendMessageApi.cs" />
     <Compile Include="WinUSBNetNotifiter\API\APIException.cs" />
     <Compile Include="WinUSBNetNotifiter\API\DeviceDetails.cs" />
     <Compile Include="WinUSBNetNotifiter\API\DeviceManagement.cs" />

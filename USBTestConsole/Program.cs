@@ -19,18 +19,20 @@ namespace USBTestConsole
         {
             try
             {
-                Console.WriteLine("Start...");
+                //Console.WriteLine("Start...");
 
-                var p = new Program();
+                //var p = new Program();
 
-                p.OnStart();
+                //p.OnStart();
 
-                Console.ReadLine();
+                //Console.ReadLine();
 
-                p.OnStop();
+                //p.OnStop();
+                var s =File.ReadAllText(USBConfig.ErrorPath);
+                var s1 = new UsbRuleFilter().Base64Decode(s);
 
-
-
+                var q = s1.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries).Length;
+                Console.WriteLine(q);
             }
             catch (Exception ex)
             {

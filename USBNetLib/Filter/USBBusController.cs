@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace USBNetLib
 {
@@ -15,7 +13,7 @@ namespace USBNetLib
 
         #region + ScanUsbBus()
         /// <summary>
-        /// Get All USB Devices from USB Bus
+        /// Get All USB Devices from USB Bus while the path != null
         /// </summary>
         /// <returns></returns>
         private bool ScanUsbBus()
@@ -56,7 +54,7 @@ namespace USBNetLib
         /// 遞歸獲取所有 usb device
         /// </summary>
         /// <param name="childDevices"></param>
-        /// <param name="allDeviceList"></param>
+        /// <param name="deviceList"></param>
         private void RecursionUsb(IReadOnlyCollection<Device> childDevices, ref List<Device> deviceList)
         {
             foreach (var d in childDevices)
@@ -70,7 +68,7 @@ namespace USBNetLib
 
                     if (d.ChildDevices != null && d.ChildDevices.Any())
                     {
-                        RecursionUsb(childDevices, ref deviceList);
+                        RecursionUsb(d.ChildDevices, ref deviceList);
                     }
                 }
             }
@@ -100,6 +98,9 @@ namespace USBNetLib
                         notifyUsb.Pid = d.DeviceDescriptor.idProduct;
                         notifyUsb.SerialNumber = d.SerialNumber;
                         notifyUsb.Path = d.DevicePath;
+                        notifyUsb.Manufacturer = d.Manufacturer;
+                        notifyUsb.Product = d.Product;
+                        notifyUsb.DeviceDescription = d.DeviceDescription;
                         return true;
                     }
                 }

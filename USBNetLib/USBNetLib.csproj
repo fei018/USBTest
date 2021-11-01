@@ -47,10 +47,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Filter\UsbRuleUpdate.cs" />
+    <Compile Include="Main\app.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>app.cfg</DependentUpon>
+    </Compile>
     <Compile Include="Main\USBLogger.cs" />
     <Compile Include="Filter\UsbRuleFilterFun.cs" />
     <Compile Include="Notify\NotifyUSB.cs" />
-    <Compile Include="Main\USBBusController.cs" />
+    <Compile Include="Filter\USBBusController.cs" />
     <Compile Include="Filter\UsbRuleFilter.cs" />
     <Compile Include="Filter\RuleUSB.cs" />
     <Compile Include="Main\USBConfig.cs" />
@@ -74,7 +80,12 @@
     <Compile Include="MSFT\MSFT_DiskHelper.cs" />
     <Compile Include="MSFT\MSFT_Disk.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Main\app.cfg">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>app.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="NativeUsbLib">
       <Version>1.4.9</Version>

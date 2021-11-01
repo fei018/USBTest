@@ -24,6 +24,12 @@ namespace USBNetLib
 
         public string SerialNumber { get; set; }
 
+        public string Manufacturer { get; set; }
+
+        public string DeviceDescription { get; set; }
+
+        public string Product { get; set; }
+
         public bool HasVidPidSerial()
         {
             if (Vid != 0 && Pid != 0 && !string.IsNullOrEmpty(SerialNumber))
@@ -42,10 +48,12 @@ namespace USBNetLib
                        Vid_Hex + " - " + Vid + Environment.NewLine +
                        Pid_Hex + " - " + Pid + Environment.NewLine +
                        "SerialNumber: " + SerialNumber + Environment.NewLine +
+                       "Manufacturer: " + Manufacturer + Environment.NewLine +
+                       "Product: " + Product + Environment.NewLine +
+                       "DeviceDescription: " + Environment.NewLine +
                        "DeviceId: " + DeviceId + Environment.NewLine +
-                       "Device Path: " + Path + Environment.NewLine +
-                       "Disk DeviceId: " + DiskDeviceId + Environment.NewLine +
-                       "Disk Path: " + DiskPath + Environment.NewLine + Environment.NewLine;
+                       "Device Path: " + Path + Environment.NewLine + Environment.NewLine;
+                       
             return s;
         }
     }

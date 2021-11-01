@@ -129,7 +129,7 @@ namespace USBNetLib
         {
             try
             {
-                var file = USBConfig.FilterUSBTablePath;
+                var file = USBConfig.RuleUSBTablePath;
                 if (!File.Exists(file))
                 {
                     throw new Exception("FilterUSBTable.txt not exist.");

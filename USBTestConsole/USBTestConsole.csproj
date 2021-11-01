@@ -50,9 +50,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NotifyUSBFormApp\NotifyUSBFormApp.csproj">
+    <ProjectReference Include="..\NotifyUSBFormApp\NotifyUSBFormServiceApp.csproj">
       <Project>{a18b2a24-1b37-4ff5-aa66-44d7016dcf08}</Project>
-      <Name>NotifyUSBFormApp</Name>
+      <Name>NotifyUSBFormServiceApp</Name>
     </ProjectReference>
     <ProjectReference Include="..\USBNetLib\USBNetLib.csproj">
       <Project>{7da52d66-7494-4f53-8b81-90e3c8cd693b}</Project>

@@ -11,11 +11,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotifyUsbWinService", "Noti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UsbMonitorLib", "UsbMonitorLib\UsbMonitorLib.csproj", "{A745C616-238E-41EF-8EF0-9F0BEB4F925D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotifyUSBFormApp", "NotifyUSBFormApp\NotifyUSBFormApp.csproj", "{A18B2A24-1B37-4FF5-AA66-44D7016DCF08}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotifyUSBFormServiceApp", "NotifyUSBFormApp\NotifyUSBFormServiceApp.csproj", "{A18B2A24-1B37-4FF5-AA66-44D7016DCF08}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{8A96E5C6-931B-4C6E-91CE-D8EDA890BC6A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ClientApp", "ClientApp", "{22E2B7D4-8A33-4BD9-9649-B6DF6175206D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{03D361AB-D0D7-4E65-AC0E-BEB8BDF58081}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

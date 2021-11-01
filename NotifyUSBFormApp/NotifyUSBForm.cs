@@ -15,8 +15,6 @@ namespace NotifyUSBFormApp
 {
     public partial class NotifyUSBForm : UsbMonitorForm
     {
-        public static string NotifyUSBAppPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "nuwapp");
-
         public NotifyUSBForm()
         {
             InitializeComponent();
@@ -50,22 +48,25 @@ namespace NotifyUSBFormApp
         #region + public override void OnUsbVolume(UsbEventVolumeArgs args)
         public override void OnUsbVolume(UsbEventVolumeArgs args)
         {
-            if (args.Flags == UsbVolumeFlags.Net) return;
-
-            try
+            Task.Run(() =>
             {
-                if (args.Action == UsbDeviceChangeEvent.Arrival)
+                if (args.Flags == UsbVolumeFlags.Net) return;
+
+                try
                 {
-                    foreach (char letter in args.Drives)
+                    if (args.Action == UsbDeviceChangeEvent.Arrival)
                     {
-                        Task.Run(() =>
+                        foreach (char letter in args.Drives)
                         {
-                            new UsbRuleFilter().Filter_NotifyUSB_Use_DriveLetter(letter);
-                        });
+                            Task.Run(() =>
+                            {
+                                new UsbRuleFilter().Filter_NotifyUSB_Use_DriveLetter(letter);
+                            });
+                        }
                     }
                 }
-            }
-            catch (Exception) { }
+                catch (Exception) { }
+            });
         }
         #endregion
 

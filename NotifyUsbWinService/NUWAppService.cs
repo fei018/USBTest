@@ -40,7 +40,7 @@ namespace NotifyUsbWinService
             {
                 CloseUsbFormProcess();
 
-                ProcessStartInfo startInfo = new ProcessStartInfo(NotifyUSBForm.NotifyUSBAppPath);
+                ProcessStartInfo startInfo = new ProcessStartInfo(USBConfig.NUWAppPath);
                 _usbFormProcess = new Process
                 {
                     EnableRaisingEvents = true,

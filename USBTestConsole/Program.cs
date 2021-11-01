@@ -62,7 +62,7 @@ namespace USBTestConsole
             {
                 CloseUsbFormProcess();
 
-                ProcessStartInfo startInfo = new ProcessStartInfo(USBConfig.NUWAppPath);
+                ProcessStartInfo startInfo = new ProcessStartInfo(USBConfig.NUWAppServicePath);
                 _usbFormProcess = new Process
                 {
                     EnableRaisingEvents = true,

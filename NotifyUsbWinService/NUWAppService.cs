@@ -17,6 +17,7 @@ namespace NotifyUsbWinService
         public NUWAppService()
         {
             InitializeComponent();
+            CanHandleSessionChangeEvent = true;
         }
 
         private Process _usbFormProcess;
@@ -34,13 +35,14 @@ namespace NotifyUsbWinService
             CloseUsbFormProcess();
         }
 
+        #region UsbFormApp Process
         private void StartUsbFormProcess()
         {
             try
             {
                 CloseUsbFormProcess();
 
-                ProcessStartInfo startInfo = new ProcessStartInfo(USBConfig.NUWAppPath);
+                ProcessStartInfo startInfo = new ProcessStartInfo(USBConfig.NUWAppServicePath);
                 _usbFormProcess = new Process
                 {
                     EnableRaisingEvents = true,
@@ -90,5 +92,19 @@ namespace NotifyUsbWinService
 
             USBLogger.Log("USBFormApp Process Exited Event.");
         }
+        #endregion
+
+        #region user logon Session change event
+        protected override void OnSessionChange(SessionChangeDescription changeDescription)
+        {
+            // user logon to desktop
+            if (changeDescription.Reason == SessionChangeReason.SessionLogon)
+            {
+
+            }
+
+            base.OnSessionChange(changeDescription);
+        }
+        #endregion
     }
 }

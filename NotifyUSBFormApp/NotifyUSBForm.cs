@@ -15,6 +15,8 @@ namespace NotifyUSBFormApp
 {
     public partial class NotifyUSBForm : UsbMonitorForm
     {
+        private readonly object _Locker_OnVolume = new object();
+
         public NotifyUSBForm()
         {
             InitializeComponent();
@@ -48,7 +50,7 @@ namespace NotifyUSBFormApp
         #region + public override void OnUsbVolume(UsbEventVolumeArgs args)
         public override void OnUsbVolume(UsbEventVolumeArgs args)
         {
-            Task.Run(() =>
+            lock (_Locker_OnVolume)
             {
                 if (args.Flags == UsbVolumeFlags.Net) return;
 
@@ -66,7 +68,7 @@ namespace NotifyUSBFormApp
                     }
                 }
                 catch (Exception) { }
-            });
+            }
         }
         #endregion
 

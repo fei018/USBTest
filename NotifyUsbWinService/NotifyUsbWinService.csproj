@@ -68,9 +68,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NotifyUSBFormApp\NotifyUSBFormServiceApp.csproj">
+    <ProjectReference Include="..\NotifyUSBFormApp\NotifyUSBFormApp.csproj">
       <Project>{a18b2a24-1b37-4ff5-aa66-44d7016dcf08}</Project>
-      <Name>NotifyUSBFormServiceApp</Name>
+      <Name>NotifyUSBFormApp</Name>
     </ProjectReference>
     <ProjectReference Include="..\USBNetLib\USBNetLib.csproj">
       <Project>{7da52d66-7494-4f53-8b81-90e3c8cd693b}</Project>

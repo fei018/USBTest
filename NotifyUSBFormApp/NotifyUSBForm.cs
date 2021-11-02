@@ -42,7 +42,7 @@ namespace NotifyUSBFormApp
         #region + private void UsbStart()
         private void UsbStart()
         {
-            new UsbRuleFilter().Set_Filter_USBTable();
+            new UsbRuleFilter().Set_Table_RuleUSB();
             new UsbRuleFilter().Filter_Scan_All_USB_Disk();
         }
         #endregion

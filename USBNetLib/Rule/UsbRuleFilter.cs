@@ -11,18 +11,14 @@ namespace USBNetLib
 {
     public partial class UsbRuleFilter
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        private static List<RuleUSB> Table_RuleUSB;
-
-        private static readonly object _locker_USBTable = new object();
-
         private readonly USBBusController _UsbBus;
+
+        private readonly RuleUSBTable _ruleTable;
 
         public UsbRuleFilter()
         {
             _UsbBus = new USBBusController();
+            _ruleTable = new RuleUSBTable();
         }
 
         #region + public void Filter_NotifyUSB_Use_DriveLetter(char driveLetter)
@@ -56,11 +52,6 @@ namespace USBNetLib
         {
             try
             {
-                if (Table_RuleUSB == null)
-                {
-                    Rule_FilterUSBTable();
-                }
-
                 if (!Find_UsbDeviceId_By_DiskPath_SetupDi(notifyUsb))
                 {
                     Rule_NotFound_UsbDeviceID_By_DiskPath_SetupDi(notifyUsb);
@@ -73,24 +64,15 @@ namespace USBNetLib
                     return;
                 }
 
-                lock (_locker_USBTable)
+                if (_ruleTable.IsFind(notifyUsb))
                 {
-                    if (Table_RuleUSB.Count <= 0)
-                    {
-                        Rule_FilterUSBTable();
-                    }
-
-                    foreach (var rule in Table_RuleUSB)
-                    {
-                        if (rule.IsMatchNotifyUSB(notifyUsb))
-                        {
-                            Rule_Match_In_FilterUSBTable(notifyUsb);
-                            return;
-                        }
-                    }
-
-                    Rule_NotMatch_In_FilterUSBTable(notifyUsb);
+                    Rule_Match_In_RuleUSBTable(notifyUsb);
+                    return;
                 }
+                else
+                {
+                    Rule_NotMatch_In_RuleUSBTable(notifyUsb);
+                }             
             }
             catch (Exception ex)
             {
@@ -124,77 +106,8 @@ namespace USBNetLib
         }
         #endregion
 
-        #region + public Set_Filter_USBTable()
-        public void Set_Filter_USBTable()
-        {
-            try
-            {
-                var file = USBConfig.RuleUSBTablePath;
-                if (!File.Exists(file))
-                {
-                    throw new Exception("FilterUSBTable.txt not exist.");
-                }
-
-                var lines = File.ReadAllLines(file);
-
-                var table = new List<RuleUSB>();
-                if (lines.Length > 0)
-                {
-                    foreach (var line in lines)
-                    {
-                        if (line.Split(',').Length == 3)
-                        {
-                            var vid = UInt16.Parse(line.Split(',')[0]?.Trim());
-                            var pid = UInt16.Parse(line.Split(',')[1]?.Trim());
-                            var serial = line.Split(',')[2]?.Trim();
-
-                            var usb = new RuleUSB
-                            {
-                                Vid = vid,
-                                Pid = pid,
-                                SerialNumber = serial
-                            };
-
-                            table.Add(usb);
-                        }
-                    }
-                }
-                lock (_locker_USBTable)
-                {
-                    Table_RuleUSB = table;
-                }
-            }
-            catch (Exception ex)
-            {
-                USBLogger.Error(ex.Message);
-                throw;
-            }
-        }
-        #endregion
-
-        #region + public void UpdateUSBList_Timer()
-        public void UpdateUSBList_Timer()
-        {
-
-        }
-        #endregion
-
-
+  
         //* Filter Rule *//
-
-        #region + private void Rule_FilterUSBTable()
-        private void Rule_FilterUSBTable()
-        {
-            if (Table_RuleUSB == null)
-            {
-                Set_Filter_USBTable();
-            }
-            if (Table_RuleUSB.Count <= 0)
-            {
-                // get table form server
-            }
-        }
-        #endregion
 
         #region + private void Rule_NotFound_UsbDeviceID_By_DiskPath_SetupDi(NotifyUSB usb)
         /// <summary>
@@ -218,8 +131,8 @@ namespace USBNetLib
         }
         #endregion
 
-        #region + private void Rule_Match_In_FilterUSBTable(NotifyUSB usb)
-        private void Rule_Match_In_FilterUSBTable(NotifyUSB usb)
+        #region + private void Rule_Match_In_RuleUSBTable(NotifyUSB usb)
+        private void Rule_Match_In_RuleUSBTable(NotifyUSB usb)
         {
             try
             {
@@ -237,7 +150,7 @@ namespace USBNetLib
         #endregion
 
         #region + private void Rule_NotMatch_In_FilterUSBTable(NotifyUSB usb)
-        private void Rule_NotMatch_In_FilterUSBTable(NotifyUSB usb)
+        private void Rule_NotMatch_In_RuleUSBTable(NotifyUSB usb)
         {
             try
             {

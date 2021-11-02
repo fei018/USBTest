@@ -4,15 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A160B38C-8995-44C9-96E2-BF81CDFB4C6D}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>USBTestConsole</RootNamespace>
-    <AssemblyName>USBTestConsole</AssemblyName>
+    <ProjectGuid>{942B5360-F889-4C6D-80DD-EB597597D858}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>NotifyUSBFormDesktop</RootNamespace>
+    <AssemblyName>NotifyUSBFormDesktop</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -36,28 +35,49 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FileTest.cs" />
+    <Compile Include="NUSBForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NUSBForm.Designer.cs">
+      <DependentUpon>NUSBForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="NUSBForm.resx">
+      <DependentUpon>NUSBForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NotifyUSBFormApp\NotifyUSBFormApp.csproj">
-      <Project>{a18b2a24-1b37-4ff5-aa66-44d7016dcf08}</Project>
-      <Name>NotifyUSBFormApp</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\USBNetLib\USBNetLib.csproj">
-      <Project>{7da52d66-7494-4f53-8b81-90e3c8cd693b}</Project>
-      <Name>USBNetLib</Name>
-    </ProjectReference>
+    <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

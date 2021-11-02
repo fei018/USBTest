@@ -47,18 +47,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Filter\UsbRuleUpdate.cs" />
+    <Compile Include="Rule\RuleUSBTable.cs" />
+    <Compile Include="Rule\UsbRuleUpdate.cs" />
     <Compile Include="Main\app.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>app.cfg</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Include="Main\USBLogger.cs" />
-    <Compile Include="Filter\UsbRuleFilterFun.cs" />
+    <Compile Include="Rule\UsbRuleFilterFun.cs" />
     <Compile Include="Notify\NotifyUSB.cs" />
-    <Compile Include="Filter\USBBusController.cs" />
-    <Compile Include="Filter\UsbRuleFilter.cs" />
-    <Compile Include="Filter\RuleUSB.cs" />
+    <Compile Include="Rule\USBBusController.cs" />
+    <Compile Include="Rule\UsbRuleFilter.cs" />
+    <Compile Include="Rule\RuleUSB.cs" />
     <Compile Include="Main\USBConfig.cs" />
     <Compile Include="Main\USBManager.cs" />
     <Compile Include="Win32API\UFileApi.cs" />
@@ -84,6 +86,7 @@
     <None Include="Main\app.cfg">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>app.Designer.cs</LastGenOutput>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>

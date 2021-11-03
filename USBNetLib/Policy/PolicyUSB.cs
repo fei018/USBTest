@@ -2,7 +2,8 @@
 
 namespace USBNetLib
 {
-    public class RuleUSB
+    // 廢棄
+    public class PolicyUSB
     {
         public UInt16 Vid { get; set; }
 

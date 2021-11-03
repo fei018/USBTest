@@ -19,9 +19,9 @@ namespace USBNetLib
             {
                 _notifyService.Start_Notifier();
 
-                new RuleUSBTable().Reload_RuleUSBTable();
+                new PolicyUSBTable().Reload_PolicyUSBTable();
 
-                new UsbRuleFilter().Filter_Scan_All_USB_Disk();
+                new UsbPolicyFilter().Filter_Scan_All_USB_Disk();
 
             }
             catch (Exception ex)

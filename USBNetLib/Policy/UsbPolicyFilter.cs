@@ -9,16 +9,16 @@ using System.IO;
 
 namespace USBNetLib
 {
-    public partial class UsbRuleFilter
+    public partial class UsbPolicyFilter
     {
         private readonly USBBusController _UsbBus;
 
-        private readonly RuleUSBTable _ruleTable;
+        private readonly PolicyUSBTable _ruleTable;
 
-        public UsbRuleFilter()
+        public UsbPolicyFilter()
         {
             _UsbBus = new USBBusController();
-            _ruleTable = new RuleUSBTable();
+            _ruleTable = new PolicyUSBTable();
         }
 
         #region + public void Filter_NotifyUSB_Use_DriveLetter(char driveLetter)

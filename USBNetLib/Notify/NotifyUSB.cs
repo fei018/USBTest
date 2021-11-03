@@ -31,6 +31,11 @@ namespace USBNetLib
 
         public uint DiskNumber { get; set; }
 
+        public string ToPolicyString()
+        {
+            return Vid.ToString() + Pid.ToString() + SerialNumber;
+        }
+
         public override string ToString()
         {
             string s = "*** USB Details ***" + Environment.NewLine +

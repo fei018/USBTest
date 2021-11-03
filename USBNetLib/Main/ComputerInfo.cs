@@ -19,18 +19,15 @@ namespace USBNetLib
 
         public string MACAddress { get; private set; }
 
-        public ComputerInfo()
-        {
-            GetInfo();
-        }
 
-        #region + private void GetInfo()
-        private void GetInfo()
+        #region + public void GetInfo()
+        public IComputerInfo GetInfo()
         {
             HostName = IPGlobalProperties.GetIPGlobalProperties().HostName;
             Domain = IPGlobalProperties.GetIPGlobalProperties().DomainName;
             GetIP();
             GetBiosSerial();
+            return this;
         }
 
         private void GetIP()

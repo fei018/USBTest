@@ -9,7 +9,7 @@ using USBNetLib.Win32API;
 
 namespace USBNetLib
 {
-    public partial class UsbRuleFilter
+    public partial class UsbPolicyFilter
     {
 
         #region + private NotifyUSB Get_NotityUSb_DiskPath_by_DriveLetter_WMI(char driveLetter)
@@ -347,18 +347,5 @@ namespace USBNetLib
         #endregion
         #endregion
 
-        #region Base64Encode
-        public string Base64Encode(string plainText)
-        {
-            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
-            return System.Convert.ToBase64String(plainTextBytes);
-        }
-
-        public string Base64Decode(string base64EncodedData)
-        {
-            var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
-            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
-        }
-        #endregion
     }
 }

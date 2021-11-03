@@ -47,21 +47,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Main\ComputerInfo.cs" />
-    <Compile Include="Rule\RuleUSBTable.cs" />
-    <Compile Include="Rule\UsbRuleUpdate.cs" />
-    <Compile Include="Main\app.Designer.cs">
+    <Compile Include="app.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>app.cfg</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
+    <Compile Include="Main\ComputerInfo.cs" />
+    <Compile Include="Policy\PolicyUSBTable.cs" />
+    <Compile Include="Policy\UsbPolicyUpdate.cs" />
     <Compile Include="Main\USBLogger.cs" />
-    <Compile Include="Rule\UsbRuleFilterFun.cs" />
+    <Compile Include="Policy\UsbPolicyFilterFun.cs" />
     <Compile Include="Notify\NotifyUSB.cs" />
-    <Compile Include="Rule\USBBusController.cs" />
-    <Compile Include="Rule\UsbRuleFilter.cs" />
-    <Compile Include="Rule\RuleUSB.cs" />
+    <Compile Include="Policy\USBBusController.cs" />
+    <Compile Include="Policy\UsbPolicyFilter.cs" />
+    <Compile Include="Policy\PolicyUSB.cs" />
     <Compile Include="Main\USBConfig.cs" />
     <Compile Include="Main\USBManager.cs" />
     <Compile Include="Win32API\UFileApi.cs" />
@@ -84,7 +83,7 @@
     <Compile Include="MSFT\MSFT_Disk.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Main\app.cfg">
+    <None Include="app.cfg">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>app.Designer.cs</LastGenOutput>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -93,6 +92,9 @@
   <ItemGroup>
     <PackageReference Include="NativeUsbLib">
       <Version>1.4.9</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

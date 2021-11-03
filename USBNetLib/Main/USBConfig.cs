@@ -20,11 +20,11 @@ namespace USBNetLib
 
         public static string RuleUSBTablePath => GetConfigValue("usbruletable");    
 
-        public static string UpdateUrl => GetConfigValue("updateurl");
+        public static string GetPolicyUrl => GetConfigValue("getpolicyurl");
 
         public static int UpdateTimer => Convert.ToInt32(GetConfigValue("updatetimer"));
 
-
+        public static string PostComputerInfoUrl => GetConfigValue("postcomurl");
 
         #region + private static string GetConfigValue(string arg)
         private static readonly object _Locker_Config = new object();
@@ -60,9 +60,9 @@ namespace USBNetLib
         }
         #endregion
 
-        #region + public static string[] Read_RuleUSBTable()
+        #region + public static string[] Read_PolicyUSBTable()
         private static readonly object _locker_Table = new object();
-        public static string[] Read_RuleUSBTable()
+        public static string[] Read_PolicyUSBTable()
         {
             lock (_locker_Table)
             {
@@ -75,8 +75,8 @@ namespace USBNetLib
         }
         #endregion
 
-        #region + public static void Write_RuleUSbTable(string txt)
-        public static void Write_RuleUSbTable(string txt)
+        #region + public static void Write_PolicyUSbTable(string txt)
+        public static void Write_PolicyUSbTable(string txt)
         {
             lock (_locker_Table)
             {

@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace USBNetLib
 {
-    public class RuleUSBTable
+    public class PolicyUSBTable
     {
-        private static HashSet<RuleUSB> CacheTable { get; set; }
+        private static HashSet<string> CacheTable { get; set; }
 
         private static readonly object _locker_CacheTable = new object();
 
-        public RuleUSBTable()
+        public PolicyUSBTable()
         {
             CheckCacheTable();
         }
@@ -23,45 +23,32 @@ namespace USBNetLib
         {
             if (CacheTable == null || CacheTable.Count <= 0)
             {
-                Reload_RuleUSBTable();
+                Reload_PolicyUSBTable();
             }
         }
         #endregion
 
-        #region + public void Reload_RuleUSBTable()
-        public void Reload_RuleUSBTable()
+        #region + public void Reload_PolicyUSBTable()
+        public void Reload_PolicyUSBTable()
         {
             try
             {
-                var table = USBConfig.Read_RuleUSBTable();
+                var table = USBConfig.Read_PolicyUSBTable();
                 if (table == null || table.Length <= 0)
                 {
                     throw new Exception(USBConfig.RuleUSBTablePath + " file nothing ?");
                 }
 
-                var cache = new HashSet<RuleUSB>();
+                var cache = new HashSet<string>();
 
                 foreach (var line in table)
                 {
                     try
                     {
-                        var data = Base64Decode(line);
-
-                        if (data.Split(',').Length == 3)
+                        if (string.IsNullOrWhiteSpace(line))
                         {
-                            string[] d = data.Split(',');
-                            var vid = Convert.ToUInt16(d[0]?.Trim());
-                            var pid = Convert.ToUInt16(d[1]?.Trim());
-                            var serial = d[2]?.Trim();
-
-                            var usb = new RuleUSB
-                            {
-                                Vid = vid,
-                                Pid = pid,
-                                SerialNumber = serial
-                            };
-
-                            cache.Add(usb);
+                            var data = Base64Decode(line.Trim());
+                            cache.Add(data);
                         }
                     }
                     catch (Exception) { }
@@ -86,7 +73,7 @@ namespace USBNetLib
             {
                 foreach (var t in CacheTable)
                 {
-                    if (t.Pid == usb.Pid && t.Vid == usb.Vid && t.SerialNumber == usb.SerialNumber)
+                    if (t.ToLower() == usb.ToPolicyString().ToLower())
                     {
                         return true;
                     }

@@ -19,7 +19,7 @@ namespace USBNetLib
             {
                 _notifyService.Start_Notifier();
 
-                new UsbRuleFilter().Set_Table_RuleUSB();
+                new RuleUSBTable().Reload_RuleUSBTable();
 
                 new UsbRuleFilter().Filter_Scan_All_USB_Disk();
 

@@ -14,9 +14,12 @@ namespace USBNetLib
 
         public string SerialNumber { get; set; }
 
-        public bool IsMatchNotifyUSB(NotifyUSB usb)
-        {
-            return Vid == usb.Vid && Pid == usb.Pid && SerialNumber == usb.SerialNumber;
-        }
+
+        #region remark
+        //public bool IsMatchNotifyUSB(NotifyUSB usb)
+        //{
+        //    return Vid == usb.Vid && Pid == usb.Pid && SerialNumber == usb.SerialNumber;
+        //}
+        #endregion
     }
 }

@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Main\ComputerInfo.cs" />
     <Compile Include="Rule\RuleUSBTable.cs" />
     <Compile Include="Rule\UsbRuleUpdate.cs" />
     <Compile Include="Main\app.Designer.cs">
@@ -93,6 +94,12 @@
     <PackageReference Include="NativeUsbLib">
       <Version>1.4.9</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\USBCommon.csproj">
+      <Project>{90fd865d-6202-4a76-b765-4d5414b4204d}</Project>
+      <Name>USBCommon</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

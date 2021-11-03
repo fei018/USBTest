@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,11 +29,7 @@ namespace USBTestConsole
                 //Console.ReadLine();
 
                 //p.OnStop();
-                var s =File.ReadAllText(USBConfig.ErrorPath);
-                var s1 = new UsbRuleFilter().Base64Decode(s);
-
-                var q = s1.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries).Length;
-                Console.WriteLine(q);
+                var nics =NetworkInterface.GetAllNetworkInterfaces();
             }
             catch (Exception ex)
             {

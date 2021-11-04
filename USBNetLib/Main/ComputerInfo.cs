@@ -7,7 +7,7 @@ using USBCommon;
 
 namespace USBNetLib
 {
-    public class ComputerInfo: IComputerInfo
+    public class ComputerInfo : IComputerInfo
     {
         public string HostName { get; private set; }
 
@@ -17,8 +17,17 @@ namespace USBNetLib
 
         public string IPAddress { get; private set; }
 
-        public string MACAddress { get; private set; }
+        public string MacAddress { get; private set; }
 
+
+        public override string ToString()
+        {
+            return "HostName: " + HostName + "\r\n" +
+                   "Domain: " + Domain + "\r\n" +
+                   "BiosSerial: " + BiosSerial + "\r\n" +
+                   "IPAddress: " + IPAddress + "\r\n" +
+                   "MacAddress: " + MacAddress + "\r\n";
+        }
 
         #region + public void GetInfo()
         public IComputerInfo GetInfo()
@@ -48,7 +57,7 @@ namespace USBNetLib
                 // address.
                 if (i != bytes.Length - 1) mac.Append("-");
             }
-            MACAddress = mac.ToString();
+            MacAddress = mac.ToString();
 
             IPAddress = nic.GetIPProperties().UnicastAddresses.First().Address.ToString();
         }

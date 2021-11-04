@@ -1,6 +1,6 @@
 ﻿namespace USBCommon
 {
-    public interface IPostUSB
+    public interface IPostUsb
     {
         IComputerInfo ComputerInfo { get; set; }
 

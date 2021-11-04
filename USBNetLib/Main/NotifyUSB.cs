@@ -31,9 +31,13 @@ namespace USBNetLib
 
         public uint DiskNumber { get; set; }
 
-        public string ToPolicyString()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>Lowercase string</returns>
+        public string ToFilterString()
         {
-            return Vid.ToString() + Pid.ToString() + SerialNumber;
+            return (Vid.ToString() + Pid.ToString() + SerialNumber).ToLower();
         }
 
         public override string ToString()

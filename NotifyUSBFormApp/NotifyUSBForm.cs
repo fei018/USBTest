@@ -42,10 +42,10 @@ namespace NotifyUSBFormApp
         #region + private void UsbStart()
         private void UsbStart()
         {
-            new PolicyUSBTable().Reload_PolicyUSBTable();
-            new UsbPolicyFilter().Filter_Scan_All_USB_Disk();
+            new UsbFilterTable().Reload_PolicyUSBTable();
+            new UsbFilter().Filter_Scan_All_USB_Disk();
 
-            UsbPolicyUpdate.Set_HttpGetPolicy_Timer();
+            UsbManager.Set_UpdateUsbFilterTable_Http_Timer();
         }
         #endregion
 
@@ -64,7 +64,7 @@ namespace NotifyUSBFormApp
                         {
                             Task.Run(() =>
                             {
-                                new UsbPolicyFilter().Filter_NotifyUSB_Use_DriveLetter(letter);
+                                new UsbFilter().Filter_NotifyUSB_Use_DriveLetter(letter);
                             });
                         }
                     }

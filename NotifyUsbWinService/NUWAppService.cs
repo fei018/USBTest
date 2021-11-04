@@ -42,7 +42,7 @@ namespace NotifyUsbWinService
             {
                 CloseUsbFormProcess();
 
-                ProcessStartInfo startInfo = new ProcessStartInfo(USBConfig.NUWAppPath);
+                ProcessStartInfo startInfo = new ProcessStartInfo(UsbConfig.NUWAppPath);
                 _usbFormProcess = new Process
                 {
                     EnableRaisingEvents = true,
@@ -55,7 +55,7 @@ namespace NotifyUsbWinService
             }
             catch (Exception ex)
             {
-                USBLogger.Error(ex.Message);
+                UsbLogger.Error(ex.Message);
             }
         }
 
@@ -74,7 +74,7 @@ namespace NotifyUsbWinService
             }
             catch (Exception ex)
             {
-                USBLogger.Error(ex.Message);
+                UsbLogger.Error(ex.Message);
             }
         }
 
@@ -90,7 +90,7 @@ namespace NotifyUsbWinService
                 StartUsbFormProcess();
             }
 
-            USBLogger.Log("USBFormApp Process Exited Event.");
+            UsbLogger.Log("USBFormApp Process Exited Event.");
         }
         #endregion
 

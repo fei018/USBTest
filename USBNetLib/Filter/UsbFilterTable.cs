@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace USBNetLib
 {
-    public class PolicyUSBTable
+    public class UsbFilterTable
     {
         private static HashSet<string> CacheTable { get; set; }
 
         private static readonly object _locker_CacheTable = new object();
 
-        public PolicyUSBTable()
+        public UsbFilterTable()
         {
             CheckCacheTable();
         }
@@ -33,10 +33,10 @@ namespace USBNetLib
         {
             try
             {
-                var table = USBConfig.Read_PolicyUSBTable();
+                var table = UsbConfig.Read_FilterUSBTable();
                 if (table == null || table.Length <= 0)
                 {
-                    throw new Exception(USBConfig.RuleUSBTablePath + " file nothing ?");
+                    throw new Exception(UsbConfig.FilterUSBTablePath + " file nothing ?");
                 }
 
                 var cache = new HashSet<string>();
@@ -61,7 +61,7 @@ namespace USBNetLib
             }
             catch (Exception ex)
             {
-                USBLogger.Error(ex.Message);
+                UsbLogger.Error(ex.Message);
             }
         }
         #endregion
@@ -73,7 +73,7 @@ namespace USBNetLib
             {
                 foreach (var t in CacheTable)
                 {
-                    if (t.ToLower() == usb.ToPolicyString().ToLower())
+                    if (t.ToLower() == usb.ToFilterString())
                     {
                         return true;
                     }

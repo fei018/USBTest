@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NotifyUSBWebServer
+namespace NotifyUSBWebMVC
 {
     public class Startup
     {
@@ -23,6 +23,8 @@ namespace NotifyUSBWebServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            services.AddHttpContextAccessor();
 
             services.AddUSBDB(Configuration.GetConnectionString("USBDB"));
         }

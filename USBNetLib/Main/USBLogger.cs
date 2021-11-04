@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace USBNetLib
 {
-    public class USBLogger
+    public class UsbLogger
     {
         public static void LogTime()
         {
@@ -17,13 +17,13 @@ namespace USBNetLib
         public static void Log(string log)
         {
             //ConsoleLog(log);
-            LogToFile(USBConfig.LogPath, log);
+            LogToFile(UsbConfig.LogPath, log);
         }
 
         public static void Error(string error)
         {
             var l = Environment.NewLine + DateTime.Now.ToString("yyyy-MM-dd HH:ss") + Environment.NewLine + error + Environment.NewLine;
-            LogToFile(USBConfig.ErrorPath, l);
+            LogToFile(UsbConfig.ErrorPath, l);
             //Console.WriteLine(l);
         }
 

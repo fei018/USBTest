@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace USBNetLib
 {
-    internal class USBBusController
+    internal class UsbBusController
     {
         private List<Device> _busUsbList;
 

@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
+using System.Text;
 
 namespace USBNetLib
 {
-    public class USBConfig
+    public class UsbConfig
     {
         private static readonly string _baseDir = AppDomain.CurrentDomain.BaseDirectory;
         private static string _config = Path.Combine(_baseDir, "app.cfg");
@@ -18,9 +15,9 @@ namespace USBNetLib
 
         public static string NUWAppPath => Path.Combine(_baseDir, "nuwapp.exe");
 
-        public static string RuleUSBTablePath => GetConfigValue("usbruletable");    
+        public static string FilterUSBTablePath => GetConfigValue("usbfiltertable");
 
-        public static string GetPolicyUrl => GetConfigValue("getpolicyurl");
+        public static string GetUsbFilterUrl => GetConfigValue("updateusbfilterurl");
 
         public static int UpdateTimer => Convert.ToInt32(GetConfigValue("updatetimer"));
 
@@ -60,29 +57,29 @@ namespace USBNetLib
         }
         #endregion
 
-        #region + public static string[] Read_PolicyUSBTable()
+        #region + public static string[] Read_FilterUSBTable()
         private static readonly object _locker_Table = new object();
-        public static string[] Read_PolicyUSBTable()
+        public static string[] Read_FilterUSBTable()
         {
             lock (_locker_Table)
             {
-                if (File.Exists(RuleUSBTablePath))
+                if (File.Exists(FilterUSBTablePath))
                 {
-                    return File.ReadAllLines(RuleUSBTablePath);
+                    return File.ReadAllLines(FilterUSBTablePath, Encoding.UTF8);
                 }
                 return null;
             }
         }
         #endregion
 
-        #region + public static void Write_PolicyUSbTable(string txt)
-        public static void Write_PolicyUSbTable(string txt)
+        #region + public static void Write_FilterUSbTable(string txt)
+        public static void Write_FilterUSbTable(string txt)
         {
             lock (_locker_Table)
             {
-                if (File.Exists(RuleUSBTablePath))
+                if (File.Exists(FilterUSBTablePath))
                 {
-                    File.WriteAllText(RuleUSBTablePath,txt);
+                    File.WriteAllText(FilterUSBTablePath, txt, Encoding.UTF8);
                 }
             }
         }

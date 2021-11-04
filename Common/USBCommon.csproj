@@ -42,7 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IComputerInfo.cs" />
-    <Compile Include="IPostUSB.cs" />
+    <Compile Include="IPostUsb.cs" />
     <Compile Include="IUsbInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

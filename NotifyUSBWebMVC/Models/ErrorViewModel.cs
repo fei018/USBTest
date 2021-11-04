@@ -1,6 +1,6 @@
 using System;
 
-namespace NotifyUSBWebServer.Models
+namespace NotifyUSBWebMVC.Models
 {
     public class ErrorViewModel
     {

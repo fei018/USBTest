@@ -9,7 +9,7 @@ using USBNetLib.Win32API;
 
 namespace USBNetLib
 {
-    public partial class UsbPolicyFilter
+    public partial class UsbFilter
     {
 
         #region + private NotifyUSB Get_NotityUSb_DiskPath_by_DriveLetter_WMI(char driveLetter)
@@ -104,7 +104,7 @@ namespace USBNetLib
                                 var result = disk.InvokeMethod("SetAttributes", inParams, null)["ReturnValue"].ToString();
                                 if (!string.IsNullOrWhiteSpace(result))
                                 {
-                                    USBLogger.Log("DiskNumber: "+ diskNumber + "\r\n" + "Set readOnly result: \r\n");
+                                    UsbLogger.Log("DiskNumber: "+ diskNumber + "\r\n" + "Set readOnly result: \r\n");
                                 }
                             }
                         }
@@ -140,7 +140,7 @@ namespace USBNetLib
                             var result = Set_Disk_IsReadOnly_WMI(d, isReadOnly);
                             if (!string.IsNullOrWhiteSpace(result))
                             {
-                                USBLogger.Log(diskPath + "\r\n" + "Set readOnly result: \r\n");
+                                UsbLogger.Log(diskPath + "\r\n" + "Set readOnly result: \r\n");
                             }
                         }
                     }

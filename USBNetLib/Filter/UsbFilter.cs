@@ -9,16 +9,16 @@ using System.IO;
 
 namespace USBNetLib
 {
-    public partial class UsbPolicyFilter
+    public partial class UsbFilter
     {
-        private readonly USBBusController _UsbBus;
+        private readonly UsbBusController _UsbBus;
 
-        private readonly PolicyUSBTable _ruleTable;
+        private readonly UsbFilterTable _ruleTable;
 
-        public UsbPolicyFilter()
+        public UsbFilter()
         {
-            _UsbBus = new USBBusController();
-            _ruleTable = new PolicyUSBTable();
+            _UsbBus = new UsbBusController();
+            _ruleTable = new UsbFilterTable();
         }
 
         #region + public void Filter_NotifyUSB_Use_DriveLetter(char driveLetter)
@@ -38,7 +38,7 @@ namespace USBNetLib
             }
             catch (Exception ex)
             {
-                USBLogger.Error(ex.Message);
+                UsbLogger.Error(ex.Message);
             }
         }
         #endregion
@@ -76,8 +76,8 @@ namespace USBNetLib
             }
             catch (Exception ex)
             {
-                USBLogger.Error(ex.Message);
-                USBLogger.Error(notifyUsb.ToString());               
+                UsbLogger.Error(ex.Message);
+                UsbLogger.Error(notifyUsb.ToString());               
             }
         }
         #endregion
@@ -101,7 +101,7 @@ namespace USBNetLib
             }
             catch (Exception ex)
             {
-                USBLogger.Error(ex.Message);
+                UsbLogger.Error(ex.Message);
             }
         }
         #endregion
@@ -116,7 +116,7 @@ namespace USBNetLib
         /// <param name="usb"></param>
         private void Rule_NotFound_UsbDeviceID_By_DiskPath_SetupDi(NotifyUSB usb)
         {
-            USBLogger.Log("Not Found In SetupDi Usb DeviceId: " + usb.ToString());
+            UsbLogger.Log("Not Found In SetupDi Usb DeviceId: " + usb.ToString());
         }
         #endregion
 
@@ -137,9 +137,9 @@ namespace USBNetLib
             try
             {
                 Set_Disk_IsReadOnly_by_DiskPath_WMI(usb.DiskPath, false);
-                USBLogger.Log("=== Match In USB ===");
-                USBLogger.Log(usb.ToString());
-                USBLogger.Log("------");
+                UsbLogger.Log("=== Match In USB ===");
+                UsbLogger.Log(usb.ToString());
+                UsbLogger.Log("------");
             }
             catch (Exception)
             {
@@ -157,10 +157,10 @@ namespace USBNetLib
                 Set_Disk_IsReadOnly_by_DiskPath_WMI(usb.DiskPath, true);
                 NotMatchSendMessage(usb);
 
-                USBLogger.Log("=== Not Match USB ===");
-                USBLogger.Log(usb.ToString());
-                USBLogger.Log("Set Disk ReadOnly Success.");
-                USBLogger.Log("------");
+                UsbLogger.Log("=== Not Match USB ===");
+                UsbLogger.Log(usb.ToString());
+                UsbLogger.Log("Set Disk ReadOnly Success.");
+                UsbLogger.Log("------");
             }
             catch (Exception)
             {

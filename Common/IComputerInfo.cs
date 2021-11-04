@@ -10,6 +10,6 @@
 
         string IPAddress { get; }
 
-        string MACAddress { get; }
+        string MacAddress { get; }
     }
 }

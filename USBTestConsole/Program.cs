@@ -61,7 +61,7 @@ namespace USBTestConsole
             {
                 CloseUsbFormProcess();
 
-                ProcessStartInfo startInfo = new ProcessStartInfo(USBConfig.NUWAppPath);
+                ProcessStartInfo startInfo = new ProcessStartInfo(UsbConfig.NUWAppPath);
                 _usbFormProcess = new Process
                 {
                     EnableRaisingEvents = true,
@@ -74,7 +74,7 @@ namespace USBTestConsole
             }
             catch (Exception ex)
             {
-                USBLogger.Error(ex.Message);
+                UsbLogger.Error(ex.Message);
             }
         }
 
@@ -93,7 +93,7 @@ namespace USBTestConsole
             }
             catch (Exception ex)
             {
-                USBLogger.Error(ex.Message);
+                UsbLogger.Error(ex.Message);
             }
         }
 
@@ -104,7 +104,7 @@ namespace USBTestConsole
                 StartUsbFormProcess();
             }
 
-            USBLogger.Log("USBFormApp Process Exied Event.");
+            UsbLogger.Log("USBFormApp Process Exied Event.");
         }
         #endregion
 

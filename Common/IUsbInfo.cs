@@ -19,5 +19,7 @@ namespace USBCommon
         string Product { get; set; }
 
         string DeviceDescription { get; set; }
+
+        string ToFilterString();
     }
 }

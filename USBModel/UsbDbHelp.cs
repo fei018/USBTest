@@ -35,7 +35,7 @@ namespace UsbModel
         {
             if (_db.DbMaintenance.CreateDatabase())
             {
-                _db.CodeFirst.InitTables<UsbInfo>();
+                _db.CodeFirst.InitTables<RegisteredUsb>();
                 _db.CodeFirst.InitTables<ComputerInfo>();
             }
         }
@@ -60,7 +60,7 @@ namespace UsbModel
         {
             try
             {
-                var usbs = await _db.Queryable<UsbInfo>().ToListAsync();
+                var usbs = await _db.Queryable<RegisteredUsb>().ToListAsync();
                 if (usbs == null || usbs.Count <= 0) return null;
 
                 var sb = new StringBuilder();
@@ -83,18 +83,9 @@ namespace UsbModel
         {
             try
             {
-                IComputerInfo icom = JsonConvert.DeserializeObject(comjson, typeof(IComputerInfo)) as IComputerInfo;
+                ComputerInfo com = JsonConvert.DeserializeObject(comjson, typeof(IComputerInfo)) as ComputerInfo;
 
-                if (icom == null) throw new Exception("Json to IComputerInfo as Null.");
-
-                var com = new ComputerInfo
-                {
-                    BiosSerial = icom.BiosSerial,
-                    Domain = icom.Domain,
-                    HostName = icom.HostName,
-                    IPAddress = icom.IPAddress,
-                    MacAddress = icom.MacAddress
-                };
+                if (com == null) throw new Exception("Json to ComputerInfo as Null.");
 
                 var query = await _db.Queryable<ComputerInfo>()
                                      .Where(c => c.BiosSerial == com.BiosSerial && c.MacAddress == com.MacAddress)
@@ -117,37 +108,18 @@ namespace UsbModel
         }
         #endregion
 
-        #region + public async Task UpdateOrInsert_UsbInfo_by_Json(string usbjson)
-        public async Task UpdateOrInsert_UsbInfo_by_Json(string usbjson)
+        #region + public async Task Insert_RegisteredUsb(RegisteredUsb usb)
+        public async Task Insert_RegisteredUsb(RegisteredUsb usb)
         {
             try
             {
-                IUsbInfo iusb = JsonConvert.DeserializeObject(usbjson, typeof(IUsbInfo)) as IUsbInfo;
-
-                if (iusb == null) throw new Exception("Json to IUsbInfo as Null.");
-
-                var usb = new UsbInfo
-                {
-                    DeviceDescription = iusb.DeviceDescription,
-                    Manufacturer = iusb.Manufacturer,
-                    Pid = iusb.Pid,
-                    Product = iusb.Product,
-                    SerialNumber = iusb.SerialNumber,
-                    Vid = iusb.Vid,
-                };
-
-                var query = await _db.Queryable<UsbInfo>()
+                var query = await _db.Queryable<RegisteredUsb>()
                                      .Where(u=> u.Vid == usb.Vid && u.Pid == usb.Pid && u.SerialNumber == usb.SerialNumber)
                                      .FirstAsync();
 
                 if (query == null)
                 {
                     await _db.Insertable(usb).ExecuteCommandAsync();
-                }
-                else
-                {
-                    usb.Id = query.Id;
-                    await _db.Updateable(usb).ExecuteCommandAsync();
                 }
             }
             catch (Exception)

@@ -4,7 +4,7 @@ using USBCommon;
 
 namespace UsbModel
 {
-    public class UsbInfo : IUsbInfo
+    public class RegisteredUsb : IUsbInfo
     {
         [SugarColumn(IsIdentity = true, IsPrimaryKey = true)]
         public int Id { get; set; }

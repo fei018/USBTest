@@ -1,7 +1,7 @@
 ﻿using SqlSugar;
 using USBCommon;
 
-namespace UsbModel
+namespace USBModel
 {
     public class ComputerInfo : IComputerInfo
     {

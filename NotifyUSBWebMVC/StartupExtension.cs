@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using UsbModel;
+using USBModel;
 
 namespace NotifyUSBWebMVC
 {

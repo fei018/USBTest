@@ -8,8 +8,4 @@
     <ProjectReference Include="..\USBModel\USBModel.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\USB\" />
-  </ItemGroup>
-
 </Project>

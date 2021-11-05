@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using UsbModel;
+using USBModel;
 
 namespace NotifyUSBWebMVC.Controllers
 {
@@ -19,6 +19,11 @@ namespace NotifyUSBWebMVC.Controllers
         {
             _usbDb = usbDb;
             _httpContext = httpContextAccessor.HttpContext;
+        }
+
+        public IActionResult Register()
+        {
+            return View();
         }
 
         public async Task<IActionResult> UpdateUsbFilterTable()

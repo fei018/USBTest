@@ -2,7 +2,7 @@
 using System;
 using USBCommon;
 
-namespace UsbModel
+namespace USBModel
 {
     public class RegisteredUsb : IUsbInfo
     {

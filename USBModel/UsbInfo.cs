@@ -4,7 +4,7 @@ using USBCommon;
 
 namespace USBModel
 {
-    public class RegisteredUsb : IUsbInfo
+    public class UsbInfo : IUsbInfo
     {
         [SugarColumn(IsIdentity = true, IsPrimaryKey = true)]
         public int Id { get; set; }
@@ -37,6 +37,11 @@ namespace USBModel
         public string ToFilterString()
         {
             return (Vid.ToString() + Pid.ToString() + SerialNumber).ToLower();
+        }
+
+        public override string ToString()
+        {
+            return $"\r\nManufacturer: {Manufacturer}\r\nProduct: { Product}\r\nVid: {Vid_Hex}\r\nPid: {Pid_Hex}\r\nSerialNumber: {SerialNumber}\r\n";
         }
     }
 }

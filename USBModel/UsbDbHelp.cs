@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System.Text;
 using System.Threading.Tasks;
 using USBCommon;
+using System.Collections.Generic;
 
 namespace USBModel
 {
@@ -30,13 +31,19 @@ namespace USBModel
         }
         #endregion
 
-        #region + public void CreateDatabase()
-        public void CreateDatabase()
-        {
+        #region + public void TryCreateDatabase()
+        public void TryCreateDatabase()
+        {        
             if (_db.DbMaintenance.CreateDatabase())
             {
-                _db.CodeFirst.InitTables<RegisteredUsb>();
-                _db.CodeFirst.InitTables<ComputerInfo>();
+                if (!_db.DbMaintenance.IsAnyTable(nameof(UsbInfo)))
+                {
+                    _db.CodeFirst.InitTables<UsbInfo>();
+                }
+                if (!_db.DbMaintenance.IsAnyTable(nameof(ComputerInfo)))
+                {
+                    _db.CodeFirst.InitTables<ComputerInfo>();
+                }               
             }
         }
         #endregion
@@ -60,7 +67,7 @@ namespace USBModel
         {
             try
             {
-                var usbs = await _db.Queryable<RegisteredUsb>().ToListAsync();
+                var usbs = await _db.Queryable<UsbInfo>().ToListAsync();
                 if (usbs == null || usbs.Count <= 0) return null;
 
                 var sb = new StringBuilder();
@@ -108,12 +115,12 @@ namespace USBModel
         }
         #endregion
 
-        #region + public async Task Insert_RegisteredUsb(RegisteredUsb usb)
-        public async Task Insert_RegisteredUsb(RegisteredUsb usb)
+        #region + public async Task RegisterUsb(RegisteredUsb usb)
+        public async Task RegisterUsb(UsbInfo usb)
         {
             try
             {
-                var query = await _db.Queryable<RegisteredUsb>()
+                var query = await _db.Queryable<UsbInfo>()
                                      .Where(u=> u.Vid == usb.Vid && u.Pid == usb.Pid && u.SerialNumber == usb.SerialNumber)
                                      .FirstAsync();
 
@@ -121,6 +128,30 @@ namespace USBModel
                 {
                     await _db.Insertable(usb).ExecuteCommandAsync();
                 }
+                else
+                {
+                    throw new Exception("Usb existed: " + usb.ToString());
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        #region + public async Task<List<RegisteredUsb>> GetRegisteredUsbList()
+        public async Task<List<UsbInfo>> GetRegisteredUsbList()
+        {
+            try
+            {
+                var query = await _db.Queryable<UsbInfo>().ToListAsync();
+                if (query == null || query.Count <= 0)
+                {
+                    throw new Exception("RegisteredUsb Db is Null or Empty.");
+                }
+
+                return query;
             }
             catch (Exception)
             {

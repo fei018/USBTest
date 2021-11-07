@@ -17,16 +17,54 @@ namespace NotifyUSBWebMVC.Controllers
 
         public USBController(IHttpContextAccessor httpContextAccessor, UsbDbHelp usbDb)
         {
+            
             _usbDb = usbDb;
+            _usbDb.TryCreateDatabase();
             _httpContext = httpContextAccessor.HttpContext;
         }
 
+        #region Index
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> IndexUsb()
+        {
+            try
+            {
+                var query = await _usbDb.GetRegisteredUsbList();
+                return Json(JsonHelp.LayuiTableData(query));
+            }
+            catch (Exception ex)
+            {
+                return Json(JsonHelp.Error(ex.Message));
+            }
+        }
+        #endregion
+
+        #region Register
         public IActionResult Register()
         {
             return View();
         }
 
-        public async Task<IActionResult> UpdateUsbFilterTable()
+        public async Task<IActionResult> RegisterUsb(UsbInfo usb)
+        {
+            try
+            {
+                await _usbDb.RegisterUsb(usb);
+                return Json(JsonHelp.Ok("Register Success."));
+            }
+            catch (Exception ex)
+            {
+                return Json(JsonHelp.Error(ex.Message));
+            }
+        }
+        #endregion
+
+        #region GetUsbFilterTable
+        public async Task<IActionResult> GetUsbFilterTable()
         {
             var query = await _usbDb.GetUsbFilterTable();
             if (string.IsNullOrWhiteSpace(null))
@@ -38,8 +76,11 @@ namespace NotifyUSBWebMVC.Controllers
                 return Content(query, "text/plain", Encoding.UTF8);
             }
         }
+        #endregion
 
-        public async Task<IActionResult> UpdateComputerInfo()
+        #region PostComputerInfo
+        [HttpPost]
+        public async Task<IActionResult> PostComputerInfo()
         {
             StreamReader body = new StreamReader(_httpContext.Request.Body, Encoding.UTF8);
             var comjosn = await body.ReadToEndAsync();
@@ -48,5 +89,8 @@ namespace NotifyUSBWebMVC.Controllers
 
             return Ok();
         }
+        #endregion
+
+
     }
 }

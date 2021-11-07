@@ -64,10 +64,10 @@ namespace NotifyUSBWebMVC.Controllers
         #endregion
 
         #region GetUsbFilterTable
-        public async Task<IActionResult> GetUsbFilterTable()
+        public async Task<IActionResult> FilterTable()
         {
             var query = await _usbDb.GetUsbFilterTable();
-            if (string.IsNullOrWhiteSpace(null))
+            if (string.IsNullOrWhiteSpace(query))
             {
                 return NotFound();
             }

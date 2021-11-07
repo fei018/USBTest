@@ -3,19 +3,35 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using USBModel;
 
 namespace NotifyUSBWebMVC.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly UsbDbHelp _usbDb;
+
+        public HomeController(UsbDbHelp usbDb)
+        {
+            _usbDb = usbDb;
+        }
+
         public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult WelCome()
+        public async Task<IActionResult> Welcome()
         {
-            return View();
+            try
+            {
+                var query = await _usbDb.GetRegisteredUsbList();
+                return View("Welcome",query.Count.ToString());
+            }
+            catch (Exception ex)
+            {
+                return View("Welcome",ex.Message);
+            }
         }
     }
 }

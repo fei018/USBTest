@@ -16,5 +16,10 @@ namespace NotifyUSBFormDesktop
         {
             InitializeComponent();
         }
+
+        private void NUSBForm_Shown(object sender, EventArgs e)
+        {
+            this.Hide();
+        }
     }
 }

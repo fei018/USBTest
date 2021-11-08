@@ -35,28 +35,56 @@
         <div class="layui-form-item">
             <label class="layui-form-label">Vid</label>
             <div class="layui-input-inline">
-                <input type="text" name="vid" class="layui-input" required>
+                <input type="text" name="vid" class="layui-input" lay-verify="required|number" lay-reqtext="number">
             </div>
         </div>
 
         <div class="layui-form-item">
             <label class="layui-form-label">Pid</label>
             <div class="layui-input-inline">
-                <input type="text" name="pid" class="layui-input" required>
+                <input type="text" name="pid" class="layui-input" lay-verify="required|number" lay-reqtext="number">
             </div>
         </div>
 
         <div class="layui-form-item">
             <label class="layui-form-label">SerialNumber</label>
             <div class="layui-input-inline">
-                <input type="text" name="serialNumber" class="layui-input" required>
+                <input type="text" name="serialNumber" class="layui-input" lay-verify="required" lay-reqtext="required">
             </div>
         </div>
 
         <div class="layui-form-item">
             <div class="layui-input-block">
-                <button class="layui-btn" lay-submit="">Submit</button>
+                <button class="layui-btn" id="submit">Submit</button>
             </div>
         </div>
     </form>
 </div>
+
+@section Script{ 
+    <script>
+        layui.use(['layer', 'form','miniTab'], function () {
+            var layer = layui.layer,
+                miniTab = layui.miniTab,
+                form = layui.form;
+
+            $('#submit').on('click', function () {
+                let datas = $('form').serialize();
+                $.ajax({
+                    type: 'post',
+                    url: '/usb/registerusb',
+                    data: datas,
+                    dataType: 'json',
+                    success: function (json) {
+                        if (json.code === 200) {
+                            layer.alert(json.msg);
+                        }
+                        if (json.code === 400) {
+                            layer.alert(json.msg);
+                        }
+                    }
+                });
+            });
+        });       
+    </script>
+}

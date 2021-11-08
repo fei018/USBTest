@@ -1,5 +1,4 @@
-﻿using NotifyUSBFormApp;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -9,8 +8,8 @@ using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using USBNetLib;
-using USBNetLib.Win32API;
+using USBNotifyLib.Win32API;
+using USBNotifyLib;
 
 namespace USBTestConsole
 {

@@ -4,15 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{07BE3525-DFAD-46A1-843B-611A47B04BDD}</ProjectGuid>
+    <ProjectGuid>{88A32AB6-DA9D-45B3-A812-A0A57B9DDE60}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>NotifyUsbWinService</RootNamespace>
-    <AssemblyName>NotifyUsbWinService</AssemblyName>
+    <RootNamespace>USBNotifyService</RootNamespace>
+    <AssemblyName>USBNotifyService</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -53,11 +52,11 @@
     <Compile Include="ProjectInstaller.Designer.cs">
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </Compile>
-    <Compile Include="NUWAppService.cs">
+    <Compile Include="UsbService.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="NUWAppService.Designer.cs">
-      <DependentUpon>NUWAppService.cs</DependentUpon>
+    <Compile Include="UsbService.Designer.cs">
+      <DependentUpon>UsbService.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -68,9 +67,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\USBNetLib\USBNetLib.csproj">
-      <Project>{7da52d66-7494-4f53-8b81-90e3c8cd693b}</Project>
-      <Name>USBNetLib</Name>
+    <ProjectReference Include="..\USBNotifyLib\USBNotifyLib.csproj">
+      <Project>{bbdb4699-103a-4cd5-92db-6a9cf675161f}</Project>
+      <Name>USBNotifyLib</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

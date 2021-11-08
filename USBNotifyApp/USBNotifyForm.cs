@@ -3,41 +3,22 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using UsbMonitor;
-using USBNetLib;
+using USBNotifyLib;
 
-namespace NotifyUSBFormApp
+namespace USBNotifyApp
 {
-    public partial class NotifyUSBForm : UsbMonitorForm
+    public partial class USBNofityForm : UsbMonitorForm
     {
-        
-
-        public NotifyUSBForm()
+        public USBNofityForm()
         {
             InitializeComponent();
-
             UsbStart();
         }
-
-        #region hide form
-        private void NotifyUSBForm_Shown(object sender, EventArgs e)
-        {
-            //this.Hide();
-        }
-        #endregion
-
-        #region disable USB Notificaition when form closed
-        private void NotifyUSBForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            // disable USB Notificaition
-            base.Stop();
-        }
-        #endregion
 
         #region + private void UsbStart()
         private void UsbStart()
@@ -75,5 +56,20 @@ namespace NotifyUSBFormApp
         }
         #endregion
 
+        #region + private void USBNofityForm_FormClosed(object sender, FormClosedEventArgs e)
+        private void USBNofityForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            base.Stop();
+        }
+        #endregion
+
+        #region + private void USBNofityForm_Shown(object sender, EventArgs e)
+        private void USBNofityForm_Shown(object sender, EventArgs e)
+        {
+            this.Hide();
+        }
+        #endregion
+
+        
     }
 }

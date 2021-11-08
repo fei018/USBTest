@@ -20,6 +20,6 @@ namespace USBCommon
 
         string DeviceDescription { get; set; }
 
-        string ToFilterString();
+        string UniqueVPSerial { get; }
     }
 }

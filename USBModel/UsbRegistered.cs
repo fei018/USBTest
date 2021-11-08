@@ -4,7 +4,7 @@ using USBCommon;
 
 namespace USBModel
 {
-    public class UsbInfo : IUsbInfo
+    public class UsbRegistered : IUsbInfo
     {
         [SugarColumn(IsIdentity = true, IsPrimaryKey = true)]
         public int Id { get; set; }
@@ -25,6 +25,9 @@ namespace USBModel
         [SugarColumn(IsNullable = true, ColumnDataType = "varchar(100)")]
         public string Product { get; set; }
 
+        [SugarColumn(UniqueGroupNameList = new string[] {"unique1"}, ColumnDataType = "varchar(100)")]
+        public string UniqueVPSerial { get; set; }
+
 
         // SugarColumn(IsIgnore = true)
 
@@ -34,9 +37,9 @@ namespace USBModel
         [SugarColumn(IsIgnore = true)]
         public string Vid_Hex => "VID_" + Vid.ToString("X").PadLeft(4, '0');
 
-        public string ToFilterString()
+        public void SetUniqueVPSerial()
         {
-            return (Vid.ToString() + Pid.ToString() + SerialNumber).ToLower();
+            UniqueVPSerial = (Vid.ToString() + Pid.ToString() + SerialNumber).ToLower();
         }
 
         public override string ToString()

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using USBModel;
+using USBCommon;
 
 namespace NotifyUSBWebMVC.Controllers
 {
@@ -49,7 +50,7 @@ namespace NotifyUSBWebMVC.Controllers
             return View();
         }
 
-        public async Task<IActionResult> RegisterUsb(UsbInfo usb)
+        public async Task<IActionResult> RegisterUsb(UsbRegistered usb)
         {
             try
             {
@@ -92,5 +93,11 @@ namespace NotifyUSBWebMVC.Controllers
         #endregion
 
 
+        #region MyRegion
+        public async Task<IActionResult> PostComputerUsbInfo(PostComUsb info)
+        {
+           
+        }
+        #endregion
     }
 }

@@ -35,10 +35,7 @@ namespace USBNotifyLib
         /// 
         /// </summary>
         /// <returns>Lowercase string</returns>
-        public string ToFilterString()
-        {
-            return (Vid.ToString() + Pid.ToString() + SerialNumber).ToLower();
-        }
+        public string UniqueVPSerial => (Vid.ToString() + Pid.ToString() + SerialNumber).ToLower();
 
         public override string ToString()
         {
@@ -55,18 +52,5 @@ namespace USBNotifyLib
             return s;
         }
 
-        #region remark
-        //public bool HasVidPidSerial()
-        //{
-        //    if (Vid != 0 && Pid != 0 && !string.IsNullOrEmpty(SerialNumber))
-        //    {
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        return false;
-        //    }
-        //}
-        #endregion
     }
 }

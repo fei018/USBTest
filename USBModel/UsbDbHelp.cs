@@ -36,9 +36,9 @@ namespace USBModel
         {        
             if (_db.DbMaintenance.CreateDatabase())
             {
-                if (!_db.DbMaintenance.IsAnyTable(nameof(UsbInfo)))
+                if (!_db.DbMaintenance.IsAnyTable(nameof(UsbRegistered)))
                 {
-                    _db.CodeFirst.InitTables<UsbInfo>();
+                    _db.CodeFirst.InitTables<UsbRegistered>();
                 }
                 if (!_db.DbMaintenance.IsAnyTable(nameof(ComputerInfo)))
                 {
@@ -67,13 +67,13 @@ namespace USBModel
         {
             try
             {
-                var usbs = await _db.Queryable<UsbInfo>().ToListAsync();
+                var usbs = await _db.Queryable<UsbRegistered>().ToListAsync();
                 if (usbs == null || usbs.Count <= 0) return null;
 
                 var sb = new StringBuilder();
                 foreach (var u in usbs)
                 {
-                    sb.AppendLine(Base64Encode(u.ToFilterString()));
+                    sb.AppendLine(Base64Encode(u.UniqueVPSerial));
                 }
 
                 return sb.ToString();
@@ -91,11 +91,12 @@ namespace USBModel
             try
             {
                 ComputerInfo com = JsonConvert.DeserializeObject(comjson, typeof(IComputerInfo)) as ComputerInfo;
+                com.SetUniqueBiosMac();
 
                 if (com == null) throw new Exception("Json to ComputerInfo as Null.");
 
                 var query = await _db.Queryable<ComputerInfo>()
-                                     .Where(c => c.BiosSerial == com.BiosSerial && c.MacAddress == com.MacAddress)
+                                     .Where(c => c.UniqueBiosMac == com.UniqueBiosMac)
                                      .FirstAsync();
 
                 if (query == null)
@@ -116,12 +117,13 @@ namespace USBModel
         #endregion
 
         #region + public async Task RegisterUsb(RegisteredUsb usb)
-        public async Task RegisterUsb(UsbInfo usb)
+        public async Task RegisterUsb(UsbRegistered usb)
         {
             try
             {
-                var query = await _db.Queryable<UsbInfo>()
-                                     .Where(u=> u.Vid == usb.Vid && u.Pid == usb.Pid && u.SerialNumber == usb.SerialNumber)
+                usb.SetUniqueVPSerial();
+                var query = await _db.Queryable<UsbRegistered>()
+                                     .Where(u => u.UniqueVPSerial == usb.UniqueVPSerial)
                                      .FirstAsync();
 
                 if (query == null)
@@ -141,11 +143,11 @@ namespace USBModel
         #endregion
 
         #region + public async Task<List<RegisteredUsb>> GetRegisteredUsbList()
-        public async Task<List<UsbInfo>> GetRegisteredUsbList()
+        public async Task<List<UsbRegistered>> GetRegisteredUsbList()
         {
             try
             {
-                var query = await _db.Queryable<UsbInfo>().ToListAsync();
+                var query = await _db.Queryable<UsbRegistered>().ToListAsync();
                 if (query == null || query.Count <= 0)
                 {
                     throw new Exception("RegisteredUsb Db is Null or Empty.");

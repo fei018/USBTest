@@ -73,7 +73,7 @@ namespace USBNotifyLib
             {
                 foreach (var t in CacheTable)
                 {
-                    if (t.ToLower() == usb.ToFilterString())
+                    if (t.ToLower() == usb.UniqueVPSerial)
                     {
                         return true;
                     }

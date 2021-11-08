@@ -11,5 +11,6 @@
         string IPAddress { get; }
 
         string MacAddress { get; }
+
     }
 }

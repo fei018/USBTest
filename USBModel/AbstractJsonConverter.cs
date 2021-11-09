@@ -3,8 +3,7 @@ using System;
 
 namespace USBModel
 {
-    public class AbstractConverter<TReal, TAbstract>
-    : JsonConverter where TReal : TAbstract
+    public class AbstractJsonConverter<TReal, TAbstract> : JsonConverter where TReal : TAbstract
     {
         public override bool CanConvert(Type objectType)
             => objectType == typeof(TAbstract);

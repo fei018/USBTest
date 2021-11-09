@@ -36,9 +36,9 @@ namespace USBModel
         {        
             if (_db.DbMaintenance.CreateDatabase())
             {
-                if (!_db.DbMaintenance.IsAnyTable(nameof(UsbRegistered)))
+                if (!_db.DbMaintenance.IsAnyTable(nameof(RegisteredUsb)))
                 {
-                    _db.CodeFirst.InitTables<UsbRegistered>();
+                    _db.CodeFirst.InitTables<RegisteredUsb>();
                 }
                 if (!_db.DbMaintenance.IsAnyTable(nameof(ComputerInfo)))
                 {
@@ -67,7 +67,7 @@ namespace USBModel
         {
             try
             {
-                var usbs = await _db.Queryable<UsbRegistered>().ToListAsync();
+                var usbs = await _db.Queryable<RegisteredUsb>().ToListAsync();
                 if (usbs == null || usbs.Count <= 0) return null;
 
                 var sb = new StringBuilder();
@@ -117,12 +117,12 @@ namespace USBModel
         #endregion
 
         #region + public async Task RegisterUsb(RegisteredUsb usb)
-        public async Task RegisterUsb(UsbRegistered usb)
+        public async Task RegisterUsb(RegisteredUsb usb)
         {
             try
             {
                 usb.SetUniqueVPSerial();
-                var query = await _db.Queryable<UsbRegistered>()
+                var query = await _db.Queryable<RegisteredUsb>()
                                      .Where(u => u.UniqueVPSerial == usb.UniqueVPSerial)
                                      .FirstAsync();
 
@@ -143,11 +143,11 @@ namespace USBModel
         #endregion
 
         #region + public async Task<List<RegisteredUsb>> GetRegisteredUsbList()
-        public async Task<List<UsbRegistered>> GetRegisteredUsbList()
+        public async Task<List<RegisteredUsb>> GetRegisteredUsbList()
         {
             try
             {
-                var query = await _db.Queryable<UsbRegistered>().ToListAsync();
+                var query = await _db.Queryable<RegisteredUsb>().ToListAsync();
                 if (query == null || query.Count <= 0)
                 {
                     throw new Exception("RegisteredUsb Db is Null or Empty.");

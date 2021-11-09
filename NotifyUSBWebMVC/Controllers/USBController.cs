@@ -51,7 +51,7 @@ namespace NotifyUSBWebMVC.Controllers
             return View();
         }
 
-        public async Task<IActionResult> RegisterUsb(UsbRegistered usb)
+        public async Task<IActionResult> RegisterUsb(RegisteredUsb usb)
         {
             try
             {
@@ -102,17 +102,10 @@ namespace NotifyUSBWebMVC.Controllers
                 StreamReader body = new StreamReader(_httpContext.Request.Body, Encoding.UTF8);
                 var post = body.ReadToEndAsync().Result;
 
-                var settings = new JsonSerializerSettings
-                {
-                    Converters = {
-                        new AbstractConverter<UsbRegistered, IUsbInfo>(),
-                        new AbstractConverter<ComputerInfo, IComputerInfo>()
-                    }
-                };
+                var info = UsbJsonConvert.GetPostComputerUsbInfo(post);
 
-                var info = JsonConvert.DeserializeObject(post, typeof(PostComUsb),settings) as PostComUsb;
                 var com = info.ComputerInfo as ComputerInfo;
-                var usb = info.UsbInfo as UsbRegistered;
+                var usb = info.UsbInfo as RegisteredUsb;
 
                 return Ok();
             }

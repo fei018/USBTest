@@ -4,7 +4,7 @@ using USBCommon;
 
 namespace USBModel
 {
-    public class UsbRegistered : IUsbInfo
+    public class RegisteredUsb : IUsbInfo
     {
         [SugarColumn(IsIdentity = true, IsPrimaryKey = true)]
         public int Id { get; set; }
@@ -28,6 +28,8 @@ namespace USBModel
         [SugarColumn(UniqueGroupNameList = new string[] {"unique1"}, ColumnDataType = "varchar(100)")]
         public string UniqueVPSerial { get; set; }
 
+        [SugarColumn(IsNullable = true, ColumnDataType = "varchar(100)")]
+        public string ComputerKey { get; set; }
 
         // SugarColumn(IsIgnore = true)
 

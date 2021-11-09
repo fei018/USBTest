@@ -23,8 +23,9 @@ namespace USBModel
         [SugarColumn(IsNullable = true, ColumnDataType = "varchar(20)")]
         public string MacAddress { get; set; }
 
-        [SugarColumn(UniqueGroupNameList = new string[] { "unique1" })]
+        [SugarColumn(UniqueGroupNameList = new string[] { "unique1" }, ColumnDataType = "varchar(70)")]
         public string UniqueBiosMac { get; set; }
+
 
         public void SetUniqueBiosMac()
         {

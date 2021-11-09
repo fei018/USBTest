@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using USBModel;
 using USBCommon;
+using Newtonsoft.Json;
 
 namespace NotifyUSBWebMVC.Controllers
 {
@@ -18,7 +19,7 @@ namespace NotifyUSBWebMVC.Controllers
 
         public USBController(IHttpContextAccessor httpContextAccessor, UsbDbHelp usbDb)
         {
-            
+
             _usbDb = usbDb;
             _usbDb.TryCreateDatabase();
             _httpContext = httpContextAccessor.HttpContext;
@@ -94,9 +95,32 @@ namespace NotifyUSBWebMVC.Controllers
 
 
         #region MyRegion
-        public async Task<IActionResult> PostComputerUsbInfo(PostComUsb info)
+        public IActionResult PostComputerUsbInfo()
         {
-           
+            try
+            {
+                StreamReader body = new StreamReader(_httpContext.Request.Body, Encoding.UTF8);
+                var post = body.ReadToEndAsync().Result;
+
+                var settings = new JsonSerializerSettings
+                {
+                    Converters = {
+                        new AbstractConverter<UsbRegistered, IUsbInfo>(),
+                        new AbstractConverter<ComputerInfo, IComputerInfo>()
+                    }
+                };
+
+                var info = JsonConvert.DeserializeObject(post, typeof(PostComUsb),settings) as PostComUsb;
+                var com = info.ComputerInfo as ComputerInfo;
+                var usb = info.UsbInfo as UsbRegistered;
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+
+                return Ok();
+            }
         }
         #endregion
     }

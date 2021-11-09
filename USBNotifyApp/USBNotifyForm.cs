@@ -26,7 +26,7 @@ namespace USBNotifyApp
             new UsbFilterTable().Reload_PolicyUSBTable();
             new UsbFilter().Filter_Scan_All_USB_Disk();
 
-            UsbManager.Set_UpdateUsbFilterTable_Http_Timer();
+            //UsbHttpHelp.Set_UpdateUsbFilterTable_Http_Timer();
         }
         #endregion
 
@@ -46,7 +46,8 @@ namespace USBNotifyApp
                         {
                             Task.Run(() =>
                             {
-                                new UsbFilter().Filter_NotifyUSB_Use_DriveLetter(letter);
+                                //new UsbFilter().Filter_NotifyUSB_Use_DriveLetter(letter);
+                                new UsbHttpHelp().PostComputerUsbInfo(letter);
                             });
                         }
                     }

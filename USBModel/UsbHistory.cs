@@ -27,6 +27,9 @@ namespace USBModel
 
         public string Computer { get; set; }
 
+        [SugarColumn(ColumnDataType = "varchar(100)")]
+        public string UniqueVPSerial { get; set; }
+
 
         // SugarColumn(IsIgnore = true)
 
@@ -35,6 +38,8 @@ namespace USBModel
 
         [SugarColumn(IsIgnore = true)]
         public string Vid_Hex => "VID_" + Vid.ToString("X").PadLeft(4, '0');
+
+        
 
         public string SetUniqueVPSerial()
         {

@@ -18,7 +18,7 @@ namespace USBNotifyLib
         /// </summary>
         /// <param name="driveLetter"></param>
         /// <returns>DiskPath, DiskNumber</returns>
-        private NotifyUSB Get_NotityUSb_DiskPath_by_DriveLetter_WMI(char driveLetter)
+        private NotifyUSB Get_NotityUSB_DiskPath_by_DriveLetter_WMI(char driveLetter)
         {
             try
             {

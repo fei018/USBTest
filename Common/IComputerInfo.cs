@@ -2,15 +2,15 @@
 {
     public interface IComputerInfo
     {
-        string HostName { get; }
+        string HostName { get; set; }
 
-        string Domain { get; }
+        string Domain { get; set; }
 
-        string BiosSerial { get; }
+        string BiosSerial { get; set; }
 
-        string IPAddress { get; }
+        string IPAddress { get; set; }
 
-        string MacAddress { get; }
+        string MacAddress { get; set; }
 
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.IO;
 using System.Text;
 
@@ -8,6 +9,7 @@ namespace USBNotifyLib
     {
         private static readonly string _baseDir = AppDomain.CurrentDomain.BaseDirectory;
         private static string _config = Path.Combine(_baseDir, "app.cfg");
+        private static string _configJson = Path.Combine(_baseDir, "appcfg.json");
 
         public static string LogPath => Path.Combine(_baseDir, "log.txt");
 
@@ -15,13 +17,15 @@ namespace USBNotifyLib
 
         public static string NUWAppPath => Path.Combine(_baseDir, "nuwapp.exe");
 
-        public static string FilterUSBTablePath => GetConfigValue("usbfiltertable");
+        public static string FilterUSBTablePath => (string)AppConfig()["path"]["usbFilterTable"];
 
-        public static string GetUsbFilterUrl => GetConfigValue("updateusbfilterurl");
+        public static string GetUsbFilterUrl => (string)AppConfig()["url"]["usbFilterTable"];
 
-        public static int UpdateTimer => Convert.ToInt32(GetConfigValue("updatetimer"));
+        public static int UpdateTimer => Convert.ToInt32(AppConfig()["updateTimer"]);
 
-        public static string PostComputerInfoUrl => GetConfigValue("postcomurl");
+        public static string PostComputerInfoUrl => (string)AppConfig()["url"]["postComputerInfo"];
+
+        public static string PostComUsbInfoUrl => (string)AppConfig()["url"]["postComUserInfo"];
 
         #region + private static string GetConfigValue(string arg)
         private static readonly object _Locker_Config = new object();
@@ -81,6 +85,29 @@ namespace USBNotifyLib
                 {
                     File.WriteAllText(FilterUSBTablePath, txt, Encoding.UTF8);
                 }
+            }
+        }
+        #endregion
+
+        #region + private static JObject GetConfigJsonObject()
+        private static JObject AppConfig()
+        {
+            try
+            {
+               
+                lock (_Locker_Config)
+                {
+                    string config = null;
+                    if (File.Exists(_configJson))
+                    {
+                        config = File.ReadAllText(_configJson);
+                    }
+                    return JObject.Parse(config);
+                }               
+            }
+            catch (Exception)
+            {
+                return null;
             }
         }
         #endregion

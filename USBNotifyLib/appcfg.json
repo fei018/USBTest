@@ -1,0 +1,11 @@
+﻿{
+  "updateTimer": "10",
+  "path": {
+    "usbFilterTable": ""
+  },
+  "url": {
+    "usbFilterTable": "",
+    "postComputerInfo": "",
+    "postComUserInfo": "http://localhost:5000/usb/PostComputerUsbInfo"
+  }
+}

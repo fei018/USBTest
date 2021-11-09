@@ -81,7 +81,7 @@ namespace USBNotifyLib
         /// </summary>
         /// <param name="notifyUsb"></param>
         /// <returns></returns>
-        public bool Find_VidPidSerial_In_UsbBus(NotifyUSB notifyUsb)
+        public bool Find_NotifyUSB_Detail_In_UsbBus(NotifyUSB notifyUsb)
         {
             try
             {

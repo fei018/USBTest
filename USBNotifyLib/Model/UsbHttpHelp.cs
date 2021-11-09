@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Newtonsoft.Json;
+using System;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using System.Net.Http;
-using System.IO;
 using System.Timers;
-using Newtonsoft;
 using USBCommon;
-using Newtonsoft.Json;
 
 namespace USBNotifyLib
 {
-    public class UsbManager
+    public class UsbHttpHelp
     {
         #region + public static void UpdateUsbFilterTable_Http()
         public static void UpdateUsbFilterTable_Http()
@@ -63,7 +59,7 @@ namespace USBNotifyLib
         {
             try
             {
-                var com = new ComputerInfo().GetInfo();
+                var com = new UserComputerInfo().GetInfo();
                 var comJson = JsonConvert.SerializeObject(com);
 
                 using (var http = new HttpClient())
@@ -94,11 +90,38 @@ namespace USBNotifyLib
 
         private static void _updateComInfo_Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            Task.Run(() => {
+            Task.Run(() =>
+            {
                 _updateComInfo_Timer.Enabled = false;
                 UpdateComputerInfo_Http();
                 _updateComInfo_Timer.Enabled = true;
             });
+        }
+        #endregion
+
+        #region + public void PostComputerUsbInfo(char driveLetter)
+        public void PostComputerUsbInfo(char driveLetter)
+        {
+            try
+            {
+                var com = new UserComputerInfo().GetInfo();
+                var usb = new UsbFilter().Find_NotifyUSB_Use_DriveLetter(driveLetter) as IUsbInfo;
+
+                var post = new PostComUsb { ComputerInfo = com, UsbInfo = usb };
+                var postjosn = JsonConvert.SerializeObject(post);
+
+                using (var http = new HttpClient())
+                {
+                    http.Timeout = TimeSpan.FromSeconds(10);
+                    StringContent content = new StringContent(postjosn, Encoding.UTF8, "application/json");
+                    var response = http.PostAsync(UsbConfig.PostComUsbInfoUrl, content).Result;
+                    response.EnsureSuccessStatusCode();
+                }
+            }
+            catch (Exception ex)
+            {
+                UsbLogger.Error(ex.Message);
+            }
         }
         #endregion
     }

@@ -11,14 +11,14 @@ namespace USBNotifyLib
 {
     public partial class UsbFilter
     {
-        private readonly UsbBusController _UsbBus;
+        private readonly UsbBusController _usbBus;
 
-        private readonly UsbFilterTable _ruleTable;
+        private readonly UsbFilterTable _usbFilterTable;
 
         public UsbFilter()
         {
-            _UsbBus = new UsbBusController();
-            _ruleTable = new UsbFilterTable();
+            _usbBus = new UsbBusController();
+            _usbFilterTable = new UsbFilterTable();
         }
 
         #region + public void Filter_NotifyUSB_Use_DriveLetter(char driveLetter)
@@ -26,7 +26,7 @@ namespace USBNotifyLib
         {
             try
             {
-                var usb = Get_NotityUSb_DiskPath_by_DriveLetter_WMI(driveLetter);
+                var usb = Get_NotityUSB_DiskPath_by_DriveLetter_WMI(driveLetter);
                 if (usb != null)
                 {
                     Filter_NotifyUSB_Use_DiskPath(usb);
@@ -58,13 +58,13 @@ namespace USBNotifyLib
                     return;
                 }
 
-                if (!_UsbBus.Find_VidPidSerial_In_UsbBus(notifyUsb))
+                if (!_usbBus.Find_NotifyUSB_Detail_In_UsbBus(notifyUsb))
                 {
                     Rule_NotFound_NotityUSB_VidPidSerial_In_UsbBus(notifyUsb);
                     return;
                 }
 
-                if (_ruleTable.IsFind(notifyUsb))
+                if (_usbFilterTable.IsFind(notifyUsb))
                 {
                     Rule_Match_In_RuleUSBTable(notifyUsb);
                     return;
@@ -106,7 +106,30 @@ namespace USBNotifyLib
         }
         #endregion
 
-  
+        #region + public NotifyUSB Find_NotifyUSB_Use_DriveLetter(char driveLetter)
+        public NotifyUSB Find_NotifyUSB_Use_DriveLetter(char driveLetter)
+        {
+            try
+            {
+                var usb = Get_NotityUSB_DiskPath_by_DriveLetter_WMI(driveLetter);
+                if (usb != null)
+                {
+                    if (Find_UsbDeviceId_By_DiskPath_SetupDi(usb))
+                    {
+                        if (_usbBus.Find_NotifyUSB_Detail_In_UsbBus(usb))
+                        {
+                            return usb;
+                        }
+                    }
+                }
+                return null;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
         //* Filter Rule *//
 
         #region + private void Rule_NotFound_UsbDeviceID_By_DiskPath_SetupDi(NotifyUSB usb)

@@ -7,17 +7,17 @@ using USBCommon;
 
 namespace USBNotifyLib
 {
-    public class ComputerInfo : IComputerInfo
+    public class UserComputerInfo : IComputerInfo
     {
-        public string HostName { get; private set; }
+        public string HostName { get;  set; }
 
-        public string Domain { get; private set; }
+        public string Domain { get;  set; }
 
-        public string BiosSerial { get; private set; }
+        public string BiosSerial { get;  set; }
 
-        public string IPAddress { get; private set; }
+        public string IPAddress { get;  set; }
 
-        public string MacAddress { get; private set; }
+        public string MacAddress { get;  set; }
 
 
         public override string ToString()

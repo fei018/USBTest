@@ -3,7 +3,7 @@
         <legend>Usb Index</legend>
     </fieldset>
 
-    <table id="indexUsb" class="cell-border" style="width:100%">
+    <table id="index" class="layui-hide" style="width:100%">
     </table>
 </div>
 
@@ -16,7 +16,7 @@
 
             $.ajax({
                 type: 'get',
-                url: '/usb/indexusb',
+                url: '/usb/RegisteredIndex',
                 dataType: 'json',
                 success: function (json) {
                     if (json.code === 400) {
@@ -30,7 +30,7 @@
 
             function showTable(dataSet) {
                 table.render({
-                    elem: '#indexUsb',
+                    elem: '#index',
                     data: dataSet,
                     page: true,
                     cols: [[

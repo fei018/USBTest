@@ -9,22 +9,18 @@ namespace USBModel
         [SugarColumn(IsIdentity = true, IsPrimaryKey = true)]
         public int Id { get; set; }
 
-        [SugarColumn(ColumnDataType = "varchar(20)")]
         public string HostName { get; set; }
 
-        [SugarColumn(IsNullable = true, ColumnDataType = "varchar(50)")]
+        [SugarColumn(IsNullable = true)]
         public string Domain { get; set; }
 
-        [SugarColumn(ColumnDataType = "varchar(50)")]
         public string BiosSerial { get; set; }
 
-        [SugarColumn(IsNullable = true, ColumnDataType = "varchar(12)")]
+        [SugarColumn(IsNullable = true)]
         public string IPAddress { get; set; }
 
-        [SugarColumn(ColumnDataType = "varchar(20)")]
         public string MacAddress { get; set; }
 
-        [SugarColumn(UniqueGroupNameList = new string[] { "unique1" }, ColumnDataType = "varchar(70)")]
         public string ComputerIdentity { get; set; }
 
         public DateTime UpdateTime { get; set; }

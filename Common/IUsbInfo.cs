@@ -4,11 +4,11 @@ namespace USBCommon
 {
     public interface IUsbInfo
     {
-        UInt16 Vid { get; set; }
+        int Vid { get; set; }
 
         string Vid_Hex { get; }
 
-        UInt16 Pid { get; set; }
+        int Pid { get; set; }
 
         string Pid_Hex { get; }
 

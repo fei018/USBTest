@@ -24,9 +24,16 @@ namespace USBNotifyApp
         private void UsbStart()
         {
             new UsbFilterDb().Reload_UsbFilterDb();
-            new UsbFilter().Filter_Scan_All_USB_Disk();
+            //new UsbFilter().Filter_Scan_All_USB_Disk();
 
             //UsbHttpHelp.Set_UpdateUsbFilterTable_Http_Timer();
+        }
+        #endregion
+
+        #region disk
+        public override void OnUsbInterface(UsbEventDeviceInterfaceArgs args)
+        {
+            args.DeviceInterface == UsbMonitor.UsbDeviceInterface.Disk;
         }
         #endregion
 
@@ -67,7 +74,7 @@ namespace USBNotifyApp
         #region + private void USBNofityForm_Shown(object sender, EventArgs e)
         private void USBNofityForm_Shown(object sender, EventArgs e)
         {
-            this.Hide();
+           // this.Hide();
         }
         #endregion
 

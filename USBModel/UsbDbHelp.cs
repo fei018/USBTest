@@ -36,9 +36,9 @@ namespace USBModel
         {        
             if (_db.DbMaintenance.CreateDatabase())
             {
-                _db.CodeFirst.InitTables<UsbHistory>();
-                _db.CodeFirst.InitTables<UserUsb>();
-                _db.CodeFirst.InitTables<UserComputer>();
+                _db.CodeFirst.SetStringDefaultLength(255).InitTables<UsbHistory>();
+                _db.CodeFirst.SetStringDefaultLength(255).InitTables<UserUsb>();
+                _db.CodeFirst.SetStringDefaultLength(255).InitTables<UserComputer>();
             }
         }
         #endregion
@@ -100,18 +100,81 @@ namespace USBModel
         }
         #endregion
 
-        #region + public async Task<List<RegisteredUsb>> GetRegisteredUsbListByComputer(UserComputer com)
-        public async Task<List<UserUsb>> GetRegisteredUsbListByComputer(UserComputer com)
+        #region + public async Task<List<RegisteredUsb>> GetRegisteredUsbListByComputerIdentity(string computerIdentity)
+        public async Task<List<UserUsb>> GetRegisteredUsbListByComputerIdentity(string computerIdentity)
         {
             try
             {
                 var query = await _db.Queryable<UserUsb>()
-                                    .Where(u=>u.RequestComputerId == com.ComputerIdentity)
+                                    .Where(u=>u.RequestComputerId == computerIdentity)
                                     .ToListAsync();
 
                 if (query == null || query.Count <= 0)
                 {
-                    throw new Exception("Find RegisteredUsb is Null or Empty.");
+                    throw new Exception("Nothing RegisteredUsb in database.");
+                }
+
+                return query;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        #region + public async Task<List<UsbHistory>> GetUsbHistoryDetailList()
+        public async Task<List<UsbHistoryDetail>> GetUsbHistoryDetailList()
+        {
+            try
+            {
+                var query = await _db.Queryable<UsbHistory, UserUsb>((h, u) => h.UsbIdentity == u.UsbIdentity)
+                                    .Select((h, u) => new UsbHistoryDetail { History = h, UsbInfo = u })
+                                    .ToListAsync();
+
+                if (query == null || query.Count <= 0)
+                {
+                    throw new Exception("Nothing UsbHistory or UserUsb in database.");
+                }
+
+                return query;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        #region + public async Task<List<UserComputer>> GetUserComputerList()
+        public async Task<List<UserComputer>> GetUserComputerList()
+        {
+            try
+            {
+                var query = await _db.Queryable<UserComputer>().ToListAsync();
+                if (query == null || query.Count <= 0)
+                {
+                    throw new Exception("Nothing UserComputer in database.");
+                }
+
+                return query;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        #region + public async Task<List<UserComputer>> GetUserComputerListByIdentity(string computerIdentity)
+        public async Task<List<UserComputer>> GetUserComputerListByIdentity(string computerIdentity)
+        {
+            try
+            {
+                var query = await _db.Queryable<UserComputer>().Where(c => c.ComputerIdentity == computerIdentity).ToListAsync();
+                if (query == null || query.Count <= 0)
+                {
+                    throw new Exception("Nothing UserComputer in database.");
                 }
 
                 return query;
@@ -175,6 +238,7 @@ namespace USBModel
                 else
                 {
                     com.Id = query.Id;
+                    
                     await _db.Updateable(com).ExecuteCommandAsync();
                 }
             }

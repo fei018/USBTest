@@ -14,26 +14,23 @@ namespace USBModel
         [SugarColumn(IsNullable = true)]
         public DateTime RegisteredTime { get; set; }
 
-        public UInt16 Vid { get; set; }
+        public int Vid { get; set; }
 
-        public UInt16 Pid { get; set; }
+        public int Pid { get; set; }
 
-        [SugarColumn(ColumnDataType = "varchar(100)")]
         public string SerialNumber { get; set; }
 
-        [SugarColumn(IsNullable = true, ColumnDataType = "varchar(100)")]
+        [SugarColumn(IsNullable = true)]
         public string Manufacturer { get; set; }
 
-        [SugarColumn(IsNullable = true, ColumnDataType = "varchar(100)")]
+        [SugarColumn(IsNullable = true)]
         public string DeviceDescription { get; set; }
 
-        [SugarColumn(IsNullable = true, ColumnDataType = "varchar(100)")]
+        [SugarColumn(IsNullable = true)]
         public string Product { get; set; }
 
-        [SugarColumn(UniqueGroupNameList = new string[] {"unique1"}, ColumnDataType = "varchar(100)")]
         public string UsbIdentity { get; set; }
 
-        [SugarColumn(ColumnDataType = "varchar(100)")]
         public string RequestComputerId { get; set; }
 
         [SugarColumn(IsNullable = true)]

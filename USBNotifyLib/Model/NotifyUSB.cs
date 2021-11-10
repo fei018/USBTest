@@ -5,11 +5,11 @@ namespace USBNotifyLib
 {
     public class NotifyUsb : IUsbInfo
     {
-        public UInt16 Vid { get; set; }
+        public int Vid { get; set; }
 
         public string Vid_Hex => "Vid_" + Vid.ToString("X").PadLeft(4, '0');
 
-        public UInt16 Pid { get; set; }
+        public int Pid { get; set; }
 
         public string Pid_Hex => "Pid_" + Pid.ToString("X").PadLeft(4, '0');
 

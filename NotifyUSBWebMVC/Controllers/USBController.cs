@@ -22,13 +22,13 @@ namespace USBNotifyWebMVC.Controllers
             _httpContext = httpContextAccessor.HttpContext;
         }
 
-        #region Index
-        public IActionResult Index()
+        #region RegisteredIndex
+        public IActionResult Registered()
         {
             return View();
         }
 
-        public async Task<IActionResult> IndexUsb()
+        public async Task<IActionResult> RegisteredIndex()
         {
             try
             {
@@ -62,7 +62,7 @@ namespace USBNotifyWebMVC.Controllers
         }
         #endregion
 
-        #region GetUsbFilterTable
+        #region FilterTable()
         public async Task<IActionResult> FilterTable()
         {
             var query = await _usbDb.GetUsbFilterTable();
@@ -73,6 +73,26 @@ namespace USBNotifyWebMVC.Controllers
             else
             {
                 return Content(query, "text/plain", Encoding.UTF8);
+            }
+        }
+        #endregion
+
+        #region HistoryIndex
+        public IActionResult History()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> HistoryIndex()
+        {
+            try
+            {
+                var query = await _usbDb.GetUsbHistoryDetailList();
+                return Json(JsonResultHelp.LayuiTableData(query));
+            }
+            catch (Exception ex)
+            {
+                return Json(JsonResultHelp.Error(ex.Message));
             }
         }
         #endregion

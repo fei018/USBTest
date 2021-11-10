@@ -69,7 +69,9 @@ namespace USBNotifyLib
             if (nic == null) return;
 
             // set IP Address
-            IPAddress = nic.GetIPProperties().UnicastAddresses.First().Address.ToString();
+            IPAddress = nic.GetIPProperties().UnicastAddresses
+                            .Where(n => n.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                            .First().Address.ToString();
 
             // Set MAC Address
             StringBuilder mac = new StringBuilder();

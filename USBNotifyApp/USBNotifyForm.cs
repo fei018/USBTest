@@ -23,7 +23,7 @@ namespace USBNotifyApp
         #region + private void UsbStart()
         private void UsbStart()
         {
-            new UsbFilterTable().Reload_PolicyUSBTable();
+            new UsbFilterDb().Reload_UsbFilterDb();
             new UsbFilter().Filter_Scan_All_USB_Disk();
 
             //UsbHttpHelp.Set_UpdateUsbFilterTable_Http_Timer();
@@ -47,7 +47,7 @@ namespace USBNotifyApp
                             Task.Run(() =>
                             {
                                 //new UsbFilter().Filter_NotifyUSB_Use_DriveLetter(letter);
-                                new UsbHttpHelp().PostComputerUsbInfo(letter);
+                                new UsbHttpHelp().PostComputerUsbHistoryInfo_Http(letter);
                             });
                         }
                     }

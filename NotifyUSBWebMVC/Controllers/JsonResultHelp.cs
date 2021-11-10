@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Text.Json;
 
-namespace NotifyUSBWebMVC.Controllers
+namespace USBNotifyWebMVC.Controllers
 {
-    public class JsonHelp
+    public class JsonResultHelp
     {
         public static object Ok(string msg=null)
         {

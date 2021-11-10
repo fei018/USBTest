@@ -1,9 +1,10 @@
 ﻿using SqlSugar;
+using System;
 using USBCommon;
 
 namespace USBModel
 {
-    public class ComputerInfo : IComputerInfo
+    public class UserComputer : IComputerInfo
     {
         [SugarColumn(IsIdentity = true, IsPrimaryKey = true)]
         public int Id { get; set; }
@@ -14,23 +15,19 @@ namespace USBModel
         [SugarColumn(IsNullable = true, ColumnDataType = "varchar(50)")]
         public string Domain { get; set; }
 
-        [SugarColumn(IsNullable = true, ColumnDataType = "varchar(50)")]
+        [SugarColumn(ColumnDataType = "varchar(50)")]
         public string BiosSerial { get; set; }
 
         [SugarColumn(IsNullable = true, ColumnDataType = "varchar(12)")]
         public string IPAddress { get; set; }
 
-        [SugarColumn(IsNullable = true, ColumnDataType = "varchar(20)")]
+        [SugarColumn(ColumnDataType = "varchar(20)")]
         public string MacAddress { get; set; }
 
         [SugarColumn(UniqueGroupNameList = new string[] { "unique1" }, ColumnDataType = "varchar(70)")]
-        public string UniqueBiosMac { get; set; }
+        public string ComputerIdentity { get; set; }
 
-
-        public void SetUniqueBiosMac()
-        {
-            UniqueBiosMac = (BiosSerial + MacAddress).Trim().ToLower();
-        }
+        public DateTime UpdateTime { get; set; }
 
         public override string ToString()
         {

@@ -33,7 +33,6 @@ namespace USBNotifyDesktop
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(USBNotifyDesktopForm));
             this.UsbNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStripUsb = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.updateUsbToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripUsb.SuspendLayout();
             this.SuspendLayout();
@@ -48,21 +47,14 @@ namespace USBNotifyDesktop
             // contextMenuStripUsb
             // 
             this.contextMenuStripUsb.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.updateUsbToolStripMenuItem,
             this.toolStripMenuItem2});
             this.contextMenuStripUsb.Name = "contextMenuStripUsb";
-            this.contextMenuStripUsb.Size = new System.Drawing.Size(143, 48);
-            // 
-            // updateUsbToolStripMenuItem
-            // 
-            this.updateUsbToolStripMenuItem.Name = "updateUsbToolStripMenuItem";
-            this.updateUsbToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
-            this.updateUsbToolStripMenuItem.Text = "Update Usb";
+            this.contextMenuStripUsb.Size = new System.Drawing.Size(181, 48);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(142, 22);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem2.Text = "?";
             // 
             // USBNotifyDesktopForm
@@ -82,7 +74,6 @@ namespace USBNotifyDesktop
 
         private System.Windows.Forms.NotifyIcon UsbNotifyIcon;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripUsb;
-        private System.Windows.Forms.ToolStripMenuItem updateUsbToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
     }
 }

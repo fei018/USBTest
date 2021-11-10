@@ -3,7 +3,7 @@ using USBCommon;
 
 namespace USBNotifyLib
 {
-    public class NotifyUSB : IUsbInfo
+    public class NotifyUsb : IUsbInfo
     {
         public UInt16 Vid { get; set; }
 
@@ -35,7 +35,7 @@ namespace USBNotifyLib
         /// 
         /// </summary>
         /// <returns>Lowercase string</returns>
-        public string UniqueVPSerial => (Vid.ToString() + Pid.ToString() + SerialNumber).ToLower();
+        public string UsbIdentity => (Vid.ToString() + Pid.ToString() + SerialNumber).ToLower();
 
         public override string ToString()
         {

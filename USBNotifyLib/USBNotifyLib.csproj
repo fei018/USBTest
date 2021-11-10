@@ -45,11 +45,12 @@
     <Compile Include="Filter\UsbBusController.cs" />
     <Compile Include="Filter\UsbFilter.cs" />
     <Compile Include="Filter\UsbFilterFun.cs" />
-    <Compile Include="Filter\UsbFilterTable.cs" />
-    <Compile Include="Model\UserConputerInfo.cs" />
-    <Compile Include="Model\NotifyUSB.cs" />
+    <Compile Include="Filter\UsbFilterDb.cs" />
+    <Compile Include="Model\LocalComputer.cs" />
+    <Compile Include="Model\NotifyUsb.cs" />
     <Compile Include="Main\USBConfig.cs" />
     <Compile Include="Main\USBLogger.cs" />
+    <Compile Include="Model\UsbHistory.cs" />
     <Compile Include="Model\UsbHttpHelp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Win32API\ProcessApi.cs" />

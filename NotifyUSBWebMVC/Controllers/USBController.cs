@@ -7,10 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using USBModel;
-using USBCommon;
-using Newtonsoft.Json;
 
-namespace NotifyUSBWebMVC.Controllers
+namespace USBNotifyWebMVC.Controllers
 {
     public class USBController : Controller
     {
@@ -21,7 +19,6 @@ namespace NotifyUSBWebMVC.Controllers
         {
 
             _usbDb = usbDb;
-            _usbDb.TryCreateDatabase();
             _httpContext = httpContextAccessor.HttpContext;
         }
 
@@ -36,11 +33,11 @@ namespace NotifyUSBWebMVC.Controllers
             try
             {
                 var query = await _usbDb.GetRegisteredUsbList();
-                return Json(JsonHelp.LayuiTableData(query));
+                return Json(JsonResultHelp.LayuiTableData(query));
             }
             catch (Exception ex)
             {
-                return Json(JsonHelp.Error(ex.Message));
+                return Json(JsonResultHelp.Error(ex.Message));
             }
         }
         #endregion
@@ -51,16 +48,16 @@ namespace NotifyUSBWebMVC.Controllers
             return View();
         }
 
-        public async Task<IActionResult> RegisterUsb(RegisteredUsb usb)
+        public async Task<IActionResult> RegisterUsb(UserUsb usb)
         {
             try
             {
-                await _usbDb.RegisterUsb(usb);
-                return Json(JsonHelp.Ok("Register Success."));
+                await _usbDb.Register_Usb(usb);
+                return Json(JsonResultHelp.Ok("Register Success."));
             }
             catch (Exception ex)
             {
-                return Json(JsonHelp.Error(ex.Message));
+                return Json(JsonResultHelp.Error(ex.Message));
             }
         }
         #endregion
@@ -80,22 +77,29 @@ namespace NotifyUSBWebMVC.Controllers
         }
         #endregion
 
-        #region PostComputerInfo
+        #region PostComputerInfo()
         [HttpPost]
         public async Task<IActionResult> PostComputerInfo()
         {
-            StreamReader body = new StreamReader(_httpContext.Request.Body, Encoding.UTF8);
-            var comjosn = await body.ReadToEndAsync();
+            try
+            {
+                StreamReader body = new StreamReader(_httpContext.Request.Body, Encoding.UTF8);
+                var comjosn = await body.ReadToEndAsync();
 
-            await _usbDb.UpdateOrInsert_ComputerInfo_by_Json(comjosn);
+                var com = UsbJsonConvert.GetUserComputer(comjosn);
+                await _usbDb.Update_UserComputer(com);
 
-            return Ok();
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
         }
         #endregion
 
-
-        #region MyRegion
-        public IActionResult PostComputerUsbInfo()
+        #region PostComputerUsbInfo()
+        public async Task<IActionResult> PostComputerUsbInfo()
         {
             try
             {
@@ -104,15 +108,13 @@ namespace NotifyUSBWebMVC.Controllers
 
                 var info = UsbJsonConvert.GetPostComputerUsbInfo(post);
 
-                var com = info.ComputerInfo as ComputerInfo;
-                var usb = info.UsbInfo as RegisteredUsb;
+                await _usbDb.Update_PostComputerUsbHistory(info);
 
                 return Ok();
             }
             catch (Exception ex)
             {
-
-                return Ok();
+                return NotFound();
             }
         }
         #endregion

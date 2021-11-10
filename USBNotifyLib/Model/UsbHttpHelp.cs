@@ -10,8 +10,8 @@ namespace USBNotifyLib
 {
     public class UsbHttpHelp
     {
-        #region + public static void UpdateUsbFilterTable_Http()
-        public static void UpdateUsbFilterTable_Http()
+        #region + public static void GetUsbFilterTable_Http()
+        public static void GetUsbFilterTable_Http()
         {
             try
             {
@@ -22,7 +22,7 @@ namespace USBNotifyLib
                     response.EnsureSuccessStatusCode();
                     string rp = response.Content.ReadAsStringAsync().Result;
 
-                    UsbConfig.Write_FilterUSbTable(rp);
+                    UsbConfig.WriteFile_UsbFilterDb(rp);
                 }
             }
             catch (Exception ex)
@@ -32,34 +32,34 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + public static void Set_UpdateUsbFilterTable_Http_Timer()
+        #region + public static void Set_GetFilterTable_Http_Timer()
         private static Timer _updateUsbFilterTableTimer;
-        public static void Set_UpdateUsbFilterTable_Http_Timer()
+        public static void Set_GetFilterTable_Http_Timer()
         {
             _updateUsbFilterTableTimer = new Timer();
             _updateUsbFilterTableTimer.Interval = UsbConfig.UpdateTimer;
             _updateUsbFilterTableTimer.AutoReset = false;
-            _updateUsbFilterTableTimer.Elapsed += _updateUsbFilterTableTimer_Elapsed;
+            _updateUsbFilterTableTimer.Elapsed += _getUsbFilterTableTimer_Elapsed;
             _updateUsbFilterTableTimer.Enabled = true;
         }
 
-        private static void _updateUsbFilterTableTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private static void _getUsbFilterTableTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             Task.Run(() =>
             {
                 _updateUsbFilterTableTimer.Enabled = false;
-                UpdateUsbFilterTable_Http();
+                GetUsbFilterTable_Http();
                 _updateUsbFilterTableTimer.Enabled = true;
             });
         }
         #endregion
 
-        #region + public static void UpdateComputerInfo_Http()
-        public static void UpdateComputerInfo_Http()
+        #region + public static void PostComputerInfo_Http()
+        public static void PostComputerInfo_Http()
         {
             try
             {
-                var com = new UserComputerInfo().GetInfo();
+                var com = new LocalComputer() as IComputerInfo;
                 var comJson = JsonConvert.SerializeObject(com);
 
                 using (var http = new HttpClient())
@@ -77,39 +77,46 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + public static void Set_HttpPostComputerInfo_Timer()
-        private static Timer _updateComInfo_Timer;
-        public static void Set_UpdateComputerInfo_Http_Timer()
+        #region + public static void Set_PostComputerInfo_Http_Timer()
+        private static Timer _postComInfo_Timer;
+        public static void Set_PostComputerInfo_Http_Timer()
         {
-            _updateComInfo_Timer = new Timer();
-            _updateComInfo_Timer.Interval = UsbConfig.UpdateTimer;
-            _updateComInfo_Timer.AutoReset = false;
-            _updateComInfo_Timer.Elapsed += _updateComInfo_Timer_Elapsed;
-            _updateComInfo_Timer.Enabled = true;
+            _postComInfo_Timer = new Timer();
+            _postComInfo_Timer.Interval = UsbConfig.UpdateTimer;
+            _postComInfo_Timer.AutoReset = false;
+            _postComInfo_Timer.Elapsed += _postComInfo_Timer_Elapsed;
+            _postComInfo_Timer.Enabled = true;
         }
 
-        private static void _updateComInfo_Timer_Elapsed(object sender, ElapsedEventArgs e)
+        private static void _postComInfo_Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             Task.Run(() =>
             {
-                _updateComInfo_Timer.Enabled = false;
-                UpdateComputerInfo_Http();
-                _updateComInfo_Timer.Enabled = true;
+                _postComInfo_Timer.Enabled = false;
+                PostComputerInfo_Http();
+                _postComInfo_Timer.Enabled = true;
             });
         }
         #endregion
 
-        #region + public void PostComputerUsbInfo(char driveLetter)
-        public void PostComputerUsbInfo(char driveLetter)
+        #region + public void PostComputerUsbInfo_Http(char driveLetter)
+        public void PostComputerUsbHistoryInfo_Http(char driveLetter)
         {
             try
             {
-                var com = new UserComputerInfo().GetInfo();
+                var com = new LocalComputer() as IComputerInfo;
                 var usb = new UsbFilter().Find_NotifyUSB_Use_DriveLetter(driveLetter) as IUsbInfo;
+                
+                var his = new UsbHistory
+                {
+                    ComputerIdentity = com.ComputerIdentity,
+                    UsbIdentity = usb.UsbIdentity,
+                    PluginTime = DateTime.Now
+                };
 
-                var post = new PostComUsb { ComputerInfo = com, UsbInfo = usb };
+                var post = new PostComUsbHistory { ComputerInfo = com, UsbInfo = usb, UsbHistory = his };
                 var postjosn = JsonConvert.SerializeObject(post);
-
+             
                 using (var http = new HttpClient())
                 {
                     http.Timeout = TimeSpan.FromSeconds(10);

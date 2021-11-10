@@ -42,7 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IComputerInfo.cs" />
-    <Compile Include="PostComUsb.cs" />
+    <Compile Include="IUsbHistory.cs" />
+    <Compile Include="PostComUsbHistory.cs" />
     <Compile Include="IUsbInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

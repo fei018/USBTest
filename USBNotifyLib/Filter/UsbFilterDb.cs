@@ -7,36 +7,36 @@ using System.Threading.Tasks;
 
 namespace USBNotifyLib
 {
-    public class UsbFilterTable
+    public class UsbFilterDb
     {
-        private static HashSet<string> CacheTable { get; set; }
+        private static HashSet<string> CacheDb { get; set; }
 
-        private static readonly object _locker_CacheTable = new object();
+        private static readonly object _locker_CacheDb = new object();
 
-        public UsbFilterTable()
+        public UsbFilterDb()
         {
-            CheckCacheTable();
+            CheckCacheDb();
         }
 
-        #region + private void CheckCacheTable()
-        private void CheckCacheTable()
+        #region + private void CheckCacheDb()
+        private void CheckCacheDb()
         {
-            if (CacheTable == null || CacheTable.Count <= 0)
+            if (CacheDb == null || CacheDb.Count <= 0)
             {
-                Reload_PolicyUSBTable();
+                Reload_UsbFilterDb();
             }
         }
         #endregion
 
-        #region + public void Reload_PolicyUSBTable()
-        public void Reload_PolicyUSBTable()
+        #region + public void Reload_UsbFilterDb()
+        public void Reload_UsbFilterDb()
         {
             try
             {
-                var table = UsbConfig.Read_FilterUSBTable();
+                var table = UsbConfig.ReadFile_UsbFilterDb();
                 if (table == null || table.Length <= 0)
                 {
-                    throw new Exception(UsbConfig.FilterUSBTablePath + " file nothing ?");
+                    throw new Exception(UsbConfig.UsbFilterDbPath + " file nothing ?");
                 }
 
                 var cache = new HashSet<string>();
@@ -54,9 +54,9 @@ namespace USBNotifyLib
                     catch (Exception) { }
                 }
 
-                lock (_locker_CacheTable)
+                lock (_locker_CacheDb)
                 {
-                    CacheTable = cache;
+                    CacheDb = cache;
                 }
             }
             catch (Exception ex)
@@ -67,13 +67,13 @@ namespace USBNotifyLib
         #endregion
 
         #region + public bool IsFind(NotifyUSB usb)
-        public bool IsFind(NotifyUSB usb)
+        public bool IsFind(NotifyUsb usb)
         {
-            if (CacheTable != null && CacheTable.Count > 0)
+            if (CacheDb != null && CacheDb.Count > 0)
             {
-                foreach (var t in CacheTable)
+                foreach (var t in CacheDb)
                 {
-                    if (t.ToLower() == usb.UniqueVPSerial)
+                    if (t.ToLower() == usb.UsbIdentity)
                     {
                         return true;
                     }

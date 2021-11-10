@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using USBModel;
 
-namespace NotifyUSBWebMVC.Controllers
+namespace USBNotifyWebMVC.Controllers
 {
     public class HomeController : Controller
     {
@@ -26,11 +24,11 @@ namespace NotifyUSBWebMVC.Controllers
             try
             {
                 var query = await _usbDb.GetRegisteredUsbList();
-                return View("Welcome",query.Count.ToString());
+                return View("Welcome", query.Count.ToString());
             }
             catch (Exception ex)
             {
-                return View("Welcome",ex.Message);
+                return View("Welcome", ex.Message);
             }
         }
     }

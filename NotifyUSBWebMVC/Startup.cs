@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NotifyUSBWebMVC
+namespace USBNotifyWebMVC
 {
     public class Startup
     {

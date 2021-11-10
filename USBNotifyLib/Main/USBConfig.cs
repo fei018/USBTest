@@ -8,7 +8,7 @@ namespace USBNotifyLib
     public class UsbConfig
     {
         private static readonly string _baseDir = AppDomain.CurrentDomain.BaseDirectory;
-        private static string _config = Path.Combine(_baseDir, "app.cfg");
+
         private static string _configJson = Path.Combine(_baseDir, "appcfg.json");
 
         public static string LogPath => Path.Combine(_baseDir, "log.txt");
@@ -17,79 +17,47 @@ namespace USBNotifyLib
 
         public static string NUWAppPath => Path.Combine(_baseDir, "nuwapp.exe");
 
-        public static string FilterUSBTablePath => (string)AppConfig()["path"]["usbFilterTable"];
+        public static string UsbFilterDbPath => (string)AppConfig()["path"]["usbFilterTable"];
 
         public static string GetUsbFilterUrl => (string)AppConfig()["url"]["usbFilterTable"];
 
-        public static int UpdateTimer => Convert.ToInt32(AppConfig()["updateTimer"]);
+        public static int UpdateTimer => (int)AppConfig()["updateTimer"];
 
         public static string PostComputerInfoUrl => (string)AppConfig()["url"]["postComputerInfo"];
 
         public static string PostComUsbInfoUrl => (string)AppConfig()["url"]["postComUserInfo"];
 
-        #region + private static string GetConfigValue(string arg)
-        private static readonly object _Locker_Config = new object();
-        private static string GetConfigValue(string arg)
-        {
-            try
-            {
-                lock (_Locker_Config)
-                {
-                    if (File.Exists(_config))
-                    {
-                        var lines = File.ReadAllLines(_config);
-                        foreach (var l in lines)
-                        {
-                            if (!string.IsNullOrWhiteSpace(l))
-                            {
-                                var a = l.Split('=')[0].Trim().ToLower();
-                                var v = l.Split('=')[1].Trim();
-                                if (a == arg.ToLower())
-                                {
-                                    return v;
-                                }
-                            }
-                        }
-                    }
-                    return null;
-                }
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-        #endregion
 
-        #region + public static string[] Read_FilterUSBTable()
-        private static readonly object _locker_Table = new object();
-        public static string[] Read_FilterUSBTable()
+        #region + public static string[] ReadFile_UsbFilterDb()
+        private static readonly object _locker_UsbFilterDb = new object();
+        public static string[] ReadFile_UsbFilterDb()
         {
-            lock (_locker_Table)
+            lock (_locker_UsbFilterDb)
             {
-                if (File.Exists(FilterUSBTablePath))
+                if (File.Exists(UsbFilterDbPath))
                 {
-                    return File.ReadAllLines(FilterUSBTablePath, Encoding.UTF8);
+                    return File.ReadAllLines(UsbFilterDbPath, Encoding.UTF8);
                 }
                 return null;
             }
         }
         #endregion
 
-        #region + public static void Write_FilterUSbTable(string txt)
-        public static void Write_FilterUSbTable(string txt)
+        #region + public static void WriteFile_UsbFilterDb(string txt)
+        public static void WriteFile_UsbFilterDb(string txt)
         {
-            lock (_locker_Table)
+            lock (_locker_UsbFilterDb)
             {
-                if (File.Exists(FilterUSBTablePath))
+                if (File.Exists(UsbFilterDbPath))
                 {
-                    File.WriteAllText(FilterUSBTablePath, txt, Encoding.UTF8);
+                    File.WriteAllText(UsbFilterDbPath, txt, Encoding.UTF8);
                 }
             }
         }
         #endregion
 
         #region + private static JObject GetConfigJsonObject()
+        private static readonly object _Locker_Config = new object();
         private static JObject AppConfig()
         {
             try

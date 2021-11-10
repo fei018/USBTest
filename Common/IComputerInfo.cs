@@ -12,5 +12,6 @@
 
         string MacAddress { get; set; }
 
+        string ComputerIdentity { get; }
     }
 }

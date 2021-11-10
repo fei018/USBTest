@@ -36,14 +36,9 @@ namespace USBModel
         {        
             if (_db.DbMaintenance.CreateDatabase())
             {
-                if (!_db.DbMaintenance.IsAnyTable(nameof(RegisteredUsb)))
-                {
-                    _db.CodeFirst.InitTables<RegisteredUsb>();
-                }
-                if (!_db.DbMaintenance.IsAnyTable(nameof(ComputerInfo)))
-                {
-                    _db.CodeFirst.InitTables<ComputerInfo>();
-                }               
+                _db.CodeFirst.InitTables<UsbHistory>();
+                _db.CodeFirst.InitTables<UserUsb>();
+                _db.CodeFirst.InitTables<UserComputer>();
             }
         }
         #endregion
@@ -67,13 +62,13 @@ namespace USBModel
         {
             try
             {
-                var usbs = await _db.Queryable<RegisteredUsb>().ToListAsync();
+                var usbs = await _db.Queryable<UserUsb>().ToListAsync();
                 if (usbs == null || usbs.Count <= 0) return null;
 
                 var sb = new StringBuilder();
                 foreach (var u in usbs)
                 {
-                    sb.AppendLine(Base64Encode(u.UniqueVPSerial));
+                    sb.AppendLine(Base64Encode(u.UsbIdentity));
                 }
 
                 return sb.ToString();
@@ -85,75 +80,174 @@ namespace USBModel
         }
         #endregion
 
-        #region + public async Task UpdateOrInsert_ComputerInfo_by_Json(string comjson)
-        public async Task UpdateOrInsert_ComputerInfo_by_Json(string comjson)
-        {
-            try
-            {
-                ComputerInfo com = JsonConvert.DeserializeObject(comjson, typeof(IComputerInfo)) as ComputerInfo;
-                com.SetUniqueBiosMac();
-
-                if (com == null) throw new Exception("Json to ComputerInfo as Null.");
-
-                var query = await _db.Queryable<ComputerInfo>()
-                                     .Where(c => c.UniqueBiosMac == com.UniqueBiosMac)
-                                     .FirstAsync();
-
-                if (query == null)
-                {
-                    await _db.Insertable(com).ExecuteCommandAsync();
-                }
-                else
-                {
-                    com.Id = query.Id;
-                    await _db.Updateable(com).ExecuteCommandAsync();
-                }               
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-        #endregion
-
-        #region + public async Task RegisterUsb(RegisteredUsb usb)
-        public async Task RegisterUsb(RegisteredUsb usb)
-        {
-            try
-            {
-                usb.SetUniqueVPSerial();
-                var query = await _db.Queryable<RegisteredUsb>()
-                                     .Where(u => u.UniqueVPSerial == usb.UniqueVPSerial)
-                                     .FirstAsync();
-
-                if (query == null)
-                {
-                    await _db.Insertable(usb).ExecuteCommandAsync();
-                }
-                else
-                {
-                    throw new Exception("Usb existed: " + usb.ToString());
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-        #endregion
-
         #region + public async Task<List<RegisteredUsb>> GetRegisteredUsbList()
-        public async Task<List<RegisteredUsb>> GetRegisteredUsbList()
+        public async Task<List<UserUsb>> GetRegisteredUsbList()
         {
             try
             {
-                var query = await _db.Queryable<RegisteredUsb>().ToListAsync();
+                var query = await _db.Queryable<UserUsb>().ToListAsync();
                 if (query == null || query.Count <= 0)
                 {
                     throw new Exception("RegisteredUsb Db is Null or Empty.");
                 }
 
                 return query;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        #region + public async Task<List<RegisteredUsb>> GetRegisteredUsbListByComputer(UserComputer com)
+        public async Task<List<UserUsb>> GetRegisteredUsbListByComputer(UserComputer com)
+        {
+            try
+            {
+                var query = await _db.Queryable<UserUsb>()
+                                    .Where(u=>u.RequestComputerId == com.ComputerIdentity)
+                                    .ToListAsync();
+
+                if (query == null || query.Count <= 0)
+                {
+                    throw new Exception("Find RegisteredUsb is Null or Empty.");
+                }
+
+                return query;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        #region + public async Task Register_Usb(UserUsb usb)
+        public async Task Register_Usb(UserUsb usb)
+        {
+            try
+            {
+                var usbInDb = await _db.Queryable<UserUsb>()
+                                     .Where(u => u.UsbIdentity == usb.UsbIdentity)
+                                     .FirstAsync();
+
+                if (usbInDb == null)
+                {
+                    usb.RegisteredTime = DateTime.Now;
+                    usb.IsRegistered = false;
+                    await _db.Insertable(usb).ExecuteCommandAsync();
+                }
+                else
+                {
+                    if (usbInDb.IsRegistered)
+                    {
+                        throw new Exception("USB Registered: " + usbInDb.ToString());
+                    }
+                    else
+                    {
+                        usbInDb.RegisteredTime = DateTime.Now;
+                        await _db.Updateable(usbInDb).ExecuteCommandAsync();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        #region + public async Task Update_UserComputer(UserComputer com)
+        public async Task Update_UserComputer(UserComputer com)
+        {
+            try
+            {
+                var query = await _db.Queryable<UserComputer>()
+                                     .Where(c => c.ComputerIdentity == com.ComputerIdentity)
+                                     .FirstAsync();
+
+                com.UpdateTime = DateTime.Now;
+                if (query == null)
+                {                   
+                    await _db.Insertable(com).ExecuteCommandAsync();
+                }
+                else
+                {
+                    com.Id = query.Id;
+                    await _db.Updateable(com).ExecuteCommandAsync();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        #region + private async Task Insert_UserUsb(UserUsb usb)
+        private async Task Insert_UserUsb(UserUsb usb)
+        {
+            try
+            {
+                var usbInDb = await _db.Queryable<UserUsb>()
+                                    .Where(u => u.UsbIdentity == usb.UsbIdentity)
+                                    .FirstAsync();
+
+                if (usbInDb == null)
+                {
+                    await _db.Insertable(usb).ExecuteCommandAsync();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        #region + private async Task Insert_UsbHistory(UsbHistory usb)
+        private async Task Insert_UsbHistory(UsbHistory usb)
+        {
+            try
+            {
+                await _db.Insertable(usb).ExecuteCommandAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        #region + public async Task Update_PostComputerUsbHistory(PostComUsbInfo post)
+        /// <summary>
+        /// update UserComputer and UserUsb to database
+        /// </summary>
+        /// <param name="post"></param>
+        /// <returns></returns>
+        public async Task Update_PostComputerUsbHistory(PostComUsbHistory post)
+        {
+            try
+            {
+                var com = post.ComputerInfo as UserComputer;
+                if (com != null)
+                {
+                    await Update_UserComputer(com);
+                }
+
+                var usb = post.UsbInfo as UserUsb;
+                if (usb != null)
+                {
+                    usb.RequestComputerId = com?.ComputerIdentity;
+                    await Insert_UserUsb(usb);
+                }
+
+                var history = post.UsbHistory as UsbHistory;
+                if (history != null)
+                {
+                    await Insert_UsbHistory(history);
+                }
             }
             catch (Exception)
             {

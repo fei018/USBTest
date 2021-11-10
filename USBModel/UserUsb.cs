@@ -4,10 +4,15 @@ using USBCommon;
 
 namespace USBModel
 {
-    public class RegisteredUsb : IUsbInfo
+    public class UserUsb : IUsbInfo
     {
         [SugarColumn(IsIdentity = true, IsPrimaryKey = true)]
         public int Id { get; set; }
+
+        public bool IsRegistered { get; set; }
+
+        [SugarColumn(IsNullable = true)]
+        public DateTime RegisteredTime { get; set; }
 
         public UInt16 Vid { get; set; }
 
@@ -26,10 +31,16 @@ namespace USBModel
         public string Product { get; set; }
 
         [SugarColumn(UniqueGroupNameList = new string[] {"unique1"}, ColumnDataType = "varchar(100)")]
-        public string UniqueVPSerial { get; set; }
+        public string UsbIdentity { get; set; }
 
-        [SugarColumn(IsNullable = true, ColumnDataType = "varchar(100)")]
-        public string ComputerKey { get; set; }
+        [SugarColumn(ColumnDataType = "varchar(100)")]
+        public string RequestComputerId { get; set; }
+
+        [SugarColumn(IsNullable = true)]
+        public DateTime RequestTime { get; set; }
+
+        
+        
 
         // SugarColumn(IsIgnore = true)
 
@@ -39,10 +50,6 @@ namespace USBModel
         [SugarColumn(IsIgnore = true)]
         public string Vid_Hex => "VID_" + Vid.ToString("X").PadLeft(4, '0');
 
-        public void SetUniqueVPSerial()
-        {
-            UniqueVPSerial = (Vid.ToString() + Pid.ToString() + SerialNumber).ToLower();
-        }
 
         public override string ToString()
         {

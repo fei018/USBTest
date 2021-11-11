@@ -17,5 +17,9 @@ namespace USBNotifyDesktop
             InitializeComponent();
         }
 
+        private void USBNotifyDesktopForm_Shown(object sender, EventArgs e)
+        {
+            this.Hide();
+        }
     }
 }

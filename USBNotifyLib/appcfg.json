@@ -1,10 +1,10 @@
 ﻿{
   "updateTimer": "10",
   "path": {
-    "usbFilterTable": ""
+    "usbFilterDb": ""
   },
   "url": {
-    "usbFilterTable": "",
+    "usbFilterDb": "",
     "postComputerInfo": "",
     "postComUsbHistoryInfo": "http://localhost:5000/usb/PostComputerUsbHistoryInfo"
   }

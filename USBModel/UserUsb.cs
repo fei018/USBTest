@@ -29,6 +29,7 @@ namespace USBModel
         [SugarColumn(IsNullable = true)]
         public string Product { get; set; }
 
+        [SugarColumn(UniqueGroupNameList = new string[] { "usbid" })]
         public string UsbIdentity { get; set; }
 
         public string RequestComputerId { get; set; }

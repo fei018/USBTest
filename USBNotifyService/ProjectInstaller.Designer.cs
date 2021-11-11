@@ -40,7 +40,7 @@ namespace USBNotifyService
             // 
             // serviceInstaller1
             // 
-            this.serviceInstaller1.ServiceName = "unotifysrv";
+            this.serviceInstaller1.ServiceName = "usbnsrv";
             this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
             // 
             // ProjectInstaller

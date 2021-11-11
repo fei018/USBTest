@@ -36,9 +36,9 @@ namespace USBModel
         {
             if (_db.DbMaintenance.CreateDatabase())
             {
-                _db.CodeFirst.SetStringDefaultLength(255).InitTables<UsbHistory>();
-                _db.CodeFirst.SetStringDefaultLength(255).InitTables<UserUsb>();
-                _db.CodeFirst.SetStringDefaultLength(255).InitTables<UserComputer>();
+                _db.CodeFirst.SetStringDefaultLength(100).InitTables<UsbHistory>();
+                _db.CodeFirst.SetStringDefaultLength(100).InitTables<UserUsb>();
+                _db.CodeFirst.SetStringDefaultLength(100).InitTables<UserComputer>();
             }
         }
         #endregion

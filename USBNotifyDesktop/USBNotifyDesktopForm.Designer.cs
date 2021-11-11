@@ -46,25 +46,29 @@ namespace USBNotifyDesktop
             // 
             // contextMenuStripUsb
             // 
+            this.contextMenuStripUsb.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStripUsb.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem2});
             this.contextMenuStripUsb.Name = "contextMenuStripUsb";
-            this.contextMenuStripUsb.Size = new System.Drawing.Size(181, 48);
+            this.contextMenuStripUsb.Size = new System.Drawing.Size(86, 28);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(85, 24);
             this.toolStripMenuItem2.Text = "?";
             // 
             // USBNotifyDesktopForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(244, 82);
+            this.ClientSize = new System.Drawing.Size(365, 102);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "USBNotifyDesktopForm";
             this.Text = "USBNotify Desktop";
+            this.Shown += new System.EventHandler(this.USBNotifyDesktopForm_Shown);
             this.contextMenuStripUsb.ResumeLayout(false);
             this.ResumeLayout(false);
 

@@ -21,6 +21,7 @@ namespace USBModel
 
         public string MacAddress { get; set; }
 
+        [SugarColumn(UniqueGroupNameList = new string[] {"comid"})]
         public string ComputerIdentity { get; set; }
 
         public DateTime UpdateTime { get; set; }

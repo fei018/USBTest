@@ -7,7 +7,7 @@
     <ProjectGuid>{09F80C0B-BD6B-4F99-97AE-A02AED1E61CE}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>USBNotifyApp</RootNamespace>
-    <AssemblyName>USBNotifyApp</AssemblyName>
+    <AssemblyName>usbnapp</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

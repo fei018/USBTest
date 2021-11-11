@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace USBNotifyLib.Win32API
 {
-    internal partial class ProcessApi
+    internal class ProcessApi
     {
         #region struct
         [StructLayout(LayoutKind.Sequential)]

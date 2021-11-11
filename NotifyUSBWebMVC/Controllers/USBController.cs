@@ -78,9 +78,18 @@ namespace USBNotifyWebMVC.Controllers
         #endregion
 
         #region HistoryIndex
-        public IActionResult History()
+        public async Task<IActionResult> History()
         {
-            return View();
+            try
+            {
+                var query = await _usbDb.GetUsbHistoryDetailList();
+                return View(query);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error(ex.Message);
+                return View();
+            }
         }
 
         public async Task<IActionResult> HistoryIndex()
@@ -118,15 +127,16 @@ namespace USBNotifyWebMVC.Controllers
         }
         #endregion
 
-        #region PostComputerUsbInfo()
-        public async Task<IActionResult> PostComputerUsbInfo()
+        #region PostComputerUsbHistoryInfo()
+        [HttpPost]
+        public async Task<IActionResult> PostComputerUsbHistoryInfo()
         {
             try
             {
                 StreamReader body = new StreamReader(_httpContext.Request.Body, Encoding.UTF8);
                 var post = body.ReadToEndAsync().Result;
 
-                var info = UsbJsonConvert.GetPostComputerUsbInfo(post);
+                var info = UsbJsonConvert.GetPostComputerUsbHistoryInfo(post);
 
                 await _usbDb.Update_PostComputerUsbHistory(info);
 

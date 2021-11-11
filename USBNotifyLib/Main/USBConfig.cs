@@ -15,7 +15,9 @@ namespace USBNotifyLib
 
         public static string ErrorPath => Path.Combine(_baseDir, "error.txt");
 
-        public static string NUWAppPath => Path.Combine(_baseDir, "nuwapp.exe");
+        public static string USBNotifyApp => Path.Combine(_baseDir, "nuwapp.exe");
+
+        public static string USBNotifyDesktop => Path.Combine(_baseDir, "");
 
         public static string UsbFilterDbPath => (string)AppConfig()["path"]["usbFilterTable"];
 
@@ -25,7 +27,7 @@ namespace USBNotifyLib
 
         public static string PostComputerInfoUrl => (string)AppConfig()["url"]["postComputerInfo"];
 
-        public static string PostComUsbInfoUrl => (string)AppConfig()["url"]["postComUserInfo"];
+        public static string PostComUsbHistoryInfoUrl => (string)AppConfig()["url"]["postComUsbHistoryInfo"];
 
 
         #region + public static string[] ReadFile_UsbFilterDb()

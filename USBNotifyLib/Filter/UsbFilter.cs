@@ -21,6 +21,8 @@ namespace USBNotifyLib
             _usbFilterDb = new UsbFilterDb();
         }
 
+        // Filter
+
         #region + public void Filter_NotifyUsb_Use_DriveLetter(char driveLetter)
         public void Filter_NotifyUsb_Use_DriveLetter(char driveLetter)
         {
@@ -106,8 +108,10 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + public NotifyUSB Find_NotifyUSB_Use_DriveLetter(char driveLetter)
-        public NotifyUsb Find_NotifyUSB_Use_DriveLetter(char driveLetter)
+        //Find
+
+        #region + public NotifyUSB Find_NotifyUsb_Use_DriveLetter(char driveLetter)
+        public NotifyUsb Find_NotifyUsb_Use_DriveLetter(char driveLetter)
         {
             try
             {
@@ -130,6 +134,29 @@ namespace USBNotifyLib
             }
         }
         #endregion
+
+        #region + public NotifyUsb Find_NotifyUsb_Use_DiskPath(string diskPath)
+        public NotifyUsb Find_NotifyUsb_Use_DiskPath(string diskPath)
+        {
+            try
+            {
+                var usb = new NotifyUsb { DiskPath = diskPath };
+                if (Find_UsbDeviceId_By_DiskPath_SetupDi(usb))
+                {
+                    if (_usbBus.Find_NotifyUSB_Detail_In_UsbBus(usb))
+                    {
+                        return usb;
+                    }
+                }
+                return null;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
         //* Filter Rule *//
 
         #region + private void Rule_NotFound_UsbDeviceID_By_DiskPath_SetupDi(NotifyUSB usb)

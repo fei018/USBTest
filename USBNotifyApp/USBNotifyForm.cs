@@ -20,64 +20,74 @@ namespace USBNotifyApp
             UsbStart();
         }
 
-        #region + private void UsbStart()
+        #region UsbStart()
         private void UsbStart()
         {
-            new UsbFilterDb().Reload_UsbFilterDb();
+            //new UsbFilterDb().Reload_UsbFilterDb();
             //new UsbFilter().Filter_Scan_All_USB_Disk();
 
             //UsbHttpHelp.Set_UpdateUsbFilterTable_Http_Timer();
         }
         #endregion
 
-        #region disk
+        #region OnUsbInterface(UsbEventDeviceInterfaceArgs args)
         public override void OnUsbInterface(UsbEventDeviceInterfaceArgs args)
         {
-            args.DeviceInterface == UsbMonitor.UsbDeviceInterface.Disk;
-        }
-        #endregion
-
-        #region + public override void OnUsbVolume(UsbEventVolumeArgs args)
-        private readonly object _Locker_OnVolume = new object();
-        public override void OnUsbVolume(UsbEventVolumeArgs args)
-        {
-            lock (_Locker_OnVolume)
+            if (args.Action == UsbDeviceChangeEvent.Arrival)
             {
-                if (args.Flags == UsbVolumeFlags.Net) return;
-
-                try
+                if (args.DeviceInterface == UsbMonitor.UsbDeviceInterface.Disk)
                 {
-                    if (args.Action == UsbDeviceChangeEvent.Arrival)
+                    Task.Run(() =>
                     {
-                        foreach (char letter in args.Drives)
-                        {
-                            Task.Run(() =>
-                            {
-                                //new UsbFilter().Filter_NotifyUSB_Use_DriveLetter(letter);
-                                new UsbHttpHelp().PostComputerUsbHistoryInfo_Http(letter);
-                            });
-                        }
-                    }
+                        new UsbHttpHelp().PostComputerUsbHistoryInfo_byDisk_Http(args.Name);
+                    });
                 }
-                catch (Exception) { }
             }
         }
         #endregion
 
-        #region + private void USBNofityForm_FormClosed(object sender, FormClosedEventArgs e)
+        #region OnUsbVolume(UsbEventVolumeArgs args)
+        private readonly object _Locker_OnVolume = new object();
+        public override void OnUsbVolume(UsbEventVolumeArgs args)
+        {
+            //lock (_Locker_OnVolume)
+            //{
+            //    if (args.Flags == UsbVolumeFlags.Net) return;
+
+            //    try
+            //    {
+            //        if (args.Action == UsbDeviceChangeEvent.Arrival)
+            //        {
+            //            foreach (char letter in args.Drives)
+            //            {
+            //                Task.Run(() =>
+            //                {
+            //                    new UsbFilter().Filter_NotifyUSB_Use_DriveLetter(letter);                               
+            //                });
+            //            }
+            //        }
+            //    }
+            //    catch (Exception) { }
+            //}
+        }
+        #endregion
+
+
+
+        // form
+        #region USBNofityForm_FormClosed(object sender, FormClosedEventArgs e)
         private void USBNofityForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             base.Stop();
         }
         #endregion
 
-        #region + private void USBNofityForm_Shown(object sender, EventArgs e)
+        #region USBNofityForm_Shown(object sender, EventArgs e)
         private void USBNofityForm_Shown(object sender, EventArgs e)
         {
            // this.Hide();
         }
         #endregion
-
         
     }
 }

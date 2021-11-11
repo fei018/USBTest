@@ -28,8 +28,14 @@
           "target": "_self",
           "child": [
             {
-              "title": "Index",
-              "href": "/USB/Index",
+              "title": "History",
+              "href": "/USB/History",
+              "icon": "fa fa-list-alt",
+              "target": "_self"
+            },
+            {
+              "title": "Registered",
+              "href": "/USB/Registered",
               "icon": "fa fa-list-alt",
               "target": "_self"
             },

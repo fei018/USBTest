@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Security;
@@ -9,10 +10,11 @@ namespace USBNotifyLib.Win32API
 {
     //// Ref: https://stackoverflow.com/questions/19776716/c-sharp-windows-service-creates-process-but-doesnt-executes-it
     ///  https://www.cnblogs.com/gnielee/archive/2010/04/08/session0-isolation-part2.html
-
+    
     [SuppressUnmanagedCodeSecurity]
-    public partial class ProcessApiHelper
+    public class ProcessApiHelp
     {
+        #region Params
         private const int GENERIC_ALL_ACCESS = 0x10000000;
         //public const int CREATE_NO_WINDOW = 0x08000000;
         private const int STARTF_USESHOWWINDOW = 0x00000001;
@@ -90,15 +92,16 @@ namespace USBNotifyLib.Win32API
             TokenPrimary = 1,
             TokenImpersonation
         }
+        #endregion
 
-
+        #region + internal static int GetCurrentUserSessionID()
         internal static int GetCurrentUserSessionID()
         {
             uint dwSessionId = (uint)ProcessApi.WTSGetActiveConsoleSessionId();
 
             // gets the Id of the User logged in with WinLogOn
-            System.Diagnostics.Process[] processes = System.Diagnostics.Process.GetProcessesByName("winlogon");
-            foreach (System.Diagnostics.Process p in processes)
+            Process[] processes = Process.GetProcessesByName("winlogon");
+            foreach (Process p in processes)
             {
                 if ((uint)p.SessionId == dwSessionId)
                 {
@@ -110,14 +113,16 @@ namespace USBNotifyLib.Win32API
 
             return -1;
         }
+        #endregion
 
+        #region + public static Process CreateProcessAsUser(string filePath, string args)
         /// <summary>
         /// Main method for Create process used advapi32: CreateProcessAsUser
         /// </summary>
         /// <param name="filePath">Execute path, for example: c:\app\myapp.exe</param>
         /// <param name="args">Arugments passing to execute application</param>
         /// <returns>Process just been created</returns>
-        public static System.Diagnostics.Process CreateProcessAsUser(string filePath, string args)
+        public static Process CreateProcessAsUser(string filePath, string args)
         {
 
             var dupedToken = IntPtr.Zero;
@@ -181,7 +186,7 @@ namespace USBNotifyLib.Win32API
                     }
                 });
 
-                return System.Diagnostics.Process.GetProcessById(pi.dwProcessID);
+                return Process.GetProcessById(pi.dwProcessID);
             }
             finally
             {
@@ -194,5 +199,6 @@ namespace USBNotifyLib.Win32API
                     ProcessApi.CloseHandle(dupedToken);
             }
         }
+        #endregion
     }
 }

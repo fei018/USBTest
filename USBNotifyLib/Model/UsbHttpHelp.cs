@@ -100,12 +100,12 @@ namespace USBNotifyLib
         #endregion
 
         #region + public void PostComputerUsbInfo_Http(char driveLetter)
-        public void PostComputerUsbHistoryInfo_Http(char driveLetter)
+        public void PostComputerUsbHistoryInfo_byVolume_Http(char driveLetter)
         {
             try
             {
                 var com = new LocalComputer() as IComputerInfo;
-                var usb = new UsbFilter().Find_NotifyUSB_Use_DriveLetter(driveLetter) as IUsbInfo;
+                var usb = new UsbFilter().Find_NotifyUsb_Use_DriveLetter(driveLetter) as IUsbInfo;
                 
                 var his = new UsbHistory
                 {
@@ -121,7 +121,40 @@ namespace USBNotifyLib
                 {
                     http.Timeout = TimeSpan.FromSeconds(10);
                     StringContent content = new StringContent(postjosn, Encoding.UTF8, "application/json");
-                    var response = http.PostAsync(UsbConfig.PostComUsbInfoUrl, content).Result;
+                    var response = http.PostAsync(UsbConfig.PostComUsbHistoryInfoUrl, content).Result;
+                    response.EnsureSuccessStatusCode();
+                }
+            }
+            catch (Exception ex)
+            {
+                UsbLogger.Error(ex.Message);
+            }
+        }
+        #endregion
+
+        #region + public void PostComputerUsbHistoryInfo_byDisk_Http(string diskPath)
+        public void PostComputerUsbHistoryInfo_byDisk_Http(string diskPath)
+        {
+            try
+            {
+                var com = new LocalComputer() as IComputerInfo;
+                var usb = new UsbFilter().Find_NotifyUsb_Use_DiskPath(diskPath) as IUsbInfo;
+
+                var his = new UsbHistory
+                {
+                    ComputerIdentity = com.ComputerIdentity,
+                    UsbIdentity = usb.UsbIdentity,
+                    PluginTime = DateTime.Now
+                };
+
+                var post = new PostComUsbHistory { ComputerInfo = com, UsbInfo = usb, UsbHistory = his };
+                var postjosn = JsonConvert.SerializeObject(post);
+
+                using (var http = new HttpClient())
+                {
+                    http.Timeout = TimeSpan.FromSeconds(10);
+                    StringContent content = new StringContent(postjosn, Encoding.UTF8, "application/json");
+                    var response = http.PostAsync(UsbConfig.PostComUsbHistoryInfoUrl, content).Result;
                     response.EnsureSuccessStatusCode();
                 }
             }

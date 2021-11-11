@@ -8,49 +8,63 @@ using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
 using USBNotifyLib;
+using USBNotifyLib.Win32API;
 
 namespace USBNotifyService
 {
     public partial class UsbService : ServiceBase
     {
+        private bool IsRebootUsbApp = true;
+
         public UsbService()
         {
             InitializeComponent();
             CanHandleSessionChangeEvent = true;
         }
 
-        private Process _usbFormProcess;
-        private bool IsBootUsbForm = true;
-
+        #region OnStart(string[] args)
         protected override void OnStart(string[] args)
         {
-            IsBootUsbForm = true;
-            StartUSBNotifyAppProcess();
+            IsRebootUsbApp = true;
+            StartProcess_USBNotifyApp();
         }
+        #endregion
 
+        #region OnStop()
         protected override void OnStop()
         {
-            IsBootUsbForm = false;
-            CloseUSBNotifyAppProcess();
+            IsRebootUsbApp = false;
+            CloseProcess_USBNotifyApp();
         }
+        #endregion
+
 
         #region USBNotifyApp Process
-        private void StartUSBNotifyAppProcess()
+        private Process _usbNotifyAppProcess;
+
+        private void StartProcess_USBNotifyApp()
         {
             try
             {
-                CloseUSBNotifyAppProcess();
+                CloseProcess_USBNotifyApp();
 
-                ProcessStartInfo startInfo = new ProcessStartInfo(UsbConfig.NUWAppPath);
-                _usbFormProcess = new Process
+                ProcessStartInfo startInfo = new ProcessStartInfo(UsbConfig.USBNotifyApp);
+                _usbNotifyAppProcess = new Process
                 {
                     EnableRaisingEvents = true,
                     StartInfo = startInfo
                 };
 
-                _usbFormProcess.Exited += usbProcess_Exited;
+                // Exited Event handler, 如果意外結束process, 可以自己啟動
+                _usbNotifyAppProcess.Exited += (s, e) =>
+                {
+                    if (IsRebootUsbApp)
+                    {
+                        StartProcess_USBNotifyApp();
+                    }
+                };
 
-                _usbFormProcess.Start();
+                _usbNotifyAppProcess.Start();
             }
             catch (Exception ex)
             {
@@ -58,17 +72,17 @@ namespace USBNotifyService
             }
         }
 
-        private void CloseUSBNotifyAppProcess()
+        private void CloseProcess_USBNotifyApp()
         {
             try
             {
-                if (_usbFormProcess != null && !_usbFormProcess.HasExited)
+                if (_usbNotifyAppProcess != null && !_usbNotifyAppProcess.HasExited)
                 {
-                    if (!_usbFormProcess.CloseMainWindow())
+                    if (!_usbNotifyAppProcess.CloseMainWindow())
                     {
-                        _usbFormProcess.Kill();
+                        _usbNotifyAppProcess.Kill();
                     }
-                    _usbFormProcess.Close();
+                    _usbNotifyAppProcess.Close();
                 }
             }
             catch (Exception ex)
@@ -76,20 +90,43 @@ namespace USBNotifyService
                 UsbLogger.Error(ex.Message);
             }
         }
+        #endregion
 
-        /// <summary>
-        /// 如果意外結束process, 可以自己啟動
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void usbProcess_Exited(object sender, EventArgs e)
+        #region MyRegion
+        private Process _usbNotifyDesktopProcess;
+
+        private void StartProcess_USBNotifyDesktop()
         {
-            if (IsBootUsbForm)
-            {
-                StartUSBNotifyAppProcess();
-            }
+            _usbNotifyDesktopProcess = ProcessApiHelp.CreateProcessAsUser(UsbConfig.USBNotifyDesktop,null);
+            _usbNotifyDesktopProcess.EnableRaisingEvents = true;
 
-            UsbLogger.Log("USBFormApp Process Exited Event.");
+            // Exited Event handler, 如果意外結束process, 可以自己啟動
+            _usbNotifyDesktopProcess.Exited += (s, e) =>
+            {
+                if (IsRebootUsbApp)
+                {
+                    StartProcess_USBNotifyDesktop();
+                }
+            };           
+        }
+
+        private void CloseProcess_USBNotifyDesktop()
+        {
+            try
+            {
+                if (_usbNotifyDesktopProcess != null && !_usbNotifyDesktopProcess.HasExited)
+                {
+                    if (!_usbNotifyDesktopProcess.CloseMainWindow())
+                    {
+                        _usbNotifyDesktopProcess.Kill();
+                    }
+                    _usbNotifyDesktopProcess.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                UsbLogger.Error(ex.Message);
+            }
         }
         #endregion
 

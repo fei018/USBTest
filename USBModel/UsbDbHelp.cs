@@ -33,7 +33,7 @@ namespace USBModel
 
         #region + public void TryCreateDatabase()
         public void TryCreateDatabase()
-        {        
+        {
             if (_db.DbMaintenance.CreateDatabase())
             {
                 _db.CodeFirst.SetStringDefaultLength(255).InitTables<UsbHistory>();
@@ -106,7 +106,7 @@ namespace USBModel
             try
             {
                 var query = await _db.Queryable<UserUsb>()
-                                    .Where(u=>u.RequestComputerId == computerIdentity)
+                                    .Where(u => u.RequestComputerId == computerIdentity)
                                     .ToListAsync();
 
                 if (query == null || query.Count <= 0)
@@ -128,8 +128,9 @@ namespace USBModel
         {
             try
             {
-                var query = await _db.Queryable<UsbHistory, UserUsb>((h, u) => h.UsbIdentity == u.UsbIdentity)
-                                    .Select((h, u) => new UsbHistoryDetail { History = h, UsbInfo = u })
+                var query = await _db.Queryable<UsbHistory, UserUsb, UserComputer>((h, u, c) =>
+                                         h.UsbIdentity == u.UsbIdentity && h.ComputerIdentity == c.ComputerIdentity)
+                                    .Select((h, u, c) => new UsbHistoryDetail { History = h, Usb = u, Computer = c })
                                     .ToListAsync();
 
                 if (query == null || query.Count <= 0)
@@ -232,13 +233,13 @@ namespace USBModel
 
                 com.UpdateTime = DateTime.Now;
                 if (query == null)
-                {                   
+                {
                     await _db.Insertable(com).ExecuteCommandAsync();
                 }
                 else
                 {
                     com.Id = query.Id;
-                    
+
                     await _db.Updateable(com).ExecuteCommandAsync();
                 }
             }

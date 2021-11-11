@@ -6,6 +6,6 @@
   "url": {
     "usbFilterTable": "",
     "postComputerInfo": "",
-    "postComUserInfo": "http://localhost:5000/usb/PostComputerUsbInfo"
+    "postComUsbHistoryInfo": "http://localhost:5000/usb/PostComputerUsbHistoryInfo"
   }
 }

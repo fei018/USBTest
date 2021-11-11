@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace USBNotifyLib.Win32API
 {
-    class WTSSendMessageApi
+    internal class WTSSendMessageApi
     {
         private static IntPtr WTS_CURRENT_SERVER_HANDLE = IntPtr.Zero;
 

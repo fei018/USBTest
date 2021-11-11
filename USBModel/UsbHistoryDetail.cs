@@ -6,7 +6,9 @@ namespace USBModel
 {
     public class UsbHistoryDetail
     {
-        public UserUsb UsbInfo { get; set; }
+        public UserUsb Usb { get; set; }
+
+        public UserComputer Computer { get; set; }
 
         public UsbHistory History { get; set; }
     }

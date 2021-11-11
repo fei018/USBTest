@@ -9,7 +9,7 @@ namespace USBModel
     public class UsbJsonConvert
     {
         #region + public static PostComUsbInfo GetPostComputerUsbInfo(string json)
-        public static PostComUsbHistory GetPostComputerUsbInfo(string postJson)
+        public static PostComUsbHistory GetPostComputerUsbHistoryInfo(string postJson)
         {
             try
             {

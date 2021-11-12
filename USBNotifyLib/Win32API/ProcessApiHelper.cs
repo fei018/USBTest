@@ -94,7 +94,11 @@ namespace USBNotifyLib.Win32API
         }
         #endregion
 
-        #region + internal static int GetCurrentUserSessionID()
+        #region + public static int GetCurrentUserSessionID()
+        /// <summary>
+        /// system = 0, error = -1
+        /// </summary>
+        /// <returns></returns>
         public static int GetCurrentUserSessionID()
         {
             uint dwSessionId = (uint)ProcessApi.WTSGetActiveConsoleSessionId();

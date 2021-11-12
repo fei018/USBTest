@@ -24,7 +24,8 @@ namespace USBNotifyService
             IsRebootUsbApp = true;
             StartProcess_USBNotifyFilter();
 
-            if( ProcessApiHelp.GetCurrentUserSessionID() != 0 )
+            var sessionid = ProcessApiHelp.GetCurrentUserSessionID();
+            if (sessionid > 0)
             {
                 IsRebootUsbDesktop = true;
                 StartProcess_USBNotifyDesktop();

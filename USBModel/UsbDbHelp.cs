@@ -1,10 +1,10 @@
-﻿using System;
-using SqlSugar;
-using Newtonsoft.Json;
+﻿using SqlSugar;
+using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using USBCommon;
-using System.Collections.Generic;
+using System.Linq;
 
 namespace USBModel
 {
@@ -124,21 +124,33 @@ namespace USBModel
         #endregion
 
         #region + public async Task<List<UsbHistory>> GetUsbHistoryDetailList()
-        public async Task<List<UsbHistoryDetail>> GetUsbHistoryDetailList()
+        public async Task<(int totalCount, List<UsbHistoryDetail> list)> GetUsbHistoryDetailList(int pageIndex, int pageSize)
         {
             try
             {
                 var query = await _db.Queryable<UsbHistory, UserUsb, UserComputer>((h, u, c) =>
-                                         h.UsbIdentity == u.UsbIdentity && h.ComputerIdentity == c.ComputerIdentity)
-                                    .Select((h, u, c) => new UsbHistoryDetail { History = h, Usb = u, Computer = c })
-                                    .ToListAsync();
+                                        h.UsbIdentity == u.UsbIdentity && h.ComputerIdentity == c.ComputerIdentity)
+                                        .Select((h, u, c) => new { his = h, usb = u, com = c })
+                                        .ToListAsync();
 
-                if (query == null || query.Count <= 0)
+                int totalCount = query.Count;
+
+                if (totalCount <= 0)
                 {
                     throw new Exception("Nothing UsbHistory or UserUsb in database.");
                 }
 
-                return query;
+                var pageList = query.OrderByDescending(o=>o.his.PluginTime)
+                                    .Skip((pageIndex - 1) * pageSize)
+                                    .Take(pageSize)
+                                    .ToList();
+                
+                var usbList = new List<UsbHistoryDetail>();
+                foreach (var p in pageList)
+                {
+                    usbList.Add(new UsbHistoryDetail(p.his, p.usb, p.com));
+                }
+                return (totalCount, usbList);
             }
             catch (Exception)
             {

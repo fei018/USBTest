@@ -1,7 +1,7 @@
 ﻿
-namespace USBNotifyApp
+namespace USBNotifyFilter
 {
-    partial class USBNofityForm
+    partial class USBNofityFilterForm
     {
         /// <summary>
         /// 設計工具所需的變數。
@@ -31,13 +31,13 @@ namespace USBNotifyApp
         {
             this.SuspendLayout();
             // 
-            // USBNofityForm
+            // USBNofityFilterForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(233, 51);
-            this.Name = "USBNofityForm";
-            this.Text = "USBNotify App";
+            this.ClientSize = new System.Drawing.Size(277, 51);
+            this.Name = "USBNofityFilterForm";
+            this.Text = "USBNotifyFilter";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.USBNofityForm_FormClosed);
             this.Shown += new System.EventHandler(this.USBNofityForm_Shown);
             this.ResumeLayout(false);

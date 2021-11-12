@@ -18,7 +18,7 @@ namespace USBNotifyLib
                 using (var http = new HttpClient())
                 {
                     http.Timeout = TimeSpan.FromSeconds(10);
-                    var response = http.GetAsync(UsbConfig.GetUsbFilterUrl).Result;
+                    var response = http.GetAsync(UsbConfig.UsbFilterDbUrl).Result;
                     response.EnsureSuccessStatusCode();
                     string rp = response.Content.ReadAsStringAsync().Result;
 

@@ -15,13 +15,13 @@ namespace USBNotifyLib
 
         public static string ErrorPath => Path.Combine(_baseDir, "error.txt");
 
-        public static string USBNotifyApp => Path.Combine(_baseDir, "usbnapp.exe");
+        public static string USBNotifyFilter => Path.Combine(_baseDir, "usbnfilter.exe");
 
         public static string USBNotifyDesktop => Path.Combine(_baseDir, "usbndesktop.exe");
 
         public static string UsbFilterDbPath => (string)AppConfig()["path"]["usbFilterDb"];
 
-        public static string GetUsbFilterUrl => (string)AppConfig()["url"]["usbFilterDb"];
+        public static string UsbFilterDbUrl => (string)AppConfig()["url"]["usbFilterDb"];
 
         public static int UpdateTimer => (int)AppConfig()["updateTimer"];
 

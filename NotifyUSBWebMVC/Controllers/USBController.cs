@@ -33,7 +33,7 @@ namespace USBNotifyWebMVC.Controllers
             try
             {
                 var query = await _usbDb.GetRegisteredUsbList();
-                return Json(JsonResultHelp.LayuiTableData(query));
+                return Json(JsonResultHelp.Ok(query));
             }
             catch (Exception ex)
             {
@@ -78,30 +78,21 @@ namespace USBNotifyWebMVC.Controllers
         #endregion
 
         #region HistoryIndex
-        public async Task<IActionResult> History()
+        public IActionResult History()
         {
-            try
-            {
-                var query = await _usbDb.GetUsbHistoryDetailList();
-                return View(query);
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Error(ex.Message);
-                return View();
-            }
+            return View();
         }
 
-        public async Task<IActionResult> HistoryIndex()
+        public async Task<IActionResult> HistoryIndex(int page, int limit)
         {
             try
             {
-                var query = await _usbDb.GetUsbHistoryDetailList();
-                return Json(JsonResultHelp.LayuiTableData(query));
+                var query = await _usbDb.GetUsbHistoryDetailList(page,limit);
+                return Json(JsonResultHelp.LayuiTableData(0,null,query.totalCount,query.list));
             }
             catch (Exception ex)
             {
-                return Json(JsonResultHelp.Error(ex.Message));
+                return Json(JsonResultHelp.LayuiTableData(400,ex.Message,0,null));
             }
         }
         #endregion
@@ -122,7 +113,7 @@ namespace USBNotifyWebMVC.Controllers
             }
             catch (Exception)
             {
-                return NotFound();
+                return Ok();
             }
         }
         #endregion
@@ -142,9 +133,9 @@ namespace USBNotifyWebMVC.Controllers
 
                 return Ok();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return NotFound();
+                return Ok();
             }
         }
         #endregion

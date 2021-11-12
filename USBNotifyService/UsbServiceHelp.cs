@@ -22,7 +22,7 @@ namespace USBNotifyService
         private void Start_Service()
         {
             IsRebootUsbApp = true;
-            StartProcess_USBNotifyApp();
+            StartProcess_USBNotifyFilter();
 
             if( ProcessApiHelp.GetCurrentUserSessionID() != 0 )
             {
@@ -36,22 +36,22 @@ namespace USBNotifyService
         private void Stop_Service()
         {
             IsRebootUsbApp = false;
-            CloseProcess_USBNotifyApp();
+            CloseProcess_USBNotifyFilter();
 
             IsRebootUsbDesktop = false;
             CloseProcess_USBNotifyDesktop();
         }
         #endregion
 
-        #region USBNotifyApp Process
+        #region USBNotifyFilter Process
         private Process _usbNotifyAppProcess;
 
-        private void StartProcess_USBNotifyApp()
+        private void StartProcess_USBNotifyFilter()
         {
-            CloseProcess_USBNotifyApp();
+            CloseProcess_USBNotifyFilter();
             try
             {
-                ProcessStartInfo startInfo = new ProcessStartInfo(UsbConfig.USBNotifyApp);
+                ProcessStartInfo startInfo = new ProcessStartInfo(UsbConfig.USBNotifyFilter);
                 _usbNotifyAppProcess = new Process
                 {
                     EnableRaisingEvents = true,
@@ -63,7 +63,7 @@ namespace USBNotifyService
                 {
                     if (IsRebootUsbApp)
                     {
-                        StartProcess_USBNotifyApp();
+                        StartProcess_USBNotifyFilter();
                     }
                 };
 
@@ -75,7 +75,7 @@ namespace USBNotifyService
             }
         }
 
-        private void CloseProcess_USBNotifyApp()
+        private void CloseProcess_USBNotifyFilter()
         {
             try
             {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace USBNotifyDesktop
+namespace USBNotifyAgentDesktop
 {
     static class Program
     {
@@ -16,7 +16,7 @@ namespace USBNotifyDesktop
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new USBNotifyDesktopForm());
+            Application.Run(new USBNotifyAgentDesktopForm());
         }
     }
 }

@@ -17,7 +17,6 @@ namespace USBNotifyWebMVC.Controllers
 
         public USBController(IHttpContextAccessor httpContextAccessor, UsbDbHelp usbDb)
         {
-
             _usbDb = usbDb;
             _httpContext = httpContextAccessor.HttpContext;
         }

@@ -1,7 +1,7 @@
 ﻿
-namespace USBNotifyDesktop
+namespace USBNotifyAgentDesktop
 {
-    partial class USBNotifyDesktopForm
+    partial class USBNotifyAgentDesktopForm
     {
         /// <summary>
         /// 設計工具所需的變數。
@@ -30,7 +30,7 @@ namespace USBNotifyDesktop
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(USBNotifyDesktopForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(USBNotifyAgentDesktopForm));
             this.UsbNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStripUsb = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
@@ -50,24 +50,25 @@ namespace USBNotifyDesktop
             this.contextMenuStripUsb.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem2});
             this.contextMenuStripUsb.Name = "contextMenuStripUsb";
-            this.contextMenuStripUsb.Size = new System.Drawing.Size(81, 26);
+            this.contextMenuStripUsb.Size = new System.Drawing.Size(86, 28);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(80, 22);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(85, 24);
             this.toolStripMenuItem2.Text = "?";
             // 
-            // USBNotifyDesktopForm
+            // USBNotifyAgentDesktopForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(300, 82);
+            this.ClientSize = new System.Drawing.Size(400, 102);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "USBNotifyDesktopForm";
-            this.Text = "USBNotifyDesktop";
-            this.Shown += new System.EventHandler(this.USBNotifyDesktopForm_Shown);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Name = "USBNotifyAgentDesktopForm";
+            this.Text = "USBNotifyAgentD";
+            this.Shown += new System.EventHandler(this.USBNotifyAgentDesktopForm_Shown);
             this.contextMenuStripUsb.ResumeLayout(false);
             this.ResumeLayout(false);
 

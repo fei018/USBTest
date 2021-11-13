@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace USBNotifyFilter
+namespace USBNotifyAgent
 {
     static class Program
     {
@@ -13,7 +13,7 @@ namespace USBNotifyFilter
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new USBNofityFilterForm());
+            Application.Run(new USBNofityAgentForm());
         }
     }
 }

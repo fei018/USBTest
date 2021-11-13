@@ -4,11 +4,11 @@ using System.Windows.Forms;
 using UsbMonitor;
 using USBNotifyLib;
 
-namespace USBNotifyFilter
+namespace USBNotifyAgent
 {
-    public partial class USBNofityFilterForm : UsbMonitorForm
+    public partial class USBNofityAgentForm : UsbMonitorForm
     {
-        public USBNofityFilterForm()
+        public USBNofityAgentForm()
         {
             InitializeComponent();
             UsbStart();

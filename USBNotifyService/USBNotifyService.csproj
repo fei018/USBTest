@@ -70,14 +70,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\USBNotifyDesktop\USBNotifyDesktop.csproj">
-      <Project>{ba0a3d1f-b3b3-4665-964f-b1c7b129d2f0}</Project>
-      <Name>USBNotifyDesktop</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\USBNotifyFilter\USBNotifyFilter.csproj">
-      <Project>{09f80c0b-bd6b-4f99-97ae-a02aed1e61ce}</Project>
-      <Name>USBNotifyFilter</Name>
-    </ProjectReference>
     <ProjectReference Include="..\USBNotifyLib\USBNotifyLib.csproj">
       <Project>{bbdb4699-103a-4cd5-92db-6a9cf675161f}</Project>
       <Name>USBNotifyLib</Name>

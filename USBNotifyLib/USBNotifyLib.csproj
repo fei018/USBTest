@@ -46,10 +46,11 @@
     <Compile Include="Filter\UsbFilter.cs" />
     <Compile Include="Filter\UsbFilterFun.cs" />
     <Compile Include="Filter\UsbFilterDb.cs" />
+    <Compile Include="Main\UsbConifgRegistry.cs" />
     <Compile Include="Model\LocalComputer.cs" />
     <Compile Include="Model\NotifyUsb.cs" />
-    <Compile Include="Main\USBConfig.cs" />
-    <Compile Include="Main\USBLogger.cs" />
+    <Compile Include="Main\UsbConfig.cs" />
+    <Compile Include="Main\UsbLogger.cs" />
     <Compile Include="Model\UsbHistory.cs" />
     <Compile Include="Model\UsbHttpHelp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

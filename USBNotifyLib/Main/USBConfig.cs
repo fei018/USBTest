@@ -9,7 +9,7 @@ namespace USBNotifyLib
     {
         private static readonly string _baseDir = AppDomain.CurrentDomain.BaseDirectory;
 
-        private static string _configJson = Path.Combine(_baseDir, "appcfg.json");
+        private static string _configFile = Path.Combine(_baseDir, "appcfg.json");
 
         public static string LogPath => Path.Combine(_baseDir, "log.txt");
 
@@ -27,7 +27,7 @@ namespace USBNotifyLib
 
         public static string PostComputerInfoUrl => (string)AppConfig()["url"]["postComputerInfo"];
 
-        public static string PostComUsbHistoryInfoUrl => (string)AppConfig()["url"]["postComUsbHistoryInfo"];
+        public static string PostComUsbHistoryInfoUrl => (string)AppConfig()["url"]["postComUsbHistoryInfo"]; 
 
 
         #region + public static string[] ReadFile_UsbFilterDb()
@@ -58,19 +58,18 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + private static JObject GetConfigJsonObject()
+        #region + private static JObject AppConfig()
         private static readonly object _Locker_Config = new object();
         private static JObject AppConfig()
         {
             try
-            {
-               
+            {              
                 lock (_Locker_Config)
                 {
                     string config = null;
-                    if (File.Exists(_configJson))
+                    if (File.Exists(_configFile))
                     {
-                        config = File.ReadAllText(_configJson);
+                        config = File.ReadAllText(_configFile);
                     }
                     return JObject.Parse(config);
                 }               
@@ -78,6 +77,18 @@ namespace USBNotifyLib
             catch (Exception)
             {
                 return null;
+            }
+        }
+
+        private static void SaveAppConfig(JObject jObject)
+        {
+            lock (_Locker_Config)
+            {
+                var json = jObject.ToString();
+                if (File.Exists(_configFile))
+                {
+                    File.WriteAllText(_configFile, json);
+                }
             }
         }
         #endregion

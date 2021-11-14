@@ -86,12 +86,12 @@ namespace USBNotifyWebMVC.Controllers
         {
             try
             {
-                var query = await _usbDb.GetUsbHistoryDetailList(page,limit);
-                return Json(JsonResultHelp.LayuiTableData(0,null,query.totalCount,query.list));
+                var (totalCount, list) = await _usbDb.GetUsbHistoryDetailList(page,limit);
+                return Json(JsonResultHelp.LayuiTableData(totalCount,list));
             }
             catch (Exception ex)
             {
-                return Json(JsonResultHelp.LayuiTableData(400,ex.Message,0,null));
+                return Json(JsonResultHelp.LayuiTableData(ex.Message));
             }
         }
         #endregion
@@ -138,5 +138,7 @@ namespace USBNotifyWebMVC.Controllers
             }
         }
         #endregion
+
+        
     }
 }

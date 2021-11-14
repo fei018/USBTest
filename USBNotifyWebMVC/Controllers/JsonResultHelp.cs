@@ -24,17 +24,14 @@ namespace USBNotifyWebMVC.Controllers
         }
 
 
-        /// <summary>
-        /// Success: code=0, Fail: code=400
-        /// </summary>
-        /// <param name="code"></param>
-        /// <param name="msg"></param>
-        /// <param name="totalCount"></param>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        public static object LayuiTableData(int code, string msg, int totalCount, object data)
+        public static object LayuiTableData(int totalCount, object data)
         {
-            return new { code = code, msg = msg, count = totalCount, data = data };
+            return new { code = 0, msg = "", count = totalCount, data = data };
+        }
+
+        public static object LayuiTableData(string error)
+        {
+            return new { code = 400, msg = error };
         }
     }
 }

@@ -11,9 +11,6 @@ namespace USBModel
 
         public bool IsRegistered { get; set; }
 
-        [SugarColumn(IsNullable = true)]
-        public DateTime RegisteredTime { get; set; }
-
         public int Vid { get; set; }
 
         public int Pid { get; set; }
@@ -32,13 +29,11 @@ namespace USBModel
         [SugarColumn(UniqueGroupNameList = new string[] { "usbid" })]
         public string UsbIdentity { get; set; }
 
-        public string RequestComputerId { get; set; }
+        public string PostComputerId { get; set; }
 
         [SugarColumn(IsNullable = true)]
-        public DateTime RequestTime { get; set; }
-
-        
-        
+        public DateTime RequestRegisterTime { get; set; }
+      
 
         // SugarColumn(IsIgnore = true)
 

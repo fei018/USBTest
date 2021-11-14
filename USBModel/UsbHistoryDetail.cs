@@ -20,6 +20,18 @@ namespace USBModel
 
         public string UsbPluginTime => PluginTime.ToString("yyyy-MM-dd HH:mm:ss");
 
+        public UsbHistoryDetail(UsbHistory usbHistory, UserUsb usb)
+        {
+            Vid = usb.Vid;
+            Pid = usb.Pid;
+            SerialNumber = usb.SerialNumber;
+            Manufacturer = usb.Manufacturer;
+            Product = usb.Product;
+            UsbIdentity = usbHistory.UsbIdentity;
+            ComputerIdentity = usbHistory.ComputerIdentity;
+            PluginTime = usbHistory.PluginTime;
+        }
+
         public UsbHistoryDetail(UsbHistory usbHistory, UserUsb usb, UserComputer com)
         {
             Vid = usb.Vid;

@@ -46,6 +46,20 @@
               "target": "_self"
             }
           ]
+        },
+        {
+          "title": "Computer",
+          "href": "",
+          "icon": "fa fa-hdd-o",
+          "target": "_self",
+          "child": [
+            {
+              "title": "Index",
+              "href": "/Computer/Index",
+              "icon": "fa fa-list-alt",
+              "target": "_self"
+            }
+          ]
         }
       ]
     },

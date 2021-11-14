@@ -4,8 +4,9 @@
     "usbFilterDb": ""
   },
   "url": {
-    "usbFilterDb": "",
-    "postComputerInfo": "",
+    "usbFilterDb": "http://localhost:5000/usb/usbFilterDb",
+    "register": "http://localhost:5000/usb/register",
+    "postComputerInfo": "http://localhost:5000/usb/PostComputerInfo",
     "postComUsbHistoryInfo": "http://localhost:5000/usb/PostComputerUsbHistoryInfo"
   }
 }

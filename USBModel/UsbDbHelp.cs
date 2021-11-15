@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using USBCommon;
-using System.Linq;
+using LoginUserManager;
 
 namespace USBModel
 {
@@ -39,6 +39,8 @@ namespace USBModel
                 _db.CodeFirst.SetStringDefaultLength(100).InitTables<UsbHistory>();
                 _db.CodeFirst.SetStringDefaultLength(100).InitTables<UserUsb>();
                 _db.CodeFirst.SetStringDefaultLength(100).InitTables<UserComputer>();
+                _db.CodeFirst.InitTables<LoginUser>();
+                _db.CodeFirst.InitTables<LoginErrorCountLimit>();
             }
         }
         #endregion

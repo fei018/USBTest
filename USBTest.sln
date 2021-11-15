@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "USBNotifyService", "USBNoti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "USBNotifyLib", "USBNotifyLib\USBNotifyLib.csproj", "{BBDB4699-103A-4CD5-92DB-6A9CF675161F}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoginUserManager", "LoginUserManager\LoginUserManager.csproj", "{C959399D-CCCD-4995-9B71-26C1124DC34C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,10 @@ Global
 		{BBDB4699-103A-4CD5-92DB-6A9CF675161F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BBDB4699-103A-4CD5-92DB-6A9CF675161F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BBDB4699-103A-4CD5-92DB-6A9CF675161F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C959399D-CCCD-4995-9B71-26C1124DC34C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C959399D-CCCD-4995-9B71-26C1124DC34C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C959399D-CCCD-4995-9B71-26C1124DC34C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C959399D-CCCD-4995-9B71-26C1124DC34C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -88,6 +94,7 @@ Global
 		{BA0A3D1F-B3B3-4665-964F-B1C7B129D2F0} = {992C9190-700C-4953-8FB4-129800525CD4}
 		{88A32AB6-DA9D-45B3-A812-A0A57B9DDE60} = {992C9190-700C-4953-8FB4-129800525CD4}
 		{BBDB4699-103A-4CD5-92DB-6A9CF675161F} = {8A96E5C6-931B-4C6E-91CE-D8EDA890BC6A}
+		{C959399D-CCCD-4995-9B71-26C1124DC34C} = {0477CC87-7CE1-4EFC-973B-7FFC3DEB017C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {55F982B7-5BDB-4B26-BF12-27C4E1A6407F}

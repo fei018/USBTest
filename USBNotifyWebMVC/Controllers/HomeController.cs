@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using USBModel;
 
 namespace USBNotifyWebMVC.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly UsbDbHelp _usbDb;

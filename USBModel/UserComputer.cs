@@ -24,7 +24,7 @@ namespace USBModel
         [SugarColumn(UniqueGroupNameList = new string[] {"comid"})]
         public string ComputerIdentity { get; set; }
 
-        public DateTime UpdateTime { get; set; }
+        public DateTime LastSeen { get; set; }
 
         public override string ToString()
         {

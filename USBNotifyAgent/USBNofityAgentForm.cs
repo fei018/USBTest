@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using UsbMonitor;
@@ -17,14 +18,23 @@ namespace USBNotifyAgent
         #region UsbStart()
         private void UsbStart()
         {
-            //new UsbFilterDb().Reload_UsbFilterDb();
-            //new UsbFilter().Filter_Scan_All_USB_Disk();
+            // 從 registry 加載 config
+            UsbConfig.ReloadRegistryConfig();
 
-            //UsbHttpHelp.Set_UpdateUsbFilterTable_Http_Timer();
+            if (UsbConfig.UsbFilterEnabled)
+            {
+                new UsbFilterDb().Reload_UsbFilterDb();
+                new UsbFilter().Filter_Scan_All_USB_Disk();
+                UsbHttpHelp.Set_GetUsbFilterDb_Http_Timer();
+            }           
         }
         #endregion
 
         #region OnUsbInterface(UsbEventDeviceInterfaceArgs args)
+        /// <summary>
+        /// Post Usb plugin history to server
+        /// </summary>
+        /// <param name="args"></param>
         public override void OnUsbInterface(UsbEventDeviceInterfaceArgs args)
         {
             if (args.Action == UsbDeviceChangeEvent.Arrival)
@@ -44,25 +54,28 @@ namespace USBNotifyAgent
         private readonly object _Locker_OnVolume = new object();
         public override void OnUsbVolume(UsbEventVolumeArgs args)
         {
-            //lock (_Locker_OnVolume)
-            //{
-            //    if (args.Flags == UsbVolumeFlags.Net) return;
+            if (UsbConfig.UsbFilterEnabled)
+            {
+                lock (_Locker_OnVolume)
+                {
+                    if (args.Flags == UsbVolumeFlags.Net) return;
 
-            //    try
-            //    {
-            //        if (args.Action == UsbDeviceChangeEvent.Arrival)
-            //        {
-            //            foreach (char letter in args.Drives)
-            //            {
-            //                Task.Run(() =>
-            //                {
-            //                    new UsbFilter().Filter_NotifyUSB_Use_DriveLetter(letter);                               
-            //                });
-            //            }
-            //        }
-            //    }
-            //    catch (Exception) { }
-            //}
+                    try
+                    {
+                        if (args.Action == UsbDeviceChangeEvent.Arrival)
+                        {
+                            foreach (char letter in args.Drives)
+                            {
+                                Task.Run(() =>
+                                {
+                                    new UsbFilter().Filter_NotifyUsb_Use_DriveLetter(letter);
+                                });
+                            }
+                        }
+                    }
+                    catch (Exception) { }
+                }
+            }           
         }
         #endregion
 

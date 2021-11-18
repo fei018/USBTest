@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.Win32;
 using System;
 using System.IO;
 using System.Text;
@@ -7,27 +7,28 @@ namespace USBNotifyLib
 {
     public class UsbConfig
     {
+        private const string _registryKey = "SOFTWARE\\Hiphing\\USBNotify";
+
         private static readonly string _baseDir = AppDomain.CurrentDomain.BaseDirectory;
 
-        private static string _configFile = Path.Combine(_baseDir, "appcfg.json");
 
         public static string LogPath => Path.Combine(_baseDir, "log.txt");
 
         public static string ErrorPath => Path.Combine(_baseDir, "error.txt");
 
-        public static string USBNotifyFilter => Path.Combine(_baseDir, "usbnfilter.exe");
+        public static string UsbFilterDbFile => Path.Combine(_baseDir, "usbFilterDb.dat");
 
-        public static string USBNotifyDesktop => Path.Combine(_baseDir, "usbndesktop.exe");
+        // Registry
 
-        public static string UsbFilterDbPath => (string)AppConfig()["path"]["usbFilterDb"];
+        public static bool UsbFilterEnabled {get;set;}
 
-        public static string UsbFilterDbUrl => (string)AppConfig()["url"]["usbFilterDb"];
+        public static string UsbFilterDbUrl { get; set; }
 
-        public static int UpdateTimer => (int)AppConfig()["updateTimer"];
+        public static int UpdateTimer { get; set; }
 
-        public static string PostComputerInfoUrl => (string)AppConfig()["url"]["postComputerInfo"];
+        public static string PostComputerInfoUrl { get; set; }
 
-        public static string PostComUsbHistoryInfoUrl => (string)AppConfig()["url"]["postComUsbHistoryInfo"]; 
+        public static string PostComUsbHistoryInfoUrl { get; set; }
 
 
         #region + public static string[] ReadFile_UsbFilterDb()
@@ -36,11 +37,24 @@ namespace USBNotifyLib
         {
             lock (_locker_UsbFilterDb)
             {
-                if (File.Exists(UsbFilterDbPath))
+                try
                 {
-                    return File.ReadAllLines(UsbFilterDbPath, Encoding.UTF8);
+                    if (!File.Exists(UsbFilterDbFile))
+                    {
+                        UsbHttpHelp.GetUsbFilterDb_Http();
+                    }
+
+                    if (File.Exists(UsbFilterDbFile))
+                    {
+                        return File.ReadAllLines(UsbFilterDbFile, Encoding.UTF8);
+                    }
+                    return null;
                 }
-                return null;
+                catch (Exception)
+                {
+
+                    throw;
+                }
             }
         }
         #endregion
@@ -50,45 +64,42 @@ namespace USBNotifyLib
         {
             lock (_locker_UsbFilterDb)
             {
-                if (File.Exists(UsbFilterDbPath))
+                if (File.Exists(UsbFilterDbFile))
                 {
-                    File.WriteAllText(UsbFilterDbPath, txt, Encoding.UTF8);
+                    File.WriteAllText(UsbFilterDbFile, txt, Encoding.UTF8);
                 }
             }
         }
         #endregion
 
-        #region + private static JObject AppConfig()
-        private static readonly object _Locker_Config = new object();
-        private static JObject AppConfig()
+        #region + public static void ReloadRegistryConfig()
+        public static void ReloadRegistryConfig()
+        {
+            UsbFilterEnabled = Convert.ToBoolean(ReadRegistryKey("UsbFilterEnabled"));
+            UsbFilterDbUrl = ReadRegistryKey("UsbFilterDbUrl");
+            UpdateTimer = Convert.ToInt32(ReadRegistryKey("UpdateTimer"));
+            PostComputerInfoUrl = ReadRegistryKey("PostComputerInfoUrl");
+            PostComUsbHistoryInfoUrl = ReadRegistryKey("PostComUsbHistoryInfoUrl");
+        }
+        #endregion
+
+        #region + private string ReadRegistryKey(string name)
+        private static string ReadRegistryKey(string name)
         {
             try
-            {              
-                lock (_Locker_Config)
+            {
+                using (var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
                 {
-                    string config = null;
-                    if (File.Exists(_configFile))
+                    using (var usbKey = hklm.OpenSubKey(_registryKey))
                     {
-                        config = File.ReadAllText(_configFile);
+                        var value = usbKey.GetValue(name) as string;
+                        return value;
                     }
-                    return JObject.Parse(config);
-                }               
+                }
             }
             catch (Exception)
             {
-                return null;
-            }
-        }
-
-        private static void SaveAppConfig(JObject jObject)
-        {
-            lock (_Locker_Config)
-            {
-                var json = jObject.ToString();
-                if (File.Exists(_configFile))
-                {
-                    File.WriteAllText(_configFile, json);
-                }
+                throw;
             }
         }
         #endregion

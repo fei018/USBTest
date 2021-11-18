@@ -10,8 +10,8 @@ namespace USBNotifyLib
 {
     public class UsbHttpHelp
     {
-        #region + public static void GetUsbFilterTable_Http()
-        public static void GetUsbFilterTable_Http()
+        #region + public static void GetUsbFilterDb_Http()
+        public static void GetUsbFilterDb_Http()
         {
             try
             {
@@ -32,24 +32,24 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + public static void Set_GetFilterTable_Http_Timer()
-        private static Timer _updateUsbFilterTableTimer;
-        public static void Set_GetFilterTable_Http_Timer()
+        #region + public static void Set_GetUsbFilterDb_Http_Timer()
+        private static Timer _updateUsbFilterDbTimer;
+        public static void Set_GetUsbFilterDb_Http_Timer()
         {
-            _updateUsbFilterTableTimer = new Timer();
-            _updateUsbFilterTableTimer.Interval = UsbConfig.UpdateTimer;
-            _updateUsbFilterTableTimer.AutoReset = false;
-            _updateUsbFilterTableTimer.Elapsed += _getUsbFilterTableTimer_Elapsed;
-            _updateUsbFilterTableTimer.Enabled = true;
+            _updateUsbFilterDbTimer = new Timer();
+            _updateUsbFilterDbTimer.Interval = UsbConfig.UpdateTimer;
+            _updateUsbFilterDbTimer.AutoReset = false;
+            _updateUsbFilterDbTimer.Elapsed += _getUsbFilterDbTimer_Elapsed;
+            _updateUsbFilterDbTimer.Enabled = true;
         }
 
-        private static void _getUsbFilterTableTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private static void _getUsbFilterDbTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             Task.Run(() =>
             {
-                _updateUsbFilterTableTimer.Enabled = false;
-                GetUsbFilterTable_Http();
-                _updateUsbFilterTableTimer.Enabled = true;
+                _updateUsbFilterDbTimer.Enabled = false;
+                GetUsbFilterDb_Http();
+                _updateUsbFilterDbTimer.Enabled = true;
             });
         }
         #endregion

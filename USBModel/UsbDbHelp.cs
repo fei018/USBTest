@@ -352,7 +352,7 @@ namespace USBModel
                                      .Where(c => c.ComputerIdentity == com.ComputerIdentity)
                                      .FirstAsync();
 
-                com.UpdateTime = DateTime.Now;
+                com.LastSeen = DateTime.Now;
                 if (query == null)
                 {
                     await _db.Insertable(com).ExecuteCommandAsync();

@@ -1,0 +1,13 @@
+﻿[app]
+UsbNotifyService=usbnservice.exe
+UsbNotifyAgent=usbnagent.exe
+UsbNotifyAgentDesktop=usbndesktop.exe
+UsbUpdate=usbupdate.exe
+
+[registry]
+UsbFilterEnabled=true
+UpdateTimer=1
+UsbFilterDbUrl=http://localhost:5000/usb/usbFilterDb
+RegisterUrl=http://localhost:5000/usb/register
+PostComputerInfoUrl=http://localhost:5000/usb/PostComputerInfo
+PostComUsbHistoryInfoUrl=http://localhost:5000/usb/PostComputerUsbHistoryInfo

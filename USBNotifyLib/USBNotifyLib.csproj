@@ -46,7 +46,7 @@
     <Compile Include="Filter\UsbFilter.cs" />
     <Compile Include="Filter\UsbFilterFun.cs" />
     <Compile Include="Filter\UsbFilterDb.cs" />
-    <Compile Include="Main\UsbConifgRegistry.cs" />
+    <Compile Include="Main\UsbConfig - Json.cs" />
     <Compile Include="Model\LocalComputer.cs" />
     <Compile Include="Model\NotifyUsb.cs" />
     <Compile Include="Main\UsbConfig.cs" />

@@ -36,7 +36,7 @@ namespace USBNotifyLib
                 var table = UsbConfig.ReadFile_UsbFilterDb();
                 if (table == null || table.Length <= 0)
                 {
-                    throw new Exception(UsbConfig.UsbFilterDbPath + " file nothing ?");
+                    throw new Exception(UsbConfig.UsbFilterDbFile + " file nothing ?");
                 }
 
                 var cache = new HashSet<string>();

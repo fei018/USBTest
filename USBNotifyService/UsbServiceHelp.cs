@@ -7,8 +7,7 @@ using System.ServiceProcess;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using USBNotifyLib;
-using USBNotifyLib.Win32API;
+using USBNotifyService.Win32API;
 
 namespace USBNotifyService
 {
@@ -45,6 +44,9 @@ namespace USBNotifyService
         #endregion
 
         #region USBNotifyFilter Process
+
+        private string _agentPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "usbnagent.exe");
+
         private Process _usbNotifyAppProcess;
 
         private void StartProcess_USBNotifyFilter()
@@ -52,7 +54,7 @@ namespace USBNotifyService
             CloseProcess_USBNotifyFilter();
             try
             {
-                ProcessStartInfo startInfo = new ProcessStartInfo(UsbConfig.USBNotifyFilter);
+                ProcessStartInfo startInfo = new ProcessStartInfo(_agentPath);
                 _usbNotifyAppProcess = new Process
                 {
                     EnableRaisingEvents = true,
@@ -72,7 +74,6 @@ namespace USBNotifyService
             }
             catch (Exception ex)
             {
-                UsbLogger.Error(ex.Message);
             }
         }
 
@@ -95,12 +96,13 @@ namespace USBNotifyService
             }
             catch (Exception ex)
             {
-                UsbLogger.Error(ex.Message);
             }
         }
         #endregion
 
         #region USBNotityDesktop Process
+        private string _desktopPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "usbndesktop.exe");
+
         private Process _usbNotifyDesktopProcess;
 
         private void StartProcess_USBNotifyDesktop()
@@ -109,7 +111,7 @@ namespace USBNotifyService
 
             try
             {
-                _usbNotifyDesktopProcess = ProcessApiHelp.CreateProcessAsUser(UsbConfig.USBNotifyDesktop, null);
+                _usbNotifyDesktopProcess = ProcessApiHelp.CreateProcessAsUser(_desktopPath, null);
                 _usbNotifyDesktopProcess.EnableRaisingEvents = true;
 
                 // Exited Event 委託, 如果意外結束process, 可以自己啟動
@@ -123,7 +125,6 @@ namespace USBNotifyService
             }
             catch (Exception ex)
             {
-                UsbLogger.Error(ex.Message);
             }
         }
 
@@ -146,7 +147,6 @@ namespace USBNotifyService
             }
             catch (Exception ex)
             {
-                UsbLogger.Error(ex.Message);
             }
         }
         #endregion

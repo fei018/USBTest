@@ -9,6 +9,9 @@ namespace USBNotifyLib
 {
     public class LocalComputer : IComputerInfo
     {
+        /// <summary>
+        /// new() 自動set好屬性值
+        /// </summary>
         public LocalComputer()
         {
             SetInfo();

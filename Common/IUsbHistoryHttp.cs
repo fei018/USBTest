@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace USBCommon
 {
-    public interface IUsbHistory
+    public interface IUsbHistoryHttp
     {
         string UsbIdentity { get; set; }
 

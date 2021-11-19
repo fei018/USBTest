@@ -4,10 +4,13 @@ using USBCommon;
 
 namespace USBModel
 {
-    public class UserComputer : IComputerInfo
+    public class UserComputer : IComputerHttp
     {
         [SugarColumn(IsIdentity = true, IsPrimaryKey = true)]
         public int Id { get; set; }
+
+        [SugarColumn(UniqueGroupNameList = new string[] { "comid" })]
+        public string ComputerIdentity { get; set; }
 
         public string HostName { get; set; }
 
@@ -19,10 +22,7 @@ namespace USBModel
         [SugarColumn(IsNullable = true)]
         public string IPAddress { get; set; }
 
-        public string MacAddress { get; set; }
-
-        [SugarColumn(UniqueGroupNameList = new string[] {"comid"})]
-        public string ComputerIdentity { get; set; }
+        public string MacAddress { get; set; }      
 
         public DateTime LastSeen { get; set; }
 

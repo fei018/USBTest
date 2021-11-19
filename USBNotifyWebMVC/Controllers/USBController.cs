@@ -50,7 +50,7 @@ namespace USBNotifyWebMVC.Controllers
             return View();
         }
 
-        public async Task<IActionResult> RegisterUsb(UserUsb usb)
+        public async Task<IActionResult> RegisterUsb(UserUsbDetial usb)
         {
             try
             {
@@ -108,7 +108,7 @@ namespace USBNotifyWebMVC.Controllers
                 StreamReader body = new StreamReader(_httpContext.Request.Body, Encoding.UTF8);
                 var comjosn = await body.ReadToEndAsync();
 
-                var com = UsbJsonConvert.GetUserComputer(comjosn);
+                var com = JsonHttpConvert.GetUserComputer(comjosn);
                 await _usbDb.Update_UserComputer(com);
 
                 return Ok();
@@ -129,7 +129,7 @@ namespace USBNotifyWebMVC.Controllers
                 StreamReader body = new StreamReader(_httpContext.Request.Body, Encoding.UTF8);
                 var post = body.ReadToEndAsync().Result;
 
-                var info = UsbJsonConvert.GetPostComputerUsbHistoryInfo(post);
+                var info = JsonHttpConvert.GetPostComputerUsbHistoryInfo(post);
 
                 await _usbDb.Update_PostComputerUsbHistory(info);
 

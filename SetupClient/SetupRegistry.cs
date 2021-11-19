@@ -28,7 +28,7 @@ namespace SetupClient
                         if (i.Contains('='))
                         {
                             SetSetupini(setup, i);
-                        }                       
+                        }
                     }
                 }
                 return setup;
@@ -55,7 +55,7 @@ namespace SetupClient
                     break;
 
                 case nameof(setup.UpdateTimer):
-                    setup.UpdateTimer = value;
+                    setup.UpdateTimer = uint.Parse(value);
                     break;
 
                 case nameof(setup.UsbFilterDbUrl):
@@ -82,6 +82,10 @@ namespace SetupClient
                     setup.UsbUpdateAgent = value;
                     break;
 
+                case nameof(setup.UsbFilterEnabled):
+                    setup.UsbFilterEnabled = bool.Parse(value);
+                    break;
+
                 default:
                     break;
             }
@@ -96,16 +100,16 @@ namespace SetupClient
 
                 using (var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
                 {
-                    using (var usbKey = hklm.CreateSubKey("SOFTWARE\\Hiphing\\USBNotify",true))
+                    using (var usbKey = hklm.CreateSubKey("SOFTWARE\\Hiphing\\USBNotify", true))
                     {
-                        usbKey.SetValue("UsbFilterEnabled", setup.UsbFilterEnabled, RegistryValueKind.String);
+                        usbKey.SetValue("UsbFilterEnabled", setup.UsbFilterEnabled, RegistryValueKind.Binary);
                         usbKey.SetValue("UsbFilterDbUrl", setup.UsbFilterDbUrl, RegistryValueKind.String);
                         usbKey.SetValue("PostComUsbHistoryInfoUrl", setup.PostComUsbHistoryInfoUrl, RegistryValueKind.String);
                         usbKey.SetValue("PostComputerInfoUrl", setup.PostComputerInfoUrl, RegistryValueKind.String);
-                        usbKey.SetValue("UpdateTimer", setup.UpdateTimer, RegistryValueKind.String);
+                        usbKey.SetValue("UpdateTimer", setup.UpdateTimer, RegistryValueKind.DWord);
                         usbKey.SetValue("UsbRegisterUrl", setup.UsbRegisterUrl, RegistryValueKind.String);
                     }
-                }              
+                }
             }
             catch (Exception)
             {

@@ -1,6 +1,6 @@
 ﻿namespace USBCommon
 {
-    public interface IComputerInfo
+    public interface IComputerHttp
     {
         string HostName { get; set; }
 

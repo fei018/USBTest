@@ -7,7 +7,7 @@ using USBCommon;
 
 namespace USBNotifyLib
 {
-    public class LocalComputer : IComputerInfo
+    public class LocalComputer : IComputerHttp
     {
         /// <summary>
         /// new() 自動set好屬性值

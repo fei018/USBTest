@@ -59,7 +59,7 @@ namespace USBNotifyLib
         {
             try
             {
-                var com = new LocalComputer() as IComputerInfo;
+                var com = new LocalComputer() as IComputerHttp;
                 var comJson = JsonConvert.SerializeObject(com);
 
                 using (var http = new HttpClient())
@@ -104,8 +104,8 @@ namespace USBNotifyLib
         {
             try
             {
-                var com = new LocalComputer() as IComputerInfo;
-                var usb = new UsbFilter().Find_NotifyUsb_Use_DriveLetter(driveLetter) as IUsbInfo;
+                var com = new LocalComputer() as IComputerHttp;
+                var usb = new UsbFilter().Find_NotifyUsb_Use_DriveLetter(driveLetter) as IUsbHttp;
                 
                 var his = new UsbHistory
                 {
@@ -114,7 +114,7 @@ namespace USBNotifyLib
                     PluginTime = DateTime.Now
                 };
 
-                var post = new PostComUsbHistory { ComputerInfo = com, UsbInfo = usb, UsbHistory = his };
+                var post = new PostComUsbHistoryHttp { ComputerInfo = com, UsbInfo = usb, UsbHistory = his };
                 var postjosn = JsonConvert.SerializeObject(post);
              
                 using (var http = new HttpClient())
@@ -137,8 +137,8 @@ namespace USBNotifyLib
         {
             try
             {
-                var com = new LocalComputer() as IComputerInfo;
-                var usb = new UsbFilter().Find_NotifyUsb_Use_DiskPath(diskPath) as IUsbInfo;
+                var com = new LocalComputer() as IComputerHttp;
+                var usb = new UsbFilter().Find_NotifyUsb_Use_DiskPath(diskPath) as IUsbHttp;
 
                 var his = new UsbHistory
                 {
@@ -147,7 +147,7 @@ namespace USBNotifyLib
                     PluginTime = DateTime.Now
                 };
 
-                var post = new PostComUsbHistory { ComputerInfo = com, UsbInfo = usb, UsbHistory = his };
+                var post = new PostComUsbHistoryHttp { ComputerInfo = com, UsbInfo = usb, UsbHistory = his };
                 var postjosn = JsonConvert.SerializeObject(post);
 
                 using (var http = new HttpClient())

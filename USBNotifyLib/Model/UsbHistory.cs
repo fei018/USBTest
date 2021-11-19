@@ -7,7 +7,7 @@ using USBCommon;
 
 namespace USBNotifyLib
 {
-    public class UsbHistory : IUsbHistory
+    public class UsbHistory : IUsbHistoryHttp
     {
         public string UsbIdentity { get; set; }
 

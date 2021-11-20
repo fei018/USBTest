@@ -7,7 +7,7 @@ UsbUpdate=usbupdate.exe
 [registry]
 UsbFilterEnabled=true
 UpdateTimer=1
-UsbFilterDbUrl=http://localhost:5000/usb/usbFilterDb
+AgentDataUrl=http://localhost:5000/usb/AgentData
 RegisterUrl=http://localhost:5000/usb/register
-PostComputerInfoUrl=http://localhost:5000/usb/PostComputerInfo
-PostComUsbHistoryInfoUrl=http://localhost:5000/usb/PostComputerUsbHistoryInfo
+PostUserComputerUrl=http://localhost:5000/usb/PostUserComputer
+PostUserUsbHistoryUrl=http://localhost:5000/usb/PostUserUsbHistory

@@ -19,13 +19,13 @@ namespace USBNotifyAgent
         private void UsbStart()
         {
             // 從 registry 加載 config
-            UsbConfig.ReloadRegistryConfig();
+            UsbConfigHelp.ReloadUsbRegistryConfig();
 
-            if (UsbConfig.UsbFilterEnabled)
+            if (UsbConfig.UserUsbFilterEnabled)
             {
                 new UsbFilterDb().Reload_UsbFilterDb();
                 new UsbFilter().Filter_Scan_All_USB_Disk();
-                UsbHttpHelp.Set_GetUsbFilterDb_Http_Timer();
+                UsbTimerTask.Run();
             }           
         }
         #endregion
@@ -43,7 +43,7 @@ namespace USBNotifyAgent
                 {
                     Task.Run(() =>
                     {
-                        new UsbHttpHelp().PostComputerUsbHistoryInfo_byDisk_Http(args.Name);
+                        new UsbHttpHelp().PostUserUsbHistory_byDisk_Http(args.Name);
                     });
                 }
             }

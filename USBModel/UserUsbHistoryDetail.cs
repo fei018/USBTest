@@ -4,7 +4,7 @@ using System.Text;
 
 namespace USBModel
 {
-    public class UsbHistoryDetail : UsbHistory
+    public class UserUsbHistoryDetail : UserUsbHistory
     {
         public int Vid { get; set; }
 
@@ -16,33 +16,23 @@ namespace USBModel
 
         public string Product { get; set; }
 
-        public string Computer { get; set; }
+        public string ComputerName { get; set; }
 
         public string UsbPluginTime => PluginTime.ToString("yyyy-MM-dd HH:mm:ss");
 
-        public UsbHistoryDetail(UsbHistory usbHistory, UserUsbDetial usb)
-        {
-            Vid = usb.Vid;
-            Pid = usb.Pid;
-            SerialNumber = usb.SerialNumber;
-            Manufacturer = usb.Manufacturer;
-            Product = usb.Product;
-            UsbIdentity = usbHistory.UsbIdentity;
-            ComputerIdentity = usbHistory.ComputerIdentity;
-            PluginTime = usbHistory.PluginTime;
-        }
 
-        public UsbHistoryDetail(UsbHistory usbHistory, UserUsbDetial usb, UserComputer com)
+        public UserUsbHistoryDetail(UserUsbHistory usbHistory, UsbInfo usb, UserComputer com=null)
         {
             Vid = usb.Vid;
             Pid = usb.Pid;
             SerialNumber = usb.SerialNumber;
             Manufacturer = usb.Manufacturer;
-            Product = usb.Product;
-            Computer = com.HostName;
+            Product = usb.Product;           
             UsbIdentity = usbHistory.UsbIdentity;
             ComputerIdentity = usbHistory.ComputerIdentity;
             PluginTime = usbHistory.PluginTime;
+
+            ComputerName = com?.HostName;
         }
     }
 }

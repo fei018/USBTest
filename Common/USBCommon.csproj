@@ -41,13 +41,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IAgentInfoHttp.cs" />
-    <Compile Include="IComputerHttp.cs" />
-    <Compile Include="IUsbHistoryHttp.cs" />
-    <Compile Include="PostComUsbHistoryHttp.cs" />
-    <Compile Include="IUsbHttp.cs" />
+    <Compile Include="AbstractJsonConverter.cs" />
+    <Compile Include="UsbAgentData.cs" />
+    <Compile Include="IUserComputerHttp.cs" />
+    <Compile Include="IUserUsbHistoryHttp.cs" />
+    <Compile Include="PostUserUsbHistoryHttp.cs" />
+    <Compile Include="IUsbInfoHttp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RequestAgentData.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.1</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

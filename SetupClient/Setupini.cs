@@ -7,10 +7,11 @@
         public string UsbNotifyAgent { get; set; }
         public string UsbNotifyAgentDesktop { get; set; }
         public string UsbUpdateAgent { get; set; }
-        public uint UpdateTimer { get; set; }
-        public string UsbFilterDbUrl { get; set; }
+        public uint AgentTimerMinute { get; set; }
+
+        public string AgentDataUrl { get; set; }
         public string UsbRegisterUrl { get; set; }
-        public string PostComputerInfoUrl { get; set; }
-        public string PostComUsbHistoryInfoUrl { get; set; }
+        public string PostUserComputerUrl { get; set; }
+        public string PostUserUsbHistoryUrl { get; set; }
     }
 }

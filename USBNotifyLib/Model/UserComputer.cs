@@ -1,30 +1,26 @@
-﻿using SqlSugar;
-using System;
+﻿using System;
+using System.Linq;
+using System.Management;
+using System.Net.NetworkInformation;
+using System.Text;
 using USBCommon;
 
-namespace USBModel
+namespace USBNotifyLib
 {
     public class UserComputer : IUserComputerHttp
     {
-        [SugarColumn(IsIdentity = true, IsPrimaryKey = true)]
-        public int Id { get; set; }
-
-        [SugarColumn(UniqueGroupNameList = new string[] { "comid" })]
-        public string ComputerIdentity { get; set; }
 
         public string HostName { get; set; }
 
-        [SugarColumn(IsNullable = true)]
         public string Domain { get; set; }
 
         public string BiosSerial { get; set; }
 
-        [SugarColumn(IsNullable = true)]
         public string IPAddress { get; set; }
 
-        public string MacAddress { get; set; }      
+        public string MacAddress { get; set; }
 
-        public DateTime LastSeen { get; set; }
+        public string ComputerIdentity => (BiosSerial + MacAddress)?.ToLower();
 
         public bool UserUsbFilterEnabled { get; set; }
 

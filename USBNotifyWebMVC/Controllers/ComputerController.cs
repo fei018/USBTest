@@ -38,7 +38,7 @@ namespace USBNotifyWebMVC.Controllers
         }
         #endregion
 
-        #region MyRegion
+        #region UsbHistory
         public async Task<IActionResult> UsbHistory(int comId)
         {
             try
@@ -56,7 +56,7 @@ namespace USBNotifyWebMVC.Controllers
         {
             try
             {
-                (int totalCount, List<UsbHistoryDetail> list) = await _usbDb.GetUsbHistoryDetailListByComputerIdentity(comIdentity, page, limit);
+                (int totalCount, List<UserUsbHistoryDetail> list) = await _usbDb.GetUsbHistoryDetailListByComputerIdentity(comIdentity, page, limit);
 
                 return Json(JsonResultHelp.LayuiTableData(totalCount, list));
             }

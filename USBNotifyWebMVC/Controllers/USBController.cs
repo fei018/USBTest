@@ -12,7 +12,7 @@ using LoginUserManager;
 
 namespace USBNotifyWebMVC.Controllers
 {
-    [Authorize(Roles = RolesName.RoleAdmin)]
+    [Authorize(Roles = RolesName.RoleNormal)]
     public class USBController : Controller
     {
         private readonly UsbDbHelp _usbDb;
@@ -50,7 +50,7 @@ namespace USBNotifyWebMVC.Controllers
             return View();
         }
 
-        public async Task<IActionResult> RegisterUsb(UserUsbDetial usb)
+        public async Task<IActionResult> RegisterUsb(UsbInfo usb)
         {
             try
             {
@@ -60,21 +60,6 @@ namespace USBNotifyWebMVC.Controllers
             catch (Exception ex)
             {
                 return Json(JsonResultHelp.Error(ex.Message));
-            }
-        }
-        #endregion
-
-        #region FilterTable()
-        public async Task<IActionResult> FilterTable()
-        {
-            var query = await _usbDb.GetUsbFilterTable();
-            if (string.IsNullOrWhiteSpace(query))
-            {
-                return NotFound();
-            }
-            else
-            {
-                return Content(query, "text/plain", Encoding.UTF8);
             }
         }
         #endregion
@@ -95,49 +80,6 @@ namespace USBNotifyWebMVC.Controllers
             catch (Exception ex)
             {
                 return Json(JsonResultHelp.LayuiTableData(ex.Message));
-            }
-        }
-        #endregion
-
-        #region PostComputerInfo()
-        [HttpPost]
-        public async Task<IActionResult> PostComputerInfo()
-        {
-            try
-            {
-                StreamReader body = new StreamReader(_httpContext.Request.Body, Encoding.UTF8);
-                var comjosn = await body.ReadToEndAsync();
-
-                var com = JsonHttpConvert.GetUserComputer(comjosn);
-                await _usbDb.Update_UserComputer(com);
-
-                return Ok();
-            }
-            catch (Exception)
-            {
-                return Ok();
-            }
-        }
-        #endregion
-
-        #region PostComputerUsbHistoryInfo()
-        [HttpPost]
-        public async Task<IActionResult> PostComputerUsbHistoryInfo()
-        {
-            try
-            {
-                StreamReader body = new StreamReader(_httpContext.Request.Body, Encoding.UTF8);
-                var post = body.ReadToEndAsync().Result;
-
-                var info = JsonHttpConvert.GetPostComputerUsbHistoryInfo(post);
-
-                await _usbDb.Update_PostComputerUsbHistory(info);
-
-                return Ok();
-            }
-            catch (Exception)
-            {
-                return Ok();
             }
         }
         #endregion

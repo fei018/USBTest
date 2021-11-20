@@ -6,14 +6,12 @@ using System.Threading.Tasks;
 
 namespace USBCommon
 {
-    public interface IAgentInfoHttp
+    public interface IUserUsbHistoryHttp
     {
-        int UpdateAgentDataTimer { get; set; }
-
-        bool UsbFilterEnabled { get; set; }
-
-        string UsbFilterDb { get; set; }
+        string UsbIdentity { get; set; }
 
         string ComputerIdentity { get; set; }
+
+        DateTime PluginTime { get; set; }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace USBCommon
 {
-    public interface IUsbHttp
+    public interface IUsbInfoHttp
     {
         int Vid { get; set; }
 

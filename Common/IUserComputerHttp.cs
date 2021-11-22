@@ -14,6 +14,6 @@
 
         string ComputerIdentity { get; }
 
-        bool UserUsbFilterEnabled { get; set; }
+        bool UsbFilterEnabled { get; set; }
     }
 }

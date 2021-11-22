@@ -18,14 +18,11 @@ namespace USBNotifyAgent
         #region UsbStart()
         private void UsbStart()
         {
-            // 從 registry 加載 config
-            UsbConfigHelp.ReloadUsbRegistryConfig();
-
-            if (UsbConfig.UserUsbFilterEnabled)
+            if (UsbFilter.IsEnable)
             {
-                new UsbFilterDb().Reload_UsbFilterDb();
+                UsbFilterDbHelp.Reload_UsbFilterDb();
                 new UsbFilter().Filter_Scan_All_USB_Disk();
-                UsbTimerTask.Run();
+                UsbTimer.RunTask();
             }           
         }
         #endregion
@@ -54,7 +51,7 @@ namespace USBNotifyAgent
         private readonly object _Locker_OnVolume = new object();
         public override void OnUsbVolume(UsbEventVolumeArgs args)
         {
-            if (UsbConfig.UsbFilterEnabled)
+            if (UsbFilter.IsEnable)
             {
                 lock (_Locker_OnVolume)
                 {

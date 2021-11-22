@@ -44,17 +44,16 @@
   <ItemGroup>
     <Compile Include="Filter\UsbBusController.cs" />
     <Compile Include="Filter\UsbFilter.cs" />
-    <Compile Include="Filter\UsbFilterFun.cs" />
-    <Compile Include="Filter\UsbFilterDb.cs" />
-    <Compile Include="Main\UsbConfig - Json.cs" />
-    <Compile Include="Main\UsbConfigHelp.cs" />
-    <Compile Include="Main\UsbTimerTask.cs" />
+    <Compile Include="Filter\UsbFilter2.cs" />
+    <Compile Include="Filter\UsbFilterDbHelp.cs" />
+    <Compile Include="Main\UsbTimer.cs" />
+    <Compile Include="Model\AgentSetting.cs" />
     <Compile Include="Model\UserComputer.cs" />
     <Compile Include="Model\NotifyUsb.cs" />
-    <Compile Include="Main\UsbConfig.cs" />
+    <Compile Include="Model\UsbRegistry.cs" />
     <Compile Include="Main\UsbLogger.cs" />
     <Compile Include="Model\UsbHistory.cs" />
-    <Compile Include="Model\UsbHttpHelp.cs" />
+    <Compile Include="Main\UsbHttpHelp.cs" />
     <Compile Include="Model\UserComputerHelp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Win32API\ProcessApi.cs" />
@@ -77,11 +76,6 @@
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.1</Version>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="appcfg.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

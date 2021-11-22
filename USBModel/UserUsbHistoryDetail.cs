@@ -4,7 +4,7 @@ using System.Text;
 
 namespace USBModel
 {
-    public class UserUsbHistoryDetail : UserUsbHistory
+    public class UserUsbHistoryDetail : Tbl_UserUsbHistory
     {
         public int Vid { get; set; }
 
@@ -21,7 +21,7 @@ namespace USBModel
         public string UsbPluginTime => PluginTime.ToString("yyyy-MM-dd HH:mm:ss");
 
 
-        public UserUsbHistoryDetail(UserUsbHistory usbHistory, UsbInfo usb, UserComputer com=null)
+        public UserUsbHistoryDetail(Tbl_UserUsbHistory usbHistory, Tbl_UsbInfo usb, Tbl_UserComputer com=null)
         {
             Vid = usb.Vid;
             Pid = usb.Pid;

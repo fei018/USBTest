@@ -3,25 +3,25 @@ using System.Timers;
 
 namespace USBNotifyLib
 {
-    public class UsbTimerTask
+    public class UsbTimer
     {
-        public static void Run()
+        public static void RunTask()
         {
-            SetTimer_AgentData();
+            SetTimer_GetUsbFilterDb();
             SetTimer_PostUserComputer();
         }
 
-        #region + private static void SetTimer_AgentData()
-        private static void SetTimer_AgentData()
+        #region + private static void SetTimer_GetUsbFilterDb()
+        private static void SetTimer_GetUsbFilterDb()
         {
             var timer = new Timer();
-            timer.Interval = UsbConfig.AgentTimerMinute;
+            timer.Interval = UsbRegistry.AgentTimerMinute;
             timer.AutoReset = false;
             timer.Elapsed += (s, e) =>
             {
                 Task.Run(() =>
                 {
-                    UsbHttpHelp.GetAgentData_Http();
+                    UsbHttpHelp.GetUsbFilterDb_Http();
                 });
             };
 
@@ -33,7 +33,7 @@ namespace USBNotifyLib
         private static void SetTimer_PostUserComputer()
         {
             var timer = new Timer();
-            timer.Interval = UsbConfig.AgentTimerMinute;
+            timer.Interval = UsbRegistry.AgentTimerMinute;
             timer.AutoReset = false;
             timer.Elapsed += (s, e) =>
             {

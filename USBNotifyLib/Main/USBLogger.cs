@@ -9,6 +9,13 @@ namespace USBNotifyLib
 {
     public class UsbLogger
     {
+        private static readonly string _baseDir = AppDomain.CurrentDomain.BaseDirectory;
+
+
+        public static string LogPath => Path.Combine(_baseDir, "log.txt");
+
+        public static string ErrorPath => Path.Combine(_baseDir, "error.txt");
+
         public static void LogTime()
         {
             
@@ -17,13 +24,13 @@ namespace USBNotifyLib
         public static void Log(string log)
         {
             //ConsoleLog(log);
-            LogToFile(UsbConfig.LogPath, log);
+            LogToFile(LogPath, log);
         }
 
         public static void Error(string error)
         {
             var l = Environment.NewLine + DateTime.Now.ToString("yyyy-MM-dd HH:ss") + Environment.NewLine + error + Environment.NewLine;
-            LogToFile(UsbConfig.ErrorPath, l);
+            LogToFile(ErrorPath, l);
             //Console.WriteLine(l);
         }
 

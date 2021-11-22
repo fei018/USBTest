@@ -16,6 +16,10 @@ namespace USBNotifyLib
             try
             {
                 var com = new UserComputerHelp().SetInfo();
+                if (string.IsNullOrWhiteSpace(com.ComputerIdentity))
+                {
+                    throw new Exception("ComputerIdentity is null or empty.");
+                }
                 return com.ComputerIdentity;
             }
             catch (Exception)
@@ -41,7 +45,7 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + private void SetInfo()
+        #region + private UserComputer SetInfo()
         private UserComputer SetInfo()
         {
             try

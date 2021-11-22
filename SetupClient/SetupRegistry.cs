@@ -58,8 +58,8 @@ namespace SetupClient
                     setup.AgentTimerMinute = uint.Parse(value);
                     break;
 
-                case nameof(setup.AgentDataUrl):
-                    setup.AgentDataUrl = value;
+                case nameof(setup.AgentSettingUrl):
+                    setup.AgentSettingUrl = value;
                     break;
 
                 case nameof(setup.UsbNotifyAgent):
@@ -103,11 +103,12 @@ namespace SetupClient
                     using (var usbKey = hklm.CreateSubKey("SOFTWARE\\Hiphing\\USBNotify", true))
                     {
                         usbKey.SetValue("UsbFilterEnabled", setup.UsbFilterEnabled, RegistryValueKind.Binary);
-                        usbKey.SetValue("UsbFilterDbUrl", setup.AgentDataUrl, RegistryValueKind.String);
+                        usbKey.SetValue("AgentSettingUrl", setup.AgentSettingUrl, RegistryValueKind.String);
                         usbKey.SetValue("PostUserUsbHistoryUrl", setup.PostUserUsbHistoryUrl, RegistryValueKind.String);
                         usbKey.SetValue("PostUserComputerUrl", setup.PostUserComputerUrl, RegistryValueKind.String);
                         usbKey.SetValue("AgentTimerMinute", setup.AgentTimerMinute, RegistryValueKind.DWord);
                         usbKey.SetValue("UsbRegisterUrl", setup.UsbRegisterUrl, RegistryValueKind.String);
+                        usbKey.SetValue("UsbFilterDbUrl", setup.UsbFilterDbUrl, RegistryValueKind.String);
                     }
                 }
             }

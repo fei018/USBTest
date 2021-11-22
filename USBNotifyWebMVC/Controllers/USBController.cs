@@ -50,7 +50,7 @@ namespace USBNotifyWebMVC.Controllers
             return View();
         }
 
-        public async Task<IActionResult> RegisterUsb(UsbInfo usb)
+        public async Task<IActionResult> RegisterUsb(Tbl_UsbInfo usb)
         {
             try
             {

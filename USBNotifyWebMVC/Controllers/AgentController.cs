@@ -23,19 +23,37 @@ namespace USBNotifyWebMVC.Controllers
             _httpContext = httpContextAccessor.HttpContext;
         }
 
-        public async Task<IActionResult> AgentData(string computerIdentity)
+        #region UsbFilterDb(string computerIdentity)
+        public async Task<IActionResult> UsbFilterDb(string computerIdentity)
         {
             try
             {
-                var query = await _usbDb.GetUsbAgentData(computerIdentity);
+                var query = await _usbDb.GetUsbFilterDb(computerIdentity);
                 string json = JsonConvert.SerializeObject(query);
                 return Json(json);
             }
             catch (Exception)
             {
-                return NoContent();
+                return NotFound();
             }
         }
+        #endregion
+
+        #region AgentSetting()
+        public async Task<IActionResult> AgentSetting()
+        {
+            try
+            {
+                var query = await _usbDb.GetAgentSetting();
+                string json = JsonConvert.SerializeObject(query);
+                return Json(json);
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
+        }
+        #endregion
 
         #region PostUserComputer()
         [HttpPost]

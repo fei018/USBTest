@@ -13,12 +13,16 @@ namespace USBNotifyLib
     {
         private readonly UsbBusController _usbBus;
 
-        private readonly UsbFilterDb _usbFilterDb;
+        private static bool? _usbFilterEnabled;
+        public static bool IsEnable
+        {
+            get => _usbFilterEnabled ?? UsbRegistry.UsbFilterEnabled;
+            set => _usbFilterEnabled = value;
+        }
 
         public UsbFilter()
         {
             _usbBus = new UsbBusController();
-            _usbFilterDb = new UsbFilterDb();
         }
 
         // Filter
@@ -66,7 +70,7 @@ namespace USBNotifyLib
                     return;
                 }
 
-                if (_usbFilterDb.IsFind(notifyUsb))
+                if (UsbFilterDbHelp.IsFind(notifyUsb))
                 {
                     Rule_Match_In_UsbFilterDb(notifyUsb);
                     return;

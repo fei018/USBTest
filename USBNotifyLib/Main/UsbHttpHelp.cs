@@ -11,7 +11,7 @@ namespace USBNotifyLib
     public class UsbHttpHelp
     {
         #region + public static void GetUsbFilterDb_Http()
-        public static void GetAgentData_Http()
+        public static void GetUsbFilterDb_Http()
         {
             try
             {
@@ -20,13 +20,20 @@ namespace USBNotifyLib
                     http.Timeout = TimeSpan.FromSeconds(10);
 
                     var comIdentity = UserComputerHelp.GetComputerIdentity();
-                    var url = UsbConfig.AgentDataUrl + "?computerIdentity=" + comIdentity;
+                    var url = UsbRegistry.UsbFilterDbUrl + "?computerIdentity=" + comIdentity;
                     var response = http.GetAsync(url).Result;
-                    response.EnsureSuccessStatusCode();
-                    string rp = response.Content.ReadAsStringAsync().Result;
-                    UsbAgentData agentData = JsonConvert.DeserializeObject<UsbAgentData>(rp);
 
-                    UsbConfigHelp.SetAgentData(agentData);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string rp = response.Content.ReadAsStringAsync().Result;
+                        GetUsbFilterDbHttp db = JsonConvert.DeserializeObject<GetUsbFilterDbHttp>(rp);
+
+                        UsbFilterDbHelp.Set_UsbFilterDb_byHttp(db);
+                    }
+                    else
+                    {
+                        throw new Exception(response.StatusCode.ToString());
+                    }                    
                 }
             }
             catch (Exception ex)
@@ -36,6 +43,41 @@ namespace USBNotifyLib
         }
         #endregion
 
+        #region + public static void GetAgentSetting_Http()
+        public static void GetAgentSetting_Http()
+        {
+            try
+            {
+                using (var http = new HttpClient())
+                {
+                    http.Timeout = TimeSpan.FromSeconds(10);
+
+                    var comIdentity = UserComputerHelp.GetComputerIdentity();
+                    var url = UsbRegistry.AgentDataUrl;
+                    var response = http.GetAsync(url).Result;
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string rp = response.Content.ReadAsStringAsync().Result;
+
+                        var convert = new AbstractJsonConverter<AgentSetting, IAgentSettingHttp>();
+                        AgentSetting setting = JsonConvert.DeserializeObject<AgentSetting>(rp,convert);
+
+                        UsbRegistry.AgentTimerMinute = setting.AgentTimerMinute;
+                        UsbRegistry.VersionGuid = setting.Version;
+                    }
+                    else
+                    {
+                        throw new Exception(response.StatusCode.ToString());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                UsbLogger.Error(ex.Message);
+            }
+        }
+        #endregion
 
         #region + public static void PostUserComputer_Http()
         public static void PostUserComputer_Http()
@@ -49,7 +91,8 @@ namespace USBNotifyLib
                 {
                     http.Timeout = TimeSpan.FromSeconds(10);
                     StringContent content = new StringContent(comJson, Encoding.UTF8, "application/json");
-                    var response = http.PostAsync(UsbConfig.PostUserComputerUrl, content).Result;
+                    var response = http.PostAsync(UsbRegistry.PostUserComputerUrl, content).Result;
+
                     response.EnsureSuccessStatusCode();
                 }
             }
@@ -82,7 +125,7 @@ namespace USBNotifyLib
                 {
                     http.Timeout = TimeSpan.FromSeconds(10);
                     StringContent content = new StringContent(postjosn, Encoding.UTF8, "application/json");
-                    var response = http.PostAsync(UsbConfig.PostUserUsbHistoryUrl, content).Result;
+                    var response = http.PostAsync(UsbRegistry.PostUserUsbHistoryUrl, content).Result;
                     response.EnsureSuccessStatusCode();
                 }
             }
@@ -115,7 +158,7 @@ namespace USBNotifyLib
                 {
                     http.Timeout = TimeSpan.FromSeconds(10);
                     StringContent content = new StringContent(postjosn, Encoding.UTF8, "application/json");
-                    var response = http.PostAsync(UsbConfig.PostUserUsbHistoryUrl, content).Result;
+                    var response = http.PostAsync(UsbRegistry.PostUserUsbHistoryUrl, content).Result;
                     response.EnsureSuccessStatusCode();
                 }
             }

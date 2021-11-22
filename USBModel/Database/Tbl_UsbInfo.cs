@@ -3,7 +3,7 @@ using USBCommon;
 
 namespace USBModel
 {
-    public class UsbInfo : IUsbInfoHttp
+    public class Tbl_UsbInfo : IUsbInfoHttp
     {
         [SugarColumn(IsIdentity = true, IsPrimaryKey = true)]
         public int Id { get; set; }

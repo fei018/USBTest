@@ -22,7 +22,7 @@ namespace USBNotifyLib
 
         public string ComputerIdentity => (BiosSerial + MacAddress)?.ToLower();
 
-        public bool UserUsbFilterEnabled { get; set; }
+        public bool UsbFilterEnabled { get; set; }
 
         public override string ToString()
         {

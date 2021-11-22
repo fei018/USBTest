@@ -36,9 +36,10 @@ namespace USBModel
         {
             if (_db.DbMaintenance.CreateDatabase())
             {
-                _db.CodeFirst.SetStringDefaultLength(100).InitTables<UserUsbHistory>();
-                _db.CodeFirst.SetStringDefaultLength(100).InitTables<UsbInfo>();
-                _db.CodeFirst.SetStringDefaultLength(100).InitTables<UserComputer>();
+                _db.CodeFirst.SetStringDefaultLength(100).InitTables<Tbl_UserUsbHistory>();
+                _db.CodeFirst.SetStringDefaultLength(100).InitTables<Tbl_UsbInfo>();
+                _db.CodeFirst.SetStringDefaultLength(100).InitTables<Tbl_UserComputer>();
+                _db.CodeFirst.InitTables<Tbl_AgentSetting>();
 
                 _db.CodeFirst.InitTables<LoginUser>();
                 _db.CodeFirst.InitTables<LoginErrorCountLimit>();
@@ -60,19 +61,19 @@ namespace USBModel
         }
         #endregion
 
-        #region + public async Task<UsbAgentData> GetUsbAgentData(string comIdentity)
-        public async Task<UsbAgentData> GetUsbAgentData(string comIdentity)
+        #region + public async Task<UsbFilterDbHttp> GetUsbFilterDb(string comIdentity)
+        public async Task<GetUsbFilterDbHttp> GetUsbFilterDb(string comIdentity)
         {
             try
             {
-                var com = await _db.Queryable<UserComputer>().FirstAsync(c => c.ComputerIdentity == comIdentity);
-                if (!com.UserUsbFilterEnabled)
+                var com = await _db.Queryable<Tbl_UserComputer>().FirstAsync(c => c.ComputerIdentity == comIdentity);
+                if (!com.UsbFilterEnabled)
                 {
                     throw new Exception("UserUsbFilterEnabled is false.");
                 }
 
                 // UsbFilterDb
-                var filterDb = await _db.Queryable<UsbInfo>().ToListAsync();
+                var filterDb = await _db.Queryable<Tbl_UsbInfo>().ToListAsync();
                 if (filterDb == null || filterDb.Count <= 0) throw new Exception("UsbFilterDb is null or empty in database.");
 
                 var sb = new StringBuilder();
@@ -81,17 +82,13 @@ namespace USBModel
                     sb.AppendLine(Base64Encode(u.UsbIdentity));
                 }
 
-                // AgentSetting
-                var agentSetting = await _db.Queryable<AgentSetting>().FirstAsync();
-
-                var agentData = new UsbAgentData
+                var filter = new GetUsbFilterDbHttp
                 {
                     UsbFilterDb = sb.ToString(),
-                    UserUsbFilterEnabled = com.UserUsbFilterEnabled,
-                    AgentTimerMinute = agentSetting != null ? agentSetting.AgentTimerMinute : 10
+                    UserUsbFilterEnabled = com.UsbFilterEnabled,
                 };
 
-                return agentData;
+                return filter;
             }
             catch (Exception)
             {
@@ -100,12 +97,33 @@ namespace USBModel
         }
         #endregion
 
-        #region +  public async Task<UserComputer> GetUserComputerById(int id)
-        public async Task<UserComputer> GetUserComputerById(int id)
+        #region + public async Task<t_AgentSetting> GetAgentSetting()
+        public async Task<Tbl_AgentSetting> GetAgentSetting()
         {
             try
             {
-                var query = await _db.Queryable<UserComputer>().InSingleAsync(id);
+                var query = await _db.Queryable<Tbl_AgentSetting>().FirstAsync();
+                if (query == null)
+                {
+                    throw new Exception("AgentSetting is null.");
+                }
+
+                return query;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        #endregion
+
+        #region +  public async Task<UserComputer> GetUserComputerById(int id)
+        public async Task<Tbl_UserComputer> GetUserComputerById(int id)
+        {
+            try
+            {
+                var query = await _db.Queryable<Tbl_UserComputer>().InSingleAsync(id);
                 if (query == null)
                 {
                     throw new Exception("UserComputer cannot find. Id: " + id);
@@ -121,12 +139,12 @@ namespace USBModel
         #endregion
 
         #region + public async Task<(int total, List<UsbInfo> list)> GetAllUsbInfo(int pageIndex, int pageSize)
-        public async Task<(int total, List<UsbInfo> list)> GetAllUsbInfo(int pageIndex, int pageSize)
+        public async Task<(int total, List<Tbl_UsbInfo> list)> GetAllUsbInfo(int pageIndex, int pageSize)
         {
             try
             {
                 RefAsync<int> total = new RefAsync<int>();
-                var query = await _db.Queryable<UsbInfo>().ToPageListAsync(pageIndex, pageSize, total);
+                var query = await _db.Queryable<Tbl_UsbInfo>().ToPageListAsync(pageIndex, pageSize, total);
 
                 if (query == null || query.Count <= 0)
                 {
@@ -143,11 +161,11 @@ namespace USBModel
         #endregion
 
         #region + public async Task<List<UsbInfo>> GetRegisteredUsbList()
-        public async Task<List<UsbInfo>> GetRegisteredUsbList()
+        public async Task<List<Tbl_UsbInfo>> GetRegisteredUsbList()
         {
             try
             {
-                var query = await _db.Queryable<UsbInfo>()
+                var query = await _db.Queryable<Tbl_UsbInfo>()
                                     .Where(u => u.IsRegistered == true)
                                     .ToListAsync();
 
@@ -166,11 +184,11 @@ namespace USBModel
         #endregion
 
         #region + public async Task<List<UsbInfo>> GetUnregisterUsbList(int pageIndex, int pageSize)
-        public async Task<List<UsbInfo>> GetUnregisterUsbList(int pageIndex, int pageSize)
+        public async Task<List<Tbl_UsbInfo>> GetUnregisterUsbList(int pageIndex, int pageSize)
         {
             try
             {
-                var query = await _db.Queryable<UsbInfo>()
+                var query = await _db.Queryable<Tbl_UsbInfo>()
                                 .Where(u => u.IsRegistered == false)
                                 .ToPageListAsync(pageIndex, pageSize);
 
@@ -195,7 +213,7 @@ namespace USBModel
             {
                 var total = new RefAsync<int>();
 
-                var query = await _db.Queryable<UserUsbHistory, UsbInfo, UserComputer>((h, u, c) =>
+                var query = await _db.Queryable<Tbl_UserUsbHistory, Tbl_UsbInfo, Tbl_UserComputer>((h, u, c) =>
                                         h.UsbIdentity == u.UsbIdentity && h.ComputerIdentity == c.ComputerIdentity)
                                         .OrderBy(h => h.PluginTime)
                                         .Select((h, u, c) => new { his = h, usb = u, com = c })
@@ -232,7 +250,7 @@ namespace USBModel
             {
                 var total = new RefAsync<int>();
 
-                var query = await _db.Queryable<UserUsbHistory, UsbInfo>((h, u) =>
+                var query = await _db.Queryable<Tbl_UserUsbHistory, Tbl_UsbInfo>((h, u) =>
                                         h.ComputerIdentity == computerIdentity && h.UsbIdentity == u.UsbIdentity)
                                         .OrderBy(h => h.PluginTime)
                                         .Select((h, u) => new { his = h, usb = u })
@@ -263,12 +281,12 @@ namespace USBModel
         #endregion
 
         #region + public async Task<(int totalCount,List<UserComputer> list)> GetUserComputerList(int index, int size)
-        public async Task<(int totalCount, List<UserComputer> list)> GetUserComputerList(int index, int size)
+        public async Task<(int totalCount, List<Tbl_UserComputer> list)> GetUserComputerList(int index, int size)
         {
             try
             {
                 var total = new RefAsync<int>();
-                var query = await _db.Queryable<UserComputer>().ToPageListAsync(index, size, total);
+                var query = await _db.Queryable<Tbl_UserComputer>().ToPageListAsync(index, size, total);
 
                 if (query == null || query.Count <= 0)
                 {
@@ -285,11 +303,11 @@ namespace USBModel
         #endregion
 
         #region + public async Task<List<UserComputer>> GetUserComputerListByIdentity(string computerIdentity)
-        public async Task<List<UserComputer>> GetUserComputerListByIdentity(string computerIdentity)
+        public async Task<List<Tbl_UserComputer>> GetUserComputerListByIdentity(string computerIdentity)
         {
             try
             {
-                var query = await _db.Queryable<UserComputer>().Where(c => c.ComputerIdentity == computerIdentity).ToListAsync();
+                var query = await _db.Queryable<Tbl_UserComputer>().Where(c => c.ComputerIdentity == computerIdentity).ToListAsync();
                 if (query == null || query.Count <= 0)
                 {
                     throw new Exception("Nothing UserComputer in database.");
@@ -305,11 +323,11 @@ namespace USBModel
         #endregion
 
         #region + public async Task Register_Usb(UsbInfo usb)
-        public async Task Register_Usb(UsbInfo usb)
+        public async Task Register_Usb(Tbl_UsbInfo usb)
         {
             try
             {
-                var usbInDb = await _db.Queryable<UsbInfo>()
+                var usbInDb = await _db.Queryable<Tbl_UsbInfo>()
                                      .Where(u => u.UsbIdentity == usb.UsbIdentity)
                                      .FirstAsync();
 
@@ -339,11 +357,11 @@ namespace USBModel
         #endregion
 
         #region + public async Task Update_UserComputer(UserComputer com)
-        public async Task Update_UserComputer(UserComputer com)
+        public async Task Update_UserComputer(Tbl_UserComputer com)
         {
             try
             {
-                var query = await _db.Queryable<UserComputer>()
+                var query = await _db.Queryable<Tbl_UserComputer>()
                                      .Where(c => c.ComputerIdentity == com.ComputerIdentity)
                                      .FirstAsync();
 
@@ -367,11 +385,11 @@ namespace USBModel
         #endregion
 
         #region + private async Task Insert_UserUsb(UserUsb usb)
-        private async Task Insert_UserUsb(UsbInfo usb)
+        private async Task Insert_UserUsb(Tbl_UsbInfo usb)
         {
             try
             {
-                var usbInDb = await _db.Queryable<UsbInfo>()
+                var usbInDb = await _db.Queryable<Tbl_UsbInfo>()
                                     .Where(u => u.UsbIdentity == usb.UsbIdentity)
                                     .FirstAsync();
 
@@ -389,7 +407,7 @@ namespace USBModel
         #endregion
 
         #region + private async Task Insert_UsbHistory(UsbHistory usb)
-        private async Task Insert_UsbHistory(UserUsbHistory usb)
+        private async Task Insert_UsbHistory(Tbl_UserUsbHistory usb)
         {
             try
             {
@@ -412,19 +430,19 @@ namespace USBModel
         {
             try
             {
-                var com = post.UserComputer as UserComputer;
+                var com = post.UserComputer as Tbl_UserComputer;
                 if (com != null)
                 {
                     await Update_UserComputer(com);
                 }
 
-                var usb = post.UsbInfo as UsbInfo;
+                var usb = post.UsbInfo as Tbl_UsbInfo;
                 if (usb != null)
                 {
                     await Insert_UserUsb(usb);
                 }
 
-                var history = post.UserUsbHistory as UserUsbHistory;
+                var history = post.UserUsbHistory as Tbl_UserUsbHistory;
                 if (history != null)
                 {
                     await Insert_UsbHistory(history);

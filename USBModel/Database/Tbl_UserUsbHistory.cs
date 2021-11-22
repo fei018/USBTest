@@ -4,7 +4,7 @@ using USBCommon;
 
 namespace USBModel
 {
-    public class UserUsbHistory : IUserUsbHistoryHttp
+    public class Tbl_UserUsbHistory : IUserUsbHistoryHttp
     {
         [SugarColumn(IsPrimaryKey = true, IsIdentity = true)]
         public uint Id { get; set; }

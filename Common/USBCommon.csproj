@@ -42,7 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractJsonConverter.cs" />
-    <Compile Include="UsbAgentData.cs" />
+    <Compile Include="IAgentSettingHttp.cs" />
+    <Compile Include="GetUsbFilterDbHttp.cs" />
     <Compile Include="IUserComputerHttp.cs" />
     <Compile Include="IUserUsbHistoryHttp.cs" />
     <Compile Include="PostUserUsbHistoryHttp.cs" />

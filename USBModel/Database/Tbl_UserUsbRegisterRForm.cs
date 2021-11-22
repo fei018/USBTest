@@ -3,7 +3,7 @@ using System;
 
 namespace USBModel
 {
-    public class UserUsbRegisterRForm
+    public class Tbl_UserUsbRegisterRForm
     {
         [SugarColumn(IsIdentity =true,IsPrimaryKey =true)]
         public int Id { get; set; }

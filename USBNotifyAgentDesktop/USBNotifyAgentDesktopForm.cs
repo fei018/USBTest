@@ -21,5 +21,10 @@ namespace USBNotifyAgentDesktop
         {
             this.Hide();
         }
+
+        private void NotifyItem_About_Click(object sender, EventArgs e)
+        {
+            new AboutForm().Show();
+        }
     }
 }

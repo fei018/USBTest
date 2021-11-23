@@ -25,10 +25,10 @@ namespace USBNotifyLib
             set => SetUsbRegistryKey(nameof(UsbFilterDbUrl), value, RegistryValueKind.String);
         }
 
-        public static string AgentDataUrl
+        public static string AgentSettingUrl
         {
-            get => ReadUsbRegistryKey(nameof(AgentDataUrl));
-            set=> SetUsbRegistryKey(nameof(AgentDataUrl), value, RegistryValueKind.String);
+            get => ReadUsbRegistryKey(nameof(AgentSettingUrl));
+            set=> SetUsbRegistryKey(nameof(AgentSettingUrl), value, RegistryValueKind.String);
         }
 
         public static int AgentTimerMinute 
@@ -37,10 +37,16 @@ namespace USBNotifyLib
             set=> SetUsbRegistryKey(nameof(AgentTimerMinute), value, RegistryValueKind.DWord);
         }
 
-        public static string VersionGuid
+        public static string Version
         {
-            get => ReadUsbRegistryKey(nameof(VersionGuid));
-            set => SetUsbRegistryKey(nameof(VersionGuid), value, RegistryValueKind.String);
+            get => ReadUsbRegistryKey(nameof(Version));
+            set => SetUsbRegistryKey(nameof(Version), value, RegistryValueKind.String);
+        }
+
+        public static string AgentUpdateUrl
+        {
+            get => ReadUsbRegistryKey(nameof(AgentUpdateUrl));
+            set => SetUsbRegistryKey(nameof(AgentUpdateUrl), value, RegistryValueKind.String);
         }
 
         public static string PostUserComputerUrl

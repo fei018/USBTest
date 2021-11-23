@@ -46,5 +46,7 @@ namespace USBNotifyLib
             timer.Enabled = true;
         }
         #endregion
+
+
     }
 }

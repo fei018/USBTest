@@ -53,7 +53,7 @@ namespace USBNotifyLib
                     http.Timeout = TimeSpan.FromSeconds(10);
 
                     var comIdentity = UserComputerHelp.GetComputerIdentity();
-                    var url = UsbRegistry.AgentDataUrl;
+                    var url = UsbRegistry.AgentSettingUrl;
                     var response = http.GetAsync(url).Result;
 
                     if (response.IsSuccessStatusCode)
@@ -64,7 +64,7 @@ namespace USBNotifyLib
                         AgentSetting setting = JsonConvert.DeserializeObject<AgentSetting>(rp,convert);
 
                         UsbRegistry.AgentTimerMinute = setting.AgentTimerMinute;
-                        UsbRegistry.VersionGuid = setting.Version;
+                        AgentUpdate.Check(setting.Version);
                     }
                     else
                     {

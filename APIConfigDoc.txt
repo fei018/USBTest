@@ -2,12 +2,14 @@
 UsbNotifyService=usbnservice.exe
 UsbNotifyAgent=usbnagent.exe
 UsbNotifyAgentDesktop=usbndesktop.exe
-UsbUpdate=usbupdate.exe
+AgentUpdate=agentupdate.exe
 
 [registry]
 UsbFilterEnabled=true
 UpdateTimer=1
-AgentDataUrl=http://localhost:5000/usb/AgentData
-RegisterUrl=http://localhost:5000/usb/register
-PostUserComputerUrl=http://localhost:5000/usb/PostUserComputer
-PostUserUsbHistoryUrl=http://localhost:5000/usb/PostUserUsbHistory
+UsbFilterDbUerl=http://localhost:5000/agent/usbFilterDb
+AgentSettingUrl=http://localhost:5000/agent/AgentSetting
+RegisterUrl=http://localhost:5000/agent/register
+PostUserComputerUrl=http://localhost:5000/agent/PostUserComputer
+PostUserUsbHistoryUrl=http://localhost:5000/agent/PostUserUsbHistory
+AgentUpdateUrl=http://localhost:5000/agent/agentUpdate

@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Diagnostics;
+using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +22,11 @@ namespace USBNotifyLib
                     http.Timeout = TimeSpan.FromSeconds(10);
 
                     var comIdentity = UserComputerHelp.GetComputerIdentity();
+                    Debug.WriteLine(comIdentity);
+
                     var url = UsbRegistry.UsbFilterDbUrl + "?computerIdentity=" + comIdentity;
+                    Debug.WriteLine(url);
+
                     var response = http.GetAsync(url).Result;
 
                     if (response.IsSuccessStatusCode)
@@ -53,18 +59,27 @@ namespace USBNotifyLib
                     http.Timeout = TimeSpan.FromSeconds(10);
 
                     var comIdentity = UserComputerHelp.GetComputerIdentity();
+                    Debug.WriteLine(comIdentity);
+
                     var url = UsbRegistry.AgentSettingUrl;
+                    Debug.WriteLine(url);
+                    Debugger.Break();
                     var response = http.GetAsync(url).Result;
 
                     if (response.IsSuccessStatusCode)
                     {
-                        string rp = response.Content.ReadAsStringAsync().Result;
+                        var jsonStream = response.Content.ReadAsStreamAsync().Result;
+                        StreamReader body = new StreamReader(jsonStream, Encoding.UTF8);
+                        var json = body.ReadToEnd();
 
-                        var convert = new AbstractJsonConverter<AgentSetting, IAgentSettingHttp>();
-                        AgentSetting setting = JsonConvert.DeserializeObject<AgentSetting>(rp,convert);
+                        var convert = new JsonSerializerSettings()
+                        {
+                            Converters = { new AbstractJsonConverter<AgentSetting, IAgentSettingHttp>() }
+                        };
+                        var setting = JsonConvert.DeserializeObject(json, typeof(AgentSetting), convert);
 
-                        UsbRegistry.AgentTimerMinute = setting.AgentTimerMinute;
-                        AgentUpdate.Check(setting.Version);
+                        //UsbRegistry.AgentTimerMinute = setting.AgentTimerMinute;
+                        //AgentUpdate.Check(setting.Version);
                     }
                     else
                     {

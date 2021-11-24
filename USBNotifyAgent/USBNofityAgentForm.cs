@@ -21,9 +21,9 @@ namespace USBNotifyAgent
             if (UsbFilter.IsEnable)
             {
                 UsbFilterDbHelp.Reload_UsbFilterDb();
-                new UsbFilter().Filter_Scan_All_USB_Disk();
-                UsbTimer.RunTask();
-            }           
+                new UsbFilter().Filter_Scan_All_USB_Disk();                
+            }
+            UsbTimer.RunTask();
         }
         #endregion
 

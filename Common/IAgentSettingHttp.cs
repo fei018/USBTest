@@ -2,9 +2,8 @@
 {
     public interface IAgentSettingHttp
     {
-        /// <summary>
-        /// unit: minute
-        /// </summary>
+        int Id { get; set; }
+
         int AgentTimerMinute { get; set; }
 
         string Version { get; set; }

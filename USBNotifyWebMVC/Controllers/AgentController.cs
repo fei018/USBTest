@@ -44,9 +44,9 @@ namespace USBNotifyWebMVC.Controllers
         {
             try
             {
-                var query = await _usbDb.GetAgentSetting();
+                IAgentSettingHttp query = await _usbDb.GetAgentSetting();
                 string json = JsonConvert.SerializeObject(query);
-                return Json(json);
+                return Content(json, "application/json");
             }
             catch (Exception)
             {

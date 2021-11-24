@@ -16,7 +16,7 @@ namespace USBNotifyLib
         public static bool UsbFilterEnabled
         {
             get => Convert.ToBoolean(ReadUsbRegistryKey(nameof(UsbFilterEnabled)));
-            set => SetUsbRegistryKey(nameof(UsbFilterEnabled),value,RegistryValueKind.Binary);
+            set => SetUsbRegistryKey(nameof(UsbFilterEnabled),value,RegistryValueKind.String);
         }
 
         public static string UsbFilterDbUrl
@@ -34,7 +34,7 @@ namespace USBNotifyLib
         public static int AgentTimerMinute 
         { 
             get=> Convert.ToInt32(ReadUsbRegistryKey(nameof(AgentTimerMinute)));
-            set=> SetUsbRegistryKey(nameof(AgentTimerMinute), value, RegistryValueKind.DWord);
+            set=> SetUsbRegistryKey(nameof(AgentTimerMinute), value, RegistryValueKind.String);
         }
 
         public static string Version

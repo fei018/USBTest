@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -17,7 +18,9 @@ namespace USBNotifyLib
 
         private static string _updateZipFile = Path.Combine(_downloadFileDir, "update.zip");
 
-        private static string _installDir = Path.Combine(_baseDir, "install");
+        private static string _updateDir = Path.Combine(_baseDir, "update");
+
+        private static string _updateExe = Path.Combine(_updateDir, "update.exe");
 
         #region + public static void Check(string getVersion)
         public static void Check(string getVersion)
@@ -28,7 +31,7 @@ namespace USBNotifyLib
                 {
                     Task.Run(() =>
                     {
-                        // execute agentupdate.exe
+                        new AgentUpdate().Update();
                     });
                 }
             }
@@ -40,8 +43,31 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + private void CleanUpdateDir()
-        private void CleanUpdateDir()
+        #region + public void Update()
+        public void Update()
+        {
+            try
+            {
+                CleanDownloadDir();
+                DownloadFile();
+                if (File.Exists(_updateExe))
+                {
+                    Process.Start(_updateExe);
+                }
+                else
+                {
+                    throw new Exception("update.exe not exist.");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        #region + private void CleanDownloadDir()
+        private void CleanDownloadDir()
         {
             if (Directory.Exists(_downloadFileDir))
             {
@@ -51,21 +77,9 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + private void DeleteUpdateDir()
-        private void DeleteUpdateDir()
-        {
-            if (Directory.Exists(_downloadFileDir))
-            {
-                Directory.Delete(_downloadFileDir, true);
-            }
-        }
-        #endregion
-
         #region + private void DownloadFile()
         private void DownloadFile()
         {
-            CleanUpdateDir();
-
             using (var http = new HttpClient())
             {
                 http.Timeout = TimeSpan.FromMinutes(10);
@@ -80,7 +94,7 @@ namespace USBNotifyLib
                         fs.Write(fbs, 0, fbs.Length);
                     }
 
-                    ZipFile.ExtractToDirectory(_updateZipFile, _installDir);
+                    ZipFile.ExtractToDirectory(_updateZipFile, _updateDir);
                 }
                 else
                 {

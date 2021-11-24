@@ -98,7 +98,7 @@ namespace USBModel
         #endregion
 
         #region + public async Task<t_AgentSetting> GetAgentSetting()
-        public async Task<Tbl_AgentSetting> GetAgentSetting()
+        public async Task<IAgentSettingHttp> GetAgentSetting()
         {
             try
             {

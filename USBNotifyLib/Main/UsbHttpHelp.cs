@@ -27,13 +27,13 @@ namespace USBNotifyLib
 
                     var url = UsbRegistry.UsbFilterDbUrl + "?computerIdentity=" + comIdentity;
                     Debug.WriteLine(url);
-                    //Debugger.Break();
+                    
                     var response = http.GetAsync(url).Result;
 
                     if (response.IsSuccessStatusCode)
                     {
-                        string rp = response.Content.ReadAsStringAsync().Result;
-                        GetUsbFilterDbHttp db = JsonConvert.DeserializeObject<GetUsbFilterDbHttp>(rp);
+                        string json = response.Content.ReadAsStringAsync().Result;
+                        GetUsbFilterDbHttp db = JsonConvert.DeserializeObject<GetUsbFilterDbHttp>(json);
 
                         UsbFilterDbHelp.Set_UsbFilterDb_byHttp(db);
                     }
@@ -91,7 +91,7 @@ namespace USBNotifyLib
         {
             try
             {
-                var com = UserComputerHelp.GetUserComputer() as IUserComputerHttp;
+                var com = UserComputerHelp.GetUserComputer() as IUserComputer;
                 var comJson = JsonConvert.SerializeObject(com);
 
                 using (var http = new HttpClient())
@@ -111,28 +111,33 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + public void PostUserUsbHistory_byVolume_Http(char driveLetter)
-        public void PostUserUsbHistory_byVolume_Http(char driveLetter)
+        #region + public void PostUserUsbHistory_byDisk_Http(string diskPath)
+        public void PostUserUsbHistory_byDisk_Http(string diskPath)
         {
             try
             {
-                var com = UserComputerHelp.GetUserComputer() as IUserComputerHttp;
-                var usb = new UsbFilter().Find_NotifyUsb_Use_DriveLetter(driveLetter) as IUsbInfoHttp;
-                
-                var his = new UsbHistory
+                Debugger.Break();
+                var comIdentity = UserComputerHelp.GetComputerIdentity();
+                var usb = new UsbFilter().Find_NotifyUsb_Use_DiskPath(diskPath);
+
+                IUserUsbHistory usbHistory = new UserUsbHistory
                 {
-                    ComputerIdentity = com.ComputerIdentity,
-                    UsbIdentity = usb.UsbIdentity,
+                    ComputerIdentity = comIdentity,
+                    DeviceDescription = usb.DeviceDescription,
+                    Manufacturer = usb.Manufacturer,
+                    Pid = usb.Pid,
+                    Product = usb.Product,
+                    SerialNumber = usb.SerialNumber,
+                    Vid = usb.Vid,
                     PluginTime = DateTime.Now
                 };
+                
+                var usbHistoryJosn = JsonConvert.SerializeObject(usbHistory);
 
-                var post = new PostUserUsbHistoryHttp { UserComputer = com, UsbInfo = usb, UserUsbHistory = his };
-                var postjosn = JsonConvert.SerializeObject(post);
-             
                 using (var http = new HttpClient())
                 {
                     http.Timeout = TimeSpan.FromSeconds(10);
-                    StringContent content = new StringContent(postjosn, Encoding.UTF8, "application/json");
+                    StringContent content = new StringContent(usbHistoryJosn, Encoding.UTF8, "application/json");
                     var response = http.PostAsync(UsbRegistry.PostUserUsbHistoryUrl, content).Result;
                     response.EnsureSuccessStatusCode();
                 }
@@ -144,37 +149,42 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + public void PostUserUsbHistory_byDisk_Http(string diskPath)
-        public void PostUserUsbHistory_byDisk_Http(string diskPath)
-        {
-            try
-            {
-                var com = UserComputerHelp.GetUserComputer() as IUserComputerHttp;
-                var usb = new UsbFilter().Find_NotifyUsb_Use_DiskPath(diskPath) as IUsbInfoHttp;
 
-                var his = new UsbHistory
-                {
-                    ComputerIdentity = com.ComputerIdentity,
-                    UsbIdentity = usb.UsbIdentity,
-                    PluginTime = DateTime.Now
-                };
+        #region + public void PostUserUsbHistory_byVolume_Http(char driveLetter)
+        //public void PostUserUsbHistory_byVolume_Http(char driveLetter)
+        //{
+        //    try
+        //    {
+        //        var comIdentity = UserComputerHelp.GetComputerIdentity();
+        //        var usb = new UsbFilter().Find_NotifyUsb_Use_DriveLetter(driveLetter);
 
-                var post = new PostUserUsbHistoryHttp { UserComputer = com, UsbInfo = usb, UserUsbHistory = his };
-                var postjosn = JsonConvert.SerializeObject(post);
+        //        IUserUsbHistory usbHistory = new UserUsbHistory
+        //        {
+        //            ComputerIdentity = comIdentity,
+        //            DeviceDescription = usb.DeviceDescription,
+        //            Manufacturer = usb.Manufacturer,
+        //            Pid = usb.Pid,
+        //            Product = usb.Product,
+        //            SerialNumber = usb.SerialNumber,
+        //            Vid = usb.Vid,
+        //            PluginTime = DateTime.Now
+        //        };
 
-                using (var http = new HttpClient())
-                {
-                    http.Timeout = TimeSpan.FromSeconds(10);
-                    StringContent content = new StringContent(postjosn, Encoding.UTF8, "application/json");
-                    var response = http.PostAsync(UsbRegistry.PostUserUsbHistoryUrl, content).Result;
-                    response.EnsureSuccessStatusCode();
-                }
-            }
-            catch (Exception ex)
-            {
-                UsbLogger.Error(ex.Message);
-            }
-        }
+        //        var usbHistoryJosn = JsonConvert.SerializeObject(usbHistory);
+
+        //        using (var http = new HttpClient())
+        //        {
+        //            http.Timeout = TimeSpan.FromSeconds(10);
+        //            StringContent content = new StringContent(usbHistoryJosn, Encoding.UTF8, "application/json");
+        //            var response = http.PostAsync(UsbRegistry.PostUserUsbHistoryUrl, content).Result;
+        //            response.EnsureSuccessStatusCode();
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        UsbLogger.Error(ex.Message);
+        //    }
+        //}
         #endregion
     }
 }

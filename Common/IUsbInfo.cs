@@ -2,7 +2,7 @@
 
 namespace USBCommon
 {
-    public interface IUsbInfoHttp
+    public interface IUsbInfo
     {
         int Vid { get; set; }
 
@@ -18,8 +18,6 @@ namespace USBCommon
 
         string Product { get; set; }
 
-        string DeviceDescription { get; set; }
-
-        string UsbIdentity { get; }
+        string DeviceDescription { get; set; }      
     }
 }

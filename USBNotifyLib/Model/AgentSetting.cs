@@ -2,7 +2,7 @@
 
 namespace USBNotifyLib
 {
-    public class AgentSetting : IAgentSettingHttp
+    public class AgentSetting : IAgentSetting
     {
         public int AgentTimerMinute { get; set; }
 

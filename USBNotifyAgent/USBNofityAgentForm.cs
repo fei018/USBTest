@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using UsbMonitor;
@@ -12,20 +11,9 @@ namespace USBNotifyAgent
         public USBNofityAgentForm()
         {
             InitializeComponent();
-            UsbStart();
-        }
 
-        #region UsbStart()
-        private void UsbStart()
-        {
-            if (UsbFilter.IsEnable)
-            {
-                UsbFilterDbHelp.Reload_UsbFilterDb();
-                new UsbFilter().Filter_Scan_All_USB_Disk();                
-            }
-            UsbTimer.RunTask();
+            AgentManager.Startup();
         }
-        #endregion
 
         #region OnUsbInterface(UsbEventDeviceInterfaceArgs args)
         /// <summary>
@@ -72,10 +60,9 @@ namespace USBNotifyAgent
                     }
                     catch (Exception) { }
                 }
-            }           
+            }
         }
         #endregion
-
 
 
         // form

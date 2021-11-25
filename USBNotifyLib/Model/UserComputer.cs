@@ -7,7 +7,7 @@ using USBCommon;
 
 namespace USBNotifyLib
 {
-    public class UserComputer : IUserComputerHttp
+    public class UserComputer : IUserComputer
     {
 
         public string HostName { get; set; }

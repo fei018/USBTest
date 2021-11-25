@@ -3,7 +3,7 @@ using USBCommon;
 
 namespace USBNotifyLib
 {
-    public class NotifyUsb : IUsbInfoHttp
+    public class NotifyUsb : IUsbInfo
     {
         public int Vid { get; set; }
 

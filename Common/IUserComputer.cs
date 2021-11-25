@@ -1,6 +1,6 @@
 ﻿namespace USBCommon
 {
-    public interface IUserComputerHttp
+    public interface IUserComputer
     {
         string HostName { get; set; }
 
@@ -13,7 +13,5 @@
         string MacAddress { get; set; }
 
         string ComputerIdentity { get; }
-
-        bool UsbFilterEnabled { get; set; }
     }
 }

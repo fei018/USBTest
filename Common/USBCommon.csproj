@@ -42,13 +42,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractJsonConverter.cs" />
-    <Compile Include="IAgentSettingHttp.cs" />
+    <Compile Include="IAgentSetting.cs" />
     <Compile Include="GetUsbFilterDbHttp.cs" />
-    <Compile Include="IUserComputerHttp.cs" />
-    <Compile Include="IUserUsbHistoryHttp.cs" />
+    <Compile Include="IUsbRegistered.cs" />
+    <Compile Include="IUserComputer.cs" />
+    <Compile Include="IUserUsbHistory.cs" />
     <Compile Include="MimeTypeMap.cs" />
-    <Compile Include="PostUserUsbHistoryHttp.cs" />
-    <Compile Include="IUsbInfoHttp.cs" />
+    <Compile Include="IUsbInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

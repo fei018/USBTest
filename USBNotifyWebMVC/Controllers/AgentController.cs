@@ -44,7 +44,7 @@ namespace USBNotifyWebMVC.Controllers
         {
             try
             {
-                IAgentSettingHttp query = await _usbDb.GetAgentSetting();
+                IAgentSetting query = await _usbDb.GetAgentSetting();
                 string json = JsonConvert.SerializeObject(query);
                 return Content(json, "application/json");
             }
@@ -83,11 +83,11 @@ namespace USBNotifyWebMVC.Controllers
             try
             {
                 StreamReader body = new StreamReader(_httpContext.Request.Body, Encoding.UTF8);
-                var post = body.ReadToEndAsync().Result;
+                var post = await body.ReadToEndAsync();
 
-                var info = JsonHttpConvert.Deserialize_PostUserUsbHistory(post);
+                var info = JsonHttpConvert.Deserialize_UserUsbHistory(post);
 
-                await _usbDb.Update_PostUsbHistory(info);
+                await _usbDb.Insert_UsbHistory(info);
 
                 return Ok();
             }

@@ -4,7 +4,7 @@ using USBCommon;
 
 namespace USBModel
 {
-    public class Tbl_UserComputer : IUserComputerHttp
+    public class Tbl_UserComputer : IUserComputer
     {
         [SugarColumn(IsIdentity = true, IsPrimaryKey = true)]
         public int Id { get; set; }
@@ -25,8 +25,6 @@ namespace USBModel
         public string MacAddress { get; set; }      
 
         public DateTime LastSeen { get; set; }
-
-        public bool UsbFilterEnabled { get; set; }
 
         public override string ToString()
         {

@@ -1,6 +1,6 @@
 ﻿namespace USBCommon
 {
-    public interface IAgentSettingHttp
+    public interface IAgentSetting
     {
         int AgentTimerMinute { get; set; }
 

@@ -48,13 +48,14 @@
     <Compile Include="Filter\UsbFilter2.cs" />
     <Compile Include="Filter\UsbFilterDbHelp.cs" />
     <Compile Include="Main\AgentUpdate.cs" />
+    <Compile Include="Main\AgentManager.cs" />
     <Compile Include="Main\UsbTimer.cs" />
     <Compile Include="Model\AgentSetting.cs" />
     <Compile Include="Model\UserComputer.cs" />
     <Compile Include="Model\NotifyUsb.cs" />
     <Compile Include="Model\UsbRegistry.cs" />
     <Compile Include="Main\UsbLogger.cs" />
-    <Compile Include="Model\UsbHistory.cs" />
+    <Compile Include="Model\UserUsbHistory.cs" />
     <Compile Include="Main\UsbHttpHelp.cs" />
     <Compile Include="Model\UserComputerHelp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

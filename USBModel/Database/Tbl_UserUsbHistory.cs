@@ -4,15 +4,36 @@ using USBCommon;
 
 namespace USBModel
 {
-    public class Tbl_UserUsbHistory : IUserUsbHistoryHttp
+    public class Tbl_UserUsbHistory : IUserUsbHistory
     {
-        [SugarColumn(IsPrimaryKey = true, IsIdentity = true)]
+        [SugarColumn(IsIdentity = true, IsPrimaryKey = true)]
         public uint Id { get; set; }
 
-        public string UsbIdentity { get; set; }
+        public int Vid { get; set; }
+
+        public int Pid { get; set; }
+
+        public string SerialNumber { get; set; }
+
+
+        [SugarColumn(IsNullable = true)]
+        public string Manufacturer { get; set; }
+
+        [SugarColumn(IsNullable = true)]
+        public string DeviceDescription { get; set; }
+
+        [SugarColumn(IsNullable = true)]
+        public string Product { get; set; }
 
         public string ComputerIdentity { get; set; }
 
         public DateTime PluginTime { get; set; }
+
+        // not mapping
+        [SugarColumn(IsIgnore = true)]
+        public string Pid_Hex => "PID_" + Pid.ToString("X").PadLeft(4, '0');
+
+        [SugarColumn(IsIgnore = true)]
+        public string Vid_Hex => "VID_" + Vid.ToString("X").PadLeft(4, '0');
     }
 }

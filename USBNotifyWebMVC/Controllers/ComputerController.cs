@@ -56,7 +56,7 @@ namespace USBNotifyWebMVC.Controllers
         {
             try
             {
-                (int totalCount, List<UserUsbHistoryDetail> list) = await _usbDb.GetUsbHistoryDetailListByComputerIdentity(comIdentity, page, limit);
+                (int totalCount, List<Tbl_UserUsbHistory> list) = await _usbDb.GetUsbHistoryListByComputerIdentity(comIdentity, page, limit);
 
                 return Json(JsonResultHelp.LayuiTableData(totalCount, list));
             }

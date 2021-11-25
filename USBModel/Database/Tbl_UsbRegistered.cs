@@ -3,15 +3,13 @@ using USBCommon;
 
 namespace USBModel
 {
-    public class Tbl_UsbInfo : IUsbInfoHttp
+    public class Tbl_UsbRegistered : IUsbRegistered
     {
         [SugarColumn(IsIdentity = true, IsPrimaryKey = true)]
         public int Id { get; set; }
 
         [SugarColumn(UniqueGroupNameList = new string[] { "usbid" })]
         public string UsbIdentity { get; set; }
-
-        public bool IsRegistered { get; set; }
 
         public int Vid { get; set; }
 

@@ -30,11 +30,11 @@ namespace USBNotifyWebMVC.Controllers
             return View();
         }
 
-        public async Task<IActionResult> RegisteredIndex()
+        public async Task<IActionResult> RegisteredIndex(int page, int limit)
         {
             try
             {
-                var query = await _usbDb.GetRegisteredUsbList();
+                var query = await _usbDb.GetUsbRegisteredList(page,limit);
                 return Json(JsonResultHelp.Ok(query));
             }
             catch (Exception ex)
@@ -50,7 +50,7 @@ namespace USBNotifyWebMVC.Controllers
             return View();
         }
 
-        public async Task<IActionResult> RegisterUsb(Tbl_UsbInfo usb)
+        public async Task<IActionResult> RegisterUsb(Tbl_UsbRegistered usb)
         {
             try
             {

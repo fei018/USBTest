@@ -46,6 +46,7 @@
     <Compile Include="GetUsbFilterDbHttp.cs" />
     <Compile Include="IUserComputerHttp.cs" />
     <Compile Include="IUserUsbHistoryHttp.cs" />
+    <Compile Include="MimeTypeMap.cs" />
     <Compile Include="PostUserUsbHistoryHttp.cs" />
     <Compile Include="IUsbInfoHttp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

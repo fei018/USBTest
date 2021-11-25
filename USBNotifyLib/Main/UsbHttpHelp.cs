@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using USBCommon;
+using MimeTypes;
 
 namespace USBNotifyLib
 {
@@ -26,7 +27,7 @@ namespace USBNotifyLib
 
                     var url = UsbRegistry.UsbFilterDbUrl + "?computerIdentity=" + comIdentity;
                     Debug.WriteLine(url);
-
+                    //Debugger.Break();
                     var response = http.GetAsync(url).Result;
 
                     if (response.IsSuccessStatusCode)
@@ -58,28 +59,19 @@ namespace USBNotifyLib
                 {
                     http.Timeout = TimeSpan.FromSeconds(10);
 
-                    var comIdentity = UserComputerHelp.GetComputerIdentity();
-                    Debug.WriteLine(comIdentity);
-
                     var url = UsbRegistry.AgentSettingUrl;
                     Debug.WriteLine(url);
-                    Debugger.Break();
+                    
                     var response = http.GetAsync(url).Result;
 
                     if (response.IsSuccessStatusCode)
                     {
-                        var jsonStream = response.Content.ReadAsStreamAsync().Result;
-                        StreamReader body = new StreamReader(jsonStream, Encoding.UTF8);
-                        var json = body.ReadToEnd();
+                        var json = response.Content.ReadAsStringAsync().Result;
 
-                        var convert = new JsonSerializerSettings()
-                        {
-                            Converters = { new AbstractJsonConverter<AgentSetting, IAgentSettingHttp>() }
-                        };
-                        var setting = JsonConvert.DeserializeObject(json, typeof(AgentSetting), convert);
+                        var setting = JsonConvert.DeserializeObject(json, typeof(AgentSetting)) as AgentSetting;
 
-                        //UsbRegistry.AgentTimerMinute = setting.AgentTimerMinute;
-                        //AgentUpdate.Check(setting.Version);
+                        UsbRegistry.AgentTimerMinute = setting.AgentTimerMinute;
+                        AgentUpdate.Check(setting.Version);
                     }
                     else
                     {
@@ -105,7 +97,8 @@ namespace USBNotifyLib
                 using (var http = new HttpClient())
                 {
                     http.Timeout = TimeSpan.FromSeconds(10);
-                    StringContent content = new StringContent(comJson, Encoding.UTF8, "application/json");
+                    StringContent content = new StringContent(comJson, Encoding.UTF8, MimeTypeMap.GetMimeType("json"));
+
                     var response = http.PostAsync(UsbRegistry.PostUserComputerUrl, content).Result;
 
                     response.EnsureSuccessStatusCode();

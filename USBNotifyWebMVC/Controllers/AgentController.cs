@@ -30,7 +30,7 @@ namespace USBNotifyWebMVC.Controllers
             {
                 var query = await _usbDb.GetUsbFilterDb(computerIdentity);
                 string json = JsonConvert.SerializeObject(query);
-                return Json(json);
+                return Content(json, "application/json");
             }
             catch (Exception)
             {

@@ -67,25 +67,35 @@ namespace USBModel
             try
             {
                 var com = await _db.Queryable<Tbl_UserComputer>().FirstAsync(c => c.ComputerIdentity == comIdentity);
-                if (!com.UsbFilterEnabled)
+
+                if (com == null)
                 {
-                    throw new Exception("UserUsbFilterEnabled is false.");
+                    throw new Exception("cannot find the UserComputer: " + comIdentity);
                 }
 
-                // UsbFilterDb
-                var filterDb = await _db.Queryable<Tbl_UsbInfo>().ToListAsync();
-                if (filterDb == null || filterDb.Count <= 0) throw new Exception("UsbFilterDb is null or empty in database.");
+                List<Tbl_UsbInfo> usbInfos = null;
+                StringBuilder filterDb = null;
 
-                var sb = new StringBuilder();
-                foreach (var u in filterDb)
+                if (com.UsbFilterEnabled)
                 {
-                    sb.AppendLine(Base64Encode(u.UsbIdentity));
+                    usbInfos = await _db.Queryable<Tbl_UsbInfo>().ToListAsync();
+                    if (usbInfos != null && usbInfos.Count > 0)
+                    {
+                        // UsbIdentity encode to Base64                   
+                        foreach (var u in usbInfos)
+                        {
+                            if (u.IsRegistered)
+                            {
+                                filterDb.AppendLine(Base64Encode(u.UsbIdentity));
+                            }                           
+                        }
+                    }                   
                 }
-
+                              
                 var filter = new GetUsbFilterDbHttp
                 {
-                    UsbFilterDb = sb.ToString(),
-                    UserUsbFilterEnabled = com.UsbFilterEnabled,
+                    UsbFilterDb = filterDb?.ToString(),
+                    UserUsbFilterEnabled = com.UsbFilterEnabled
                 };
 
                 return filter;

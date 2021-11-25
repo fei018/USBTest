@@ -8,8 +8,8 @@ namespace USBNotifyLib
     {
         public static void RunTask()
         {
-            //SetTimer_GetUsbFilterDb();
-            SetTimer_GetAgentSetting();
+            SetTimer_GetUsbFilterDb();
+            //SetTimer_GetAgentSetting();
             //SetTimer_PostUserComputer();
         }
 

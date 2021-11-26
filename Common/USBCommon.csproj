@@ -43,10 +43,11 @@
   <ItemGroup>
     <Compile Include="AbstractJsonConverter.cs" />
     <Compile Include="IAgentSetting.cs" />
-    <Compile Include="GetUsbFilterDbHttp.cs" />
+    <Compile Include="UsbFilterDbHttp.cs" />
     <Compile Include="IUsbRegistered.cs" />
-    <Compile Include="IUserComputer.cs" />
-    <Compile Include="IUserUsbHistory.cs" />
+    <Compile Include="IPerAgentSetting.cs" />
+    <Compile Include="IPerComputer.cs" />
+    <Compile Include="IPerUsbHistory.cs" />
     <Compile Include="MimeTypeMap.cs" />
     <Compile Include="IUsbInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

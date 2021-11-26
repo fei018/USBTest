@@ -4,6 +4,8 @@
     {
         public static void Startup()
         {
+            new UsbHttpHelp().PostPerComputer_Http();
+
             if (UsbFilter.IsEnable)
             {
                 // 載入 UsbFilterDb cache

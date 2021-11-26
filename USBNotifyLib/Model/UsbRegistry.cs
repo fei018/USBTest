@@ -19,10 +19,22 @@ namespace USBNotifyLib
             set => SetUsbRegistryKey(nameof(UsbFilterEnabled),value,RegistryValueKind.String);
         }
 
+        public static bool UsbHistoryEnabled
+        {
+            get => Convert.ToBoolean(ReadUsbRegistryKey(nameof(UsbHistoryEnabled)));
+            set => SetUsbRegistryKey(nameof(UsbHistoryEnabled), value, RegistryValueKind.String);
+        }
+
         public static string UsbFilterDbUrl
         {
             get => ReadUsbRegistryKey(nameof(UsbFilterDbUrl));
             set => SetUsbRegistryKey(nameof(UsbFilterDbUrl), value, RegistryValueKind.String);
+        }
+
+        public static string PerAgentSettingUrl
+        {
+            get => ReadUsbRegistryKey(nameof(PerAgentSettingUrl));
+            set => SetUsbRegistryKey(nameof(PerAgentSettingUrl), value, RegistryValueKind.String);
         }
 
         public static string AgentSettingUrl
@@ -37,10 +49,10 @@ namespace USBNotifyLib
             set=> SetUsbRegistryKey(nameof(AgentTimerMinute), value, RegistryValueKind.String);
         }
 
-        public static string Version
+        public static string AgentVersion
         {
-            get => ReadUsbRegistryKey(nameof(Version));
-            set => SetUsbRegistryKey(nameof(Version), value, RegistryValueKind.String);
+            get => ReadUsbRegistryKey(nameof(AgentVersion));
+            set => SetUsbRegistryKey(nameof(AgentVersion), value, RegistryValueKind.String);
         }
 
         public static string AgentUpdateUrl
@@ -49,16 +61,16 @@ namespace USBNotifyLib
             set => SetUsbRegistryKey(nameof(AgentUpdateUrl), value, RegistryValueKind.String);
         }
 
-        public static string PostUserComputerUrl
+        public static string PostPerComputerUrl
         {
-            get=> ReadUsbRegistryKey(nameof(PostUserComputerUrl));
-            set=> SetUsbRegistryKey(nameof(PostUserComputerUrl), value, RegistryValueKind.String);
+            get=> ReadUsbRegistryKey(nameof(PostPerComputerUrl));
+            set=> SetUsbRegistryKey(nameof(PostPerComputerUrl), value, RegistryValueKind.String);
         }
 
-        public static string PostUserUsbHistoryUrl
+        public static string PostPerUsbHistoryUrl
         {
-            get=> ReadUsbRegistryKey(nameof(PostUserUsbHistoryUrl));
-            set=> SetUsbRegistryKey(nameof(PostUserUsbHistoryUrl), value, RegistryValueKind.String);
+            get=> ReadUsbRegistryKey(nameof(PostPerUsbHistoryUrl));
+            set=> SetUsbRegistryKey(nameof(PostPerUsbHistoryUrl), value, RegistryValueKind.String);
         }
 
 

@@ -1,26 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System;
 using USBCommon;
 
 namespace USBModel
 {
     public class JsonHttpConvert
     {
-        #region + public static PostComUsbInfo Deserialize_UserUsbHistory(string json)
-        public static Tbl_UserUsbHistory Deserialize_UserUsbHistory(string postJson)
+        #region + public static PostComUsbInfo Deserialize_PerUsbHistory(string json)
+        public static Tbl_PerUsbHistory Deserialize_PerUsbHistory(string postJson)
         {
             try
             {
                 var settings = new JsonSerializerSettings
                 {
                     Converters = {
-                        new AbstractJsonConverter<Tbl_UserUsbHistory, IUserUsbHistory>()
+                        new AbstractJsonConverter<Tbl_PerUsbHistory, IPerUsbHistory>()
                     }
                 };
 
-                var info = JsonConvert.DeserializeObject(postJson, typeof(Tbl_UserUsbHistory), settings) as Tbl_UserUsbHistory;
+                var info = JsonConvert.DeserializeObject(postJson, typeof(Tbl_PerUsbHistory), settings) as Tbl_PerUsbHistory;
                 return info;
             }
             catch (Exception)
@@ -30,12 +28,12 @@ namespace USBModel
         }
         #endregion
 
-        #region + public static UserComputer Deserialize_UserComputer(string comJson)
-        public static Tbl_UserComputer Deserialize_UserComputer(string comJson)
+        #region + public static UserComputer Deserialize_PerComputer(string comJson)
+        public static Tbl_PerComputer Deserialize_PerComputer(string comJson)
         {
             try
             {
-                var com = JsonConvert.DeserializeObject<Tbl_UserComputer>(comJson);
+                var com = JsonConvert.DeserializeObject<Tbl_PerComputer>(comJson);
                 return com;
             }
             catch (Exception)

@@ -28,7 +28,7 @@ namespace USBNotifyWebMVC.Controllers
         {
             try
             {
-                var (totalCount, list) = await _usbDb.GetUserComputerList(page, limit);
+                var (totalCount, list) = await _usbDb.Get_PerComputerList(page, limit);
                 return Json(JsonResultHelp.LayuiTableData(totalCount, list));
             }
             catch (Exception ex)
@@ -43,7 +43,7 @@ namespace USBNotifyWebMVC.Controllers
         {
             try
             {
-                var query = await _usbDb.GetUserComputerById(comId);
+                var query = await _usbDb.Get_PerComputerById(comId);
                 return View(query);
             }
             catch (Exception)
@@ -56,7 +56,7 @@ namespace USBNotifyWebMVC.Controllers
         {
             try
             {
-                (int totalCount, List<Tbl_UserUsbHistory> list) = await _usbDb.GetUsbHistoryListByComputerIdentity(comIdentity, page, limit);
+                (int totalCount, List<Tbl_PerUsbHistory> list) = await _usbDb.Get_UsbHistoryListByComputerIdentity(comIdentity, page, limit);
 
                 return Json(JsonResultHelp.LayuiTableData(totalCount, list));
             }

@@ -28,7 +28,7 @@ namespace USBNotifyWebMVC.Controllers
         {
             try
             {
-                var query = await _usbDb.GetUsbFilterDb(computerIdentity);
+                var query = await _usbDb.Get_UsbFilterDb(computerIdentity);
                 string json = JsonConvert.SerializeObject(query);
                 return Content(json, "application/json");
             }
@@ -44,7 +44,7 @@ namespace USBNotifyWebMVC.Controllers
         {
             try
             {
-                IAgentSetting query = await _usbDb.GetAgentSetting();
+                IAgentSetting query = await _usbDb.Get_AgentSetting();
                 string json = JsonConvert.SerializeObject(query);
                 return Content(json, "application/json");
             }
@@ -55,17 +55,33 @@ namespace USBNotifyWebMVC.Controllers
         }
         #endregion
 
-        #region PostUserComputer()
+        #region PerAgentSetting(string computerIdentity)
+        public async Task<IActionResult> PerAgentSetting(string computerIdentity)
+        {
+            try
+            {
+                var query = await _usbDb.Get_PerAgentSetting(computerIdentity);
+                string json = JsonConvert.SerializeObject(query);
+                return Content(json, "application/json");
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
+        }
+        #endregion
+
+        #region PostPerComputer()
         [HttpPost]
-        public async Task<IActionResult> PostUserComputer()
+        public async Task<IActionResult> PostPerComputer()
         {
             try
             {
                 StreamReader body = new StreamReader(_httpContext.Request.Body, Encoding.UTF8);
                 var comjosn = await body.ReadToEndAsync();
 
-                var com = JsonHttpConvert.Deserialize_UserComputer(comjosn);
-                await _usbDb.Update_UserComputer(com);
+                var com = JsonHttpConvert.Deserialize_PerComputer(comjosn);
+                await _usbDb.Update_PerComputer(com);
 
                 return Ok();
             }
@@ -76,16 +92,16 @@ namespace USBNotifyWebMVC.Controllers
         }
         #endregion
 
-        #region PostUserUsbHistory()
+        #region PostPerUsbHistory()
         [HttpPost]
-        public async Task<IActionResult> PostUserUsbHistory()
+        public async Task<IActionResult> PostPerUsbHistory()
         {
             try
             {
                 StreamReader body = new StreamReader(_httpContext.Request.Body, Encoding.UTF8);
                 var post = await body.ReadToEndAsync();
 
-                var info = JsonHttpConvert.Deserialize_UserUsbHistory(post);
+                var info = JsonHttpConvert.Deserialize_PerUsbHistory(post);
 
                 await _usbDb.Insert_UsbHistory(info);
 

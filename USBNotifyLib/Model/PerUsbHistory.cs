@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using USBCommon;
 
 namespace USBNotifyLib
 {
-    public class UserUsbHistory : IUserUsbHistory
+    public class PerUsbHistory : IPerUsbHistory
     {
         public int Vid { get; set; }
         public int Pid { get; set; }
@@ -21,7 +17,7 @@ namespace USBNotifyLib
         public string ComputerIdentity { get; set; }
 
         public DateTime PluginTime { get; set; }
-        
+
         public string Vid_Hex => "VID_" + Vid.ToString("X").PadLeft(4, '0');
 
         public string Pid_Hex => "PID_" + Vid.ToString("X").PadLeft(4, '0');

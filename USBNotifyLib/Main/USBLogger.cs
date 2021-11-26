@@ -12,39 +12,18 @@ namespace USBNotifyLib
         private static readonly string _baseDir = AppDomain.CurrentDomain.BaseDirectory;
 
 
-        public static string LogPath => Path.Combine(_baseDir, "log.txt");
+        private static string LogPath => Path.Combine(_baseDir, "log.txt");
 
-        public static string ErrorPath => Path.Combine(_baseDir, "error.txt");
-
-        public static void LogTime()
-        {
-            
-        }
+        private static string ErrorPath => Path.Combine(_baseDir, "error.txt");
 
         public static void Log(string log)
         {
-            //ConsoleLog(log);
             LogToFile(LogPath, log);
         }
 
         public static void Error(string error)
         {
-            var l = Environment.NewLine + DateTime.Now.ToString("yyyy-MM-dd HH:ss") + Environment.NewLine + error + Environment.NewLine;
-            LogToFile(ErrorPath, l);
-            //Console.WriteLine(l);
-        }
-
-
-        static void ConsoleLog(string log)
-        {
-            if (string.IsNullOrEmpty(log))
-            {
-                Console.WriteLine();
-            }
-            else
-            {
-                Console.WriteLine(log);
-            }
+            LogToFile(ErrorPath, error);
         }
 
         static void LogToFile(string path, string log)

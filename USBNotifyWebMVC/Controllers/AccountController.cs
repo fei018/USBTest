@@ -46,7 +46,7 @@ namespace USBNotifyWebMVC.Controllers
             try
             {
                 await _loginService.Logout();
-                return RedirectToAction("Index","Home");
+                return RedirectToAction("Login","Account");
             }
             catch (Exception)
             {

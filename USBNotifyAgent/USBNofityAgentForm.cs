@@ -28,7 +28,7 @@ namespace USBNotifyAgent
                 {
                     Task.Run(() =>
                     {
-                        new UsbHttpHelp().PostUserUsbHistory_byDisk_Http(args.Name);
+                        new UsbHttpHelp().PostPerUsbHistory_byDisk_Http(args.Name);
                     });
                 }
             }

@@ -7,9 +7,8 @@ using USBCommon;
 
 namespace USBNotifyLib
 {
-    public class UserComputer : IUserComputer
+    public class PerComputer : IPerComputer
     {
-
         public string HostName { get; set; }
 
         public string Domain { get; set; }
@@ -23,6 +22,10 @@ namespace USBNotifyLib
         public string ComputerIdentity => (BiosSerial + MacAddress)?.ToLower();
 
         public bool UsbFilterEnabled { get; set; }
+
+        public bool UsbHistoryEnabled { get; set; }
+
+        public string AgentVersion { get; set; }
 
         public override string ToString()
         {

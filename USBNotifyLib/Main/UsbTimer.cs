@@ -9,61 +9,80 @@ namespace USBNotifyLib
         public static void RunTask()
         {
             //SetTimer_GetUsbFilterDb();
-            //SetTimer_GetAgentSetting();
+            SetTimer_GetAgentSetting();
+            //SetTimer_GetPerAgentSetting();
             //SetTimer_PostUserComputer();
         }
 
-        #region + private static void SetTimer_GetUsbFilterDb()
-        private static void SetTimer_GetUsbFilterDb()
+        #region + private static void SetTimer_GetPerAgentSetting()
+        private static void SetTimer_GetPerAgentSetting()
         {
-            var timer = new Timer();
-            timer.Interval = TimeSpan.FromMinutes(UsbRegistry.AgentTimerMinute).TotalMilliseconds;
-            timer.AutoReset = true;
-            timer.Elapsed += (s, e) =>
+            try
             {
-                Task.Run(() =>
+                var timer = new Timer();
+                timer.Interval = TimeSpan.FromMinutes(UsbRegistry.AgentTimerMinute).TotalMilliseconds;
+                timer.AutoReset = true;
+                timer.Elapsed += (s, e) =>
                 {
-                    UsbHttpHelp.GetUsbFilterDb_Http();
-                });
-            };
+                    Task.Run(() =>
+                    {
+                        new UsbHttpHelp().GetPerAgentSetting_Http();
+                    });
+                };
 
-            timer.Enabled = true;
+                timer.Enabled = true;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
         #endregion
 
         #region + private static void SetTimer_GetAgentSetting()
         private static void SetTimer_GetAgentSetting()
         {
-            var timer = new Timer();
-            timer.Interval = TimeSpan.FromMinutes(UsbRegistry.AgentTimerMinute).TotalMilliseconds;
-            timer.AutoReset = true;
-            timer.Elapsed += (s, e) =>
+            try
             {
-                Task.Run(() =>
+                var timer = new Timer();
+                timer.Interval = TimeSpan.FromMinutes(UsbRegistry.AgentTimerMinute).TotalMilliseconds;
+                timer.AutoReset = true;
+                timer.Elapsed += (s, e) =>
                 {
-                    UsbHttpHelp.GetAgentSetting_Http();
-                });
-            };
+                    new UsbHttpHelp().GetAgentSetting_Http();
+                };
 
-            timer.Enabled = true;
+                timer.Enabled = true;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
         #endregion
 
         #region + private static void SetTimer_PostUserComputer()
         private static void SetTimer_PostUserComputer()
         {
-            var timer = new Timer();
-            timer.Interval = TimeSpan.FromMinutes(UsbRegistry.AgentTimerMinute).TotalMilliseconds;
-            timer.AutoReset = true;
-            timer.Elapsed += (s, e) =>
+            try
             {
-                Task.Run(() =>
+                var timer = new Timer();
+                timer.Interval = TimeSpan.FromMinutes(UsbRegistry.AgentTimerMinute).TotalMilliseconds;
+                timer.AutoReset = true;
+                timer.Elapsed += (s, e) =>
                 {
-                    UsbHttpHelp.PostUserComputer_Http();
-                });
-            };
+                    new UsbHttpHelp().PostPerComputer_Http();
+                };
 
-            timer.Enabled = true;
+                timer.Enabled = true;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
         #endregion
 

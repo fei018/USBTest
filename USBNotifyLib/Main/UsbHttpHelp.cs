@@ -13,16 +13,54 @@ namespace USBNotifyLib
 {
     public class UsbHttpHelp
     {
+        #region + public static void GetPerAgentSetting_Http()
+        public void GetPerAgentSetting_Http()
+        {
+            try
+            {
+                Debugger.Break();
+                using (var http = new HttpClient())
+                {
+                    http.Timeout = TimeSpan.FromSeconds(10);
+
+                    var comIdentity = PerComputerHelp.GetComputerIdentity();
+
+                    var url = UsbRegistry.PerAgentSettingUrl + "?computerIdentity=" + comIdentity;
+
+                    var response = http.GetAsync(url).Result;
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string json = response.Content.ReadAsStringAsync().Result;
+                        PerAgentSetting setting = JsonConvert.DeserializeObject<PerAgentSetting>(json);
+
+                        UsbRegistry.UsbFilterEnabled = setting.UsbFilterEnabled;
+                        UsbRegistry.UsbHistoryEnabled = setting.UsbHistoryEnabled;
+
+                        if (setting.UsbFilterEnabled)
+                        {
+                            GetUsbFilterDb_Http();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                UsbLogger.Error(ex.Message);
+            }
+        }
+        #endregion
+
         #region + public static void GetUsbFilterDb_Http()
-        public static void GetUsbFilterDb_Http()
+        public void GetUsbFilterDb_Http()
         {
             try
             {
                 using (var http = new HttpClient())
                 {
-                    http.Timeout = TimeSpan.FromSeconds(10);
+                    http.Timeout = TimeSpan.FromSeconds(20);
 
-                    var comIdentity = UserComputerHelp.GetComputerIdentity();
+                    var comIdentity = PerComputerHelp.GetComputerIdentity();
                     Debug.WriteLine(comIdentity);
 
                     var url = UsbRegistry.UsbFilterDbUrl + "?computerIdentity=" + comIdentity;
@@ -33,7 +71,7 @@ namespace USBNotifyLib
                     if (response.IsSuccessStatusCode)
                     {
                         string json = response.Content.ReadAsStringAsync().Result;
-                        GetUsbFilterDbHttp db = JsonConvert.DeserializeObject<GetUsbFilterDbHttp>(json);
+                        UsbFilterDbHttp db = JsonConvert.DeserializeObject<UsbFilterDbHttp>(json);
 
                         UsbFilterDbHelp.Set_UsbFilterDb_byHttp(db);
                     }
@@ -51,16 +89,16 @@ namespace USBNotifyLib
         #endregion
 
         #region + public static void GetAgentSetting_Http()
-        public static void GetAgentSetting_Http()
+        public void GetAgentSetting_Http()
         {
             try
             {
+                Debugger.Break();
                 using (var http = new HttpClient())
                 {
                     http.Timeout = TimeSpan.FromSeconds(10);
 
-                    var url = UsbRegistry.AgentSettingUrl;
-                    Debug.WriteLine(url);
+                    var url = UsbRegistry.AgentSettingUrl;                  
                     
                     var response = http.GetAsync(url).Result;
 
@@ -71,7 +109,7 @@ namespace USBNotifyLib
                         var setting = JsonConvert.DeserializeObject(json, typeof(AgentSetting)) as AgentSetting;
 
                         UsbRegistry.AgentTimerMinute = setting.AgentTimerMinute;
-                        AgentUpdate.Check(setting.Version);
+                        AgentUpdate.Check(setting.AgentVersion);
                     }
                     else
                     {
@@ -86,12 +124,12 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + public static void PostUserComputer_Http()
-        public static void PostUserComputer_Http()
+        #region + public static void PostPerComputer_Http()
+        public void PostPerComputer_Http()
         {
             try
             {
-                var com = UserComputerHelp.GetUserComputer() as IUserComputer;
+                var com = PerComputerHelp.GetPerComputer() as IPerComputer;
                 var comJson = JsonConvert.SerializeObject(com);
 
                 using (var http = new HttpClient())
@@ -99,7 +137,7 @@ namespace USBNotifyLib
                     http.Timeout = TimeSpan.FromSeconds(10);
                     StringContent content = new StringContent(comJson, Encoding.UTF8, MimeTypeMap.GetMimeType("json"));
 
-                    var response = http.PostAsync(UsbRegistry.PostUserComputerUrl, content).Result;
+                    var response =  http.PostAsync(UsbRegistry.PostPerComputerUrl, content).Result;
 
                     response.EnsureSuccessStatusCode();
                 }
@@ -111,16 +149,16 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + public void PostUserUsbHistory_byDisk_Http(string diskPath)
-        public void PostUserUsbHistory_byDisk_Http(string diskPath)
+        #region + public void PostPerUsbHistory_byDisk_Http(string diskPath)
+        public void PostPerUsbHistory_byDisk_Http(string diskPath)
         {
             try
             {
-                Debugger.Break();
-                var comIdentity = UserComputerHelp.GetComputerIdentity();
+                //Debugger.Break();
+                var comIdentity = PerComputerHelp.GetComputerIdentity();
                 var usb = new UsbFilter().Find_NotifyUsb_Use_DiskPath(diskPath);
 
-                IUserUsbHistory usbHistory = new UserUsbHistory
+                IPerUsbHistory usbHistory = new PerUsbHistory
                 {
                     ComputerIdentity = comIdentity,
                     DeviceDescription = usb.DeviceDescription,
@@ -138,7 +176,7 @@ namespace USBNotifyLib
                 {
                     http.Timeout = TimeSpan.FromSeconds(10);
                     StringContent content = new StringContent(usbHistoryJosn, Encoding.UTF8, "application/json");
-                    var response = http.PostAsync(UsbRegistry.PostUserUsbHistoryUrl, content).Result;
+                    var response = http.PostAsync(UsbRegistry.PostPerUsbHistoryUrl, content).Result;
                     response.EnsureSuccessStatusCode();
                 }
             }

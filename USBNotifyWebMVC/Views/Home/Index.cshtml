@@ -61,13 +61,13 @@
                                 <a href="javascript:;" layuimini-content-href="page/user-setting.html" data-title="基本资料" data-icon="fa fa-gears">基本资料<span class="layui-badge-dot"></span></a>
                             </dd> -->
                             <dd>
-                                <a href="javascript:;" layuimini-content-href="page/user-password.html" data-title="修改密码" data-icon="fa fa-gears">修改密码</a>
+                                <a href="javascript:;" layuimini-content-href="" data-title="ChangePassword" data-icon="fa fa-gears">ChangePassword</a>
                             </dd>
                             <dd>
                                 <hr>
                             </dd>
                             <dd>
-                                <a href="javascript:;" class="login-out">退出登录</a>
+                                <a href="/account/logout" class="login-out">Logout</a>
                             </dd>
                         </dl>
                     </li>
@@ -143,12 +143,6 @@
             };
             miniAdmin.render(options);
 
-
-            $('.login-out').on("click", function () {
-                layer.msg('退出登录成功', function () {
-                    window.location = 'page/login-3.html';
-                });
-            });
         });
     </script>
 </body>

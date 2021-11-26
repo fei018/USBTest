@@ -100,16 +100,11 @@ namespace USBNotifyLib
         #endregion
 
         #region + public static void Set_UsbFilterDb_byHttp(UsbFilterDbHttp setting)
-        public static void Set_UsbFilterDb_byHttp(GetUsbFilterDbHttp setting)
+        public static void Set_UsbFilterDb_byHttp(UsbFilterDbHttp setting)
         {
             try
             {
-                if (setting.UserUsbFilterEnabled)
-                {
-                    WriteFile_UsbFilterDb(setting.UsbFilterDb);
-                    UsbRegistry.UsbFilterEnabled = setting.UserUsbFilterEnabled;
-                    UsbFilter.IsEnable = setting.UserUsbFilterEnabled;
-                }
+                WriteFile_UsbFilterDb(setting.UsbFilterDb);
             }
             catch (Exception)
             {
@@ -128,7 +123,7 @@ namespace USBNotifyLib
                 {
                     if (!File.Exists(_UsbFilterDbFile))
                     {
-                        UsbHttpHelp.GetUsbFilterDb_Http();
+                        new UsbHttpHelp().GetUsbFilterDb_Http();
                     }
 
                     if (File.Exists(_UsbFilterDbFile))

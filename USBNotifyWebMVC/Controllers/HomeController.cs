@@ -25,7 +25,7 @@ namespace USBNotifyWebMVC.Controllers
         {
             try
             {
-                var query = await _usbDb.GetRegisteredUsbCount();
+                var query = await _usbDb.Get_RegisteredUsbCount();
                 return View("Welcome", query.ToString());
             }
             catch (Exception ex)

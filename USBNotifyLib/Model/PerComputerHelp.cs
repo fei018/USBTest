@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace USBNotifyLib
 {
-    public class UserComputerHelp
+    public class PerComputerHelp
     {
         #region public static string GetComputerIdentity()
         public static string GetComputerIdentity()
         {
             try
             {
-                var com = new UserComputerHelp().SetInfo();
+                var com = new PerComputerHelp().GetInfo();
                 if (string.IsNullOrWhiteSpace(com.ComputerIdentity))
                 {
                     throw new Exception("ComputerIdentity is null or empty.");
@@ -29,12 +29,12 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + public static UserComputer GetUserComputer()
-        public static UserComputer GetUserComputer()
+        #region + public static PerComputer GetPerComputer()
+        public static PerComputer GetPerComputer()
         {
             try
             {
-                return new UserComputerHelp().SetInfo();
+                return new PerComputerHelp().GetInfo();
 
             }
             catch (Exception)
@@ -45,12 +45,15 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + private UserComputer SetInfo()
-        private UserComputer SetInfo()
+        #region + private PerComputer GetInfo()
+        private PerComputer GetInfo()
         {
             try
             {
-                UserComputer userComputer = new UserComputer();
+                PerComputer userComputer = new PerComputer();
+                userComputer.AgentVersion = UsbRegistry.AgentVersion;
+                userComputer.UsbFilterEnabled = UsbRegistry.UsbFilterEnabled;
+                userComputer.UsbHistoryEnabled = UsbRegistry.UsbHistoryEnabled;
                 userComputer.HostName = IPGlobalProperties.GetIPGlobalProperties().HostName;
                 userComputer.Domain = IPGlobalProperties.GetIPGlobalProperties().DomainName;
                 SetIPMacAddress(userComputer);
@@ -65,7 +68,7 @@ namespace USBNotifyLib
         #endregion
 
         #region + private void SetIPMacAddress()
-        private void SetIPMacAddress(UserComputer userComputer)
+        private void SetIPMacAddress(PerComputer userComputer)
         {
             var nic = NetworkInterface.GetAllNetworkInterfaces()
                                     .Where(n => n.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
@@ -101,7 +104,7 @@ namespace USBNotifyLib
         #endregion
 
         #region + private void SetBiosSerial()
-        private void SetBiosSerial(UserComputer userComputer)
+        private void SetBiosSerial(PerComputer userComputer)
         {
             using (ManagementObjectSearcher ComSerial = new ManagementObjectSearcher("SELECT * FROM Win32_BIOS"))
             {

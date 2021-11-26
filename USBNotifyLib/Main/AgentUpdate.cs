@@ -27,7 +27,7 @@ namespace USBNotifyLib
         {
             try
             {
-                if (!UsbRegistry.Version.Equals(getVersion, StringComparison.OrdinalIgnoreCase))
+                if (!UsbRegistry.AgentVersion.Equals(getVersion, StringComparison.OrdinalIgnoreCase))
                 {
                     Task.Run(() =>
                     {

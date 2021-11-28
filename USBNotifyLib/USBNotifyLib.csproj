@@ -51,7 +51,6 @@
     <Compile Include="Main\AgentManager.cs" />
     <Compile Include="Main\UsbTimer.cs" />
     <Compile Include="Model\AgentSetting.cs" />
-    <Compile Include="Model\PerAgentSetting.cs" />
     <Compile Include="Model\PerComputer.cs" />
     <Compile Include="Model\NotifyUsb.cs" />
     <Compile Include="Model\UsbRegistry.cs" />

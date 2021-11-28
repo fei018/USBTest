@@ -13,45 +13,7 @@ namespace USBNotifyLib
 {
     public class UsbHttpHelp
     {
-        #region + public static void GetPerAgentSetting_Http()
-        public void GetPerAgentSetting_Http()
-        {
-            try
-            {
-                Debugger.Break();
-                using (var http = new HttpClient())
-                {
-                    http.Timeout = TimeSpan.FromSeconds(10);
-
-                    var comIdentity = PerComputerHelp.GetComputerIdentity();
-
-                    var url = UsbRegistry.PerAgentSettingUrl + "?computerIdentity=" + comIdentity;
-
-                    var response = http.GetAsync(url).Result;
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        string json = response.Content.ReadAsStringAsync().Result;
-                        PerAgentSetting setting = JsonConvert.DeserializeObject<PerAgentSetting>(json);
-
-                        UsbRegistry.UsbFilterEnabled = setting.UsbFilterEnabled;
-                        UsbRegistry.UsbHistoryEnabled = setting.UsbHistoryEnabled;
-
-                        if (setting.UsbFilterEnabled)
-                        {
-                            GetUsbFilterDb_Http();
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                UsbLogger.Error(ex.Message);
-            }
-        }
-        #endregion
-
-        #region + public static void GetUsbFilterDb_Http()
+        #region + public void GetUsbFilterDb_Http()
         public void GetUsbFilterDb_Http()
         {
             try
@@ -61,10 +23,8 @@ namespace USBNotifyLib
                     http.Timeout = TimeSpan.FromSeconds(20);
 
                     var comIdentity = PerComputerHelp.GetComputerIdentity();
-                    Debug.WriteLine(comIdentity);
 
                     var url = UsbRegistry.UsbFilterDbUrl + "?computerIdentity=" + comIdentity;
-                    Debug.WriteLine(url);
                     
                     var response = http.GetAsync(url).Result;
 
@@ -88,7 +48,7 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + public static void GetAgentSetting_Http()
+        #region + public void GetAgentSetting_Http()
         public void GetAgentSetting_Http()
         {
             try
@@ -98,15 +58,27 @@ namespace USBNotifyLib
                 {
                     http.Timeout = TimeSpan.FromSeconds(10);
 
-                    var url = UsbRegistry.AgentSettingUrl;                  
-                    
+                    var comIdentity = PerComputerHelp.GetComputerIdentity();
+
+                    var url = UsbRegistry.AgentSettingUrl + "?computerIdentity=" + comIdentity;
+
                     var response = http.GetAsync(url).Result;
 
                     if (response.IsSuccessStatusCode)
                     {
                         var json = response.Content.ReadAsStringAsync().Result;
 
-                        var setting = JsonConvert.DeserializeObject(json, typeof(AgentSetting)) as AgentSetting;
+                        var setting = JsonConvert.DeserializeObject<AgentSetting>(json);
+
+                        UsbRegistry.UsbFilterEnabled = setting.UsbFilterEnabled;
+                        AgentManager.IsUsbFilterEnable = setting.UsbFilterEnabled;
+
+                        UsbRegistry.UsbHistoryEnabled = setting.UsbHistoryEnabled;
+                        AgentManager.IsUsbHistoryEnable = setting.UsbHistoryEnabled;
+                        if (setting.UsbFilterEnabled)
+                        {
+                            GetUsbFilterDb_Http();
+                        }
 
                         UsbRegistry.AgentTimerMinute = setting.AgentTimerMinute;
                         AgentUpdate.Check(setting.AgentVersion);
@@ -124,7 +96,7 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + public static void PostPerComputer_Http()
+        #region + public void PostPerComputer_Http()
         public void PostPerComputer_Http()
         {
             try

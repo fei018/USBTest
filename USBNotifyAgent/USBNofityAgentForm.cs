@@ -22,15 +22,24 @@ namespace USBNotifyAgent
         /// <param name="args"></param>
         public override void OnUsbInterface(UsbEventDeviceInterfaceArgs args)
         {
-            if (args.Action == UsbDeviceChangeEvent.Arrival)
+            try
             {
-                if (args.DeviceInterface == UsbMonitor.UsbDeviceInterface.Disk)
+                if (AgentManager.IsUsbHistoryEnable)
                 {
-                    Task.Run(() =>
+                    if (args.Action == UsbDeviceChangeEvent.Arrival)
                     {
-                        new UsbHttpHelp().PostPerUsbHistory_byDisk_Http(args.Name);
-                    });
+                        if (args.DeviceInterface == UsbMonitor.UsbDeviceInterface.Disk)
+                        {
+                            Task.Run(() =>
+                            {
+                                new UsbHttpHelp().PostPerUsbHistory_byDisk_Http(args.Name);
+                            });
+                        }
+                    }
                 }
+            }
+            catch (Exception)
+            {
             }
         }
         #endregion
@@ -39,14 +48,14 @@ namespace USBNotifyAgent
         private readonly object _Locker_OnVolume = new object();
         public override void OnUsbVolume(UsbEventVolumeArgs args)
         {
-            if (UsbFilter.IsEnable)
+            try
             {
-                lock (_Locker_OnVolume)
+                if (AgentManager.IsUsbFilterEnable)
                 {
-                    if (args.Flags == UsbVolumeFlags.Net) return;
-
-                    try
+                    lock (_Locker_OnVolume)
                     {
+                        if (args.Flags == UsbVolumeFlags.Net) return;
+
                         if (args.Action == UsbDeviceChangeEvent.Arrival)
                         {
                             foreach (char letter in args.Drives)
@@ -58,8 +67,10 @@ namespace USBNotifyAgent
                             }
                         }
                     }
-                    catch (Exception) { }
                 }
+            }
+            catch (Exception)
+            {
             }
         }
         #endregion

@@ -9,7 +9,7 @@ using Microsoft.Win32;
 
 namespace SetupClient
 {
-    public class SetupRegistry
+    public class SetupHelp
     {
         private string _setupiniPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "setup.ini");
 
@@ -67,9 +67,14 @@ namespace SetupClient
             {
                 var setup = GetSetupini();
 
+                // Registry key location: Computer\HKEY_LOCAL_MACHINE
                 using (var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
                 {
-                    using (var usbKey = hklm.CreateSubKey("SOFTWARE\\Hiphing\\USBNotify", true))
+                    var key = "SOFTWARE\\Hiphing\\USBNotify";
+
+                    hklm.DeleteSubKey(key, false);
+
+                    using (var usbKey = hklm.CreateSubKey(key, true))
                     {
                         foreach (var s in setup)
                         {

@@ -40,27 +40,11 @@ namespace USBNotifyWebMVC.Controllers
         #endregion
 
         #region AgentSetting()
-        public async Task<IActionResult> AgentSetting()
+        public async Task<IActionResult> AgentSetting(string computerIdentity)
         {
             try
             {
-                IAgentSetting query = await _usbDb.Get_AgentSetting();
-                string json = JsonConvert.SerializeObject(query);
-                return Content(json, "application/json");
-            }
-            catch (Exception)
-            {
-                return NotFound();
-            }
-        }
-        #endregion
-
-        #region PerAgentSetting(string computerIdentity)
-        public async Task<IActionResult> PerAgentSetting(string computerIdentity)
-        {
-            try
-            {
-                var query = await _usbDb.Get_PerAgentSetting(computerIdentity);
+                IAgentSetting query = await _usbDb.Get_AgentSetting(computerIdentity);
                 string json = JsonConvert.SerializeObject(query);
                 return Content(json, "application/json");
             }

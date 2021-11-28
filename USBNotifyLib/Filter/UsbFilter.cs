@@ -1,24 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Management;
-using System.Collections.Concurrent;
-using System.IO;
 
 namespace USBNotifyLib
 {
     public partial class UsbFilter
     {
         private readonly UsbBusController _usbBus;
-
-        private static bool? _usbFilterEnabled;
-        public static bool IsEnable
-        {
-            get => _usbFilterEnabled ?? UsbRegistry.UsbFilterEnabled;
-            set => _usbFilterEnabled = value;
-        }
 
         public UsbFilter()
         {
@@ -78,11 +64,11 @@ namespace USBNotifyLib
                 else
                 {
                     Rule_NotMatch_In_UsbFilterDb(notifyUsb);
-                }             
+                }
             }
             catch (Exception ex)
             {
-                UsbLogger.Error(ex.Message+"\r\n"+notifyUsb.ToString());            
+                UsbLogger.Error(ex.Message + "\r\n" + notifyUsb.ToString());
             }
         }
         #endregion
@@ -191,7 +177,7 @@ namespace USBNotifyLib
             {
                 // set ReadOnly false
                 Set_Disk_IsReadOnly_by_DiskPath_WMI(usb.DiskPath, false);
-                UsbLogger.Log("ReadWrite:\r\n"+usb.ToString());
+                UsbLogger.Log("ReadWrite:\r\n" + usb.ToString());
             }
             catch (Exception)
             {
@@ -209,11 +195,11 @@ namespace USBNotifyLib
                 // set readonly true
                 Set_Disk_IsReadOnly_by_DiskPath_WMI(usb.DiskPath, true);
 
-                UsbLogger.Log("ReadOnly:\r\n"+usb.ToString());
+                UsbLogger.Log("ReadOnly:\r\n" + usb.ToString());
             }
             catch (Exception)
             {
-                
+
                 throw;
             }
         }

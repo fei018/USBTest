@@ -31,12 +31,6 @@ namespace USBNotifyLib
             set => SetUsbRegistryKey(nameof(UsbFilterDbUrl), value, RegistryValueKind.String);
         }
 
-        public static string PerAgentSettingUrl
-        {
-            get => ReadUsbRegistryKey(nameof(PerAgentSettingUrl));
-            set => SetUsbRegistryKey(nameof(PerAgentSettingUrl), value, RegistryValueKind.String);
-        }
-
         public static string AgentSettingUrl
         {
             get => ReadUsbRegistryKey(nameof(AgentSettingUrl));

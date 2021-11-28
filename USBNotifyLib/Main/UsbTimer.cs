@@ -10,35 +10,9 @@ namespace USBNotifyLib
         {
             //SetTimer_GetUsbFilterDb();
             SetTimer_GetAgentSetting();
-            //SetTimer_GetPerAgentSetting();
             //SetTimer_PostUserComputer();
         }
 
-        #region + private static void SetTimer_GetPerAgentSetting()
-        private static void SetTimer_GetPerAgentSetting()
-        {
-            try
-            {
-                var timer = new Timer();
-                timer.Interval = TimeSpan.FromMinutes(UsbRegistry.AgentTimerMinute).TotalMilliseconds;
-                timer.AutoReset = true;
-                timer.Elapsed += (s, e) =>
-                {
-                    Task.Run(() =>
-                    {
-                        new UsbHttpHelp().GetPerAgentSetting_Http();
-                    });
-                };
-
-                timer.Enabled = true;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-        #endregion
 
         #region + private static void SetTimer_GetAgentSetting()
         private static void SetTimer_GetAgentSetting()

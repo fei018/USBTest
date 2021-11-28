@@ -42,7 +42,7 @@ namespace USBModel
                 _db.CodeFirst.SetStringDefaultLength(100).InitTables<Tbl_UsbRegistered>();
                 _db.CodeFirst.SetStringDefaultLength(100).InitTables<Tbl_PerComputer>();
                 _db.CodeFirst.SetStringDefaultLength(100).InitTables<Tbl_AgentSetting>();
-                _db.CodeFirst.SetStringDefaultLength(100).InitTables<Tbl_PerAgentSetting>();
+
 
                 _db.CodeFirst.InitTables<LoginUser>();
                 _db.CodeFirst.InitTables<LoginErrorCountLimit>();
@@ -66,31 +66,17 @@ namespace USBModel
 
         // AgentSetting
 
-        #region + public async Task<IPerAgentSetting> Get_PerAgentSetting(string computerIdentity)
-        public async Task<IPerAgentSetting> Get_PerAgentSetting(string computerIdentity)
+        #region + public async Task<t_AgentSetting> Get_AgentSetting()
+        public async Task<IAgentSetting> Get_AgentSetting(string comIdentity)
         {
             try
             {
-                var query = await _db.Queryable<Tbl_PerAgentSetting>().FirstAsync(a => a.ComputerIdentity == computerIdentity);
-                if (query == null)
+                var computerExist = await _db.Queryable<Tbl_PerComputer>().AnyAsync(c => c.ComputerIdentity == comIdentity);
+                if (!computerExist)
                 {
-                    throw new Exception("Tbl_PerAgentSetting cannot find computerIdentity: " + computerIdentity);
+                    throw new Exception("Not exist computerIdentity: " + comIdentity);
                 }
 
-                return query;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-        #endregion
-
-        #region + public async Task<t_AgentSetting> Get_AgentSetting()
-        public async Task<IAgentSetting> Get_AgentSetting()
-        {
-            try
-            {
                 var query = await _db.Queryable<Tbl_AgentSetting>().FirstAsync();
                 if (query == null)
                 {
@@ -101,7 +87,6 @@ namespace USBModel
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -114,18 +99,22 @@ namespace USBModel
         {
             try
             {
-                Tbl_PerAgentSetting setting = await _db.Queryable<Tbl_PerAgentSetting>().FirstAsync(a => a.ComputerIdentity == comIdentity);
+                var computerExist = await _db.Queryable<Tbl_PerComputer>().AnyAsync(c => c.ComputerIdentity == comIdentity);
+                if (!computerExist)
+                {
+                    throw new Exception("Not exist computerIdentity: " + comIdentity);
+                }
 
+                var setting = await _db.Queryable<Tbl_AgentSetting>().FirstAsync();
                 if (setting == null)
                 {
-                    throw new Exception("Tbl_PerAgentSetting cannot find computerIdentity: " + comIdentity);
+                    throw new Exception("Nothing AgentSetting in database.");
                 }
 
                 var http = new UsbFilterDbHttp();
                 if (setting.UsbFilterEnabled)
                 {
-                    var filterDb = await Get_UsbFilterDb();
-                    http.UsbFilterDb = filterDb;
+                    http.UsbFilterDb = await Get_UsbFilterDb();
                 }
 
                 return http;

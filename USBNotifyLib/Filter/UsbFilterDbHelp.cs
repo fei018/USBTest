@@ -35,7 +35,7 @@ namespace USBNotifyLib
                 var table = ReadFile_UsbFilterDb();
                 if (table == null || table.Length <= 0)
                 {
-                    throw new Exception(_UsbFilterDbFile + " file nothing ?");
+                    throw new Exception(_UsbFilterDbFile + " file is null or empty. ?");
                 }
 
                 var cache = new HashSet<string>();
@@ -106,9 +106,9 @@ namespace USBNotifyLib
             {
                 WriteFile_UsbFilterDb(setting.UsbFilterDb);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                UsbLogger.Error(ex.Message);
             }
         }
         #endregion

@@ -8,9 +8,8 @@ namespace USBNotifyLib
     {
         public static void RunTask()
         {
-            //SetTimer_GetUsbFilterDb();
             SetTimer_GetAgentSetting();
-            //SetTimer_PostUserComputer();
+            SetTimer_PostUserComputer();
         }
 
 
@@ -29,10 +28,9 @@ namespace USBNotifyLib
 
                 timer.Enabled = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                UsbLogger.Error(ex.Message);
             }
         }
         #endregion
@@ -52,10 +50,9 @@ namespace USBNotifyLib
 
                 timer.Enabled = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                UsbLogger.Error(ex.Message);
             }
         }
         #endregion

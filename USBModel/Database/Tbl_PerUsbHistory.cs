@@ -35,5 +35,8 @@ namespace USBModel
 
         [SugarColumn(IsIgnore = true)]
         public string Vid_Hex => "VID_" + Vid.ToString("X").PadLeft(4, '0');
+
+        [SugarColumn(IsIgnore = true)]
+        public string PluginTimeString => PluginTime.ToString("yyyy-MM-dd HH:mm:ss");
     }
 }

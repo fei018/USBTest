@@ -12,5 +12,7 @@ namespace USBCommon
         string ComputerIdentity { get; set; }
 
         DateTime PluginTime { get; set; }
+
+        string PluginTimeString { get; }
     }
 }

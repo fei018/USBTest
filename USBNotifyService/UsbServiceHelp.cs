@@ -23,6 +23,7 @@ namespace USBNotifyService
             IsRebootUsbApp = true;
             StartProcess_USBNotifyFilter();
 
+            // 判斷當前 windows session 是否 user session
             var sessionid = ProcessApiHelp.GetCurrentUserSessionID();
             if (sessionid > 0)
             {
@@ -154,13 +155,16 @@ namespace USBNotifyService
         #region + protected override void OnSessionChange(SessionChangeDescription changeDescription)
         protected override void OnSessionChange(SessionChangeDescription changeDescription)
         {
-            // user logon to desktop
+            // user logon windows
+            // startup Agent Desktop
             if (changeDescription.Reason == SessionChangeReason.SessionLogon)
             {
                 IsRebootUsbDesktop = true;
                 StartProcess_USBNotifyDesktop();
             }
 
+            // user logoff windows
+            // close Agent Desktop
             if (changeDescription.Reason == SessionChangeReason.SessionLogoff)
             {
                 IsRebootUsbDesktop = false;

@@ -12,7 +12,7 @@ using LoginUserManager;
 
 namespace USBNotifyWebMVC.Controllers
 {
-    [Authorize(Roles = RolesName.RoleNormal)]
+    [Authorize]
     public class USBController : Controller
     {
         private readonly UsbDbHelp _usbDb;

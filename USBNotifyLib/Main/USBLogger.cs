@@ -26,10 +26,14 @@ namespace USBNotifyLib
             LogToFile(ErrorPath, error);
         }
 
+        private readonly static object _locker = new object();
         static void LogToFile(string path, string log)
         {
-            var l = Environment.NewLine + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + Environment.NewLine + log + Environment.NewLine;
-            File.AppendAllText(path,l);
+            lock (_locker)
+            {
+                var l = Environment.NewLine + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + Environment.NewLine + log + Environment.NewLine;
+                File.AppendAllText(path, l);
+            }           
         }
     }
 }

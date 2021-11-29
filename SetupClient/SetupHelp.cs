@@ -1,17 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Win32;
 
+
 namespace SetupClient
 {
     public class SetupHelp
     {
-        private string _setupiniPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "setup.ini");
+        static string _installDir = Path.Combine(Environment.ExpandEnvironmentVariables("%programdata%\\USBNotity\\install"));
+
+        static string _setupiniPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "setup.ini");
+
+        static string _USBProgramDir = Path.Combine(Environment.ExpandEnvironmentVariables("%programfiles%\\USBNotify"));
 
         #region + private Setupini GetSetupini()
         private Dictionary<string, string> GetSetupini()
@@ -60,8 +67,8 @@ namespace SetupClient
         }
         #endregion
 
-        #region + public void InitialKey()
-        public void InitialKey()
+        #region + private void InitialKey()
+        private void InitialKey()
         {
             try
             {
@@ -90,6 +97,30 @@ namespace SetupClient
         }
         #endregion
 
+        #region setup
+        public void Install()
+        {
+            Console.WriteLine("Start...");
+            try
+            {
+                InitialKey();
 
+                var zip = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"debug.zip");
+                
+                ZipFile.ExtractToDirectory(zip, _USBProgramDir);
+
+                var bat = Path.Combine(_USBProgramDir, "service_install.bat");
+
+                Process.Start("cmd.exe", bat);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            Console.WriteLine("Done...");
+            Console.ReadLine();
+        }
+        #endregion
     }
 }

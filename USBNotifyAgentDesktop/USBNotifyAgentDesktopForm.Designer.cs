@@ -31,18 +31,18 @@ namespace USBNotifyAgentDesktop
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(USBNotifyAgentDesktopForm));
-            this.UsbNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.UsbNotifyTray = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStripUsb = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.NotifyItem_About = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripUsb.SuspendLayout();
             this.SuspendLayout();
             // 
-            // UsbNotifyIcon
+            // UsbNotifyTray
             // 
-            this.UsbNotifyIcon.ContextMenuStrip = this.contextMenuStripUsb;
-            this.UsbNotifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("UsbNotifyIcon.Icon")));
-            this.UsbNotifyIcon.Text = "Usb Notify";
-            this.UsbNotifyIcon.Visible = true;
+            this.UsbNotifyTray.ContextMenuStrip = this.contextMenuStripUsb;
+            this.UsbNotifyTray.Icon = ((System.Drawing.Icon)(resources.GetObject("UsbNotifyTray.Icon")));
+            this.UsbNotifyTray.Text = "Usb Notify";
+            this.UsbNotifyTray.Visible = true;
             // 
             // contextMenuStripUsb
             // 
@@ -50,12 +50,12 @@ namespace USBNotifyAgentDesktop
             this.contextMenuStripUsb.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.NotifyItem_About});
             this.contextMenuStripUsb.Name = "contextMenuStripUsb";
-            this.contextMenuStripUsb.Size = new System.Drawing.Size(181, 48);
+            this.contextMenuStripUsb.Size = new System.Drawing.Size(110, 26);
             // 
             // NotifyItem_About
             // 
             this.NotifyItem_About.Name = "NotifyItem_About";
-            this.NotifyItem_About.Size = new System.Drawing.Size(180, 22);
+            this.NotifyItem_About.Size = new System.Drawing.Size(109, 22);
             this.NotifyItem_About.Text = "About";
             this.NotifyItem_About.Click += new System.EventHandler(this.NotifyItem_About_Click);
             // 
@@ -68,6 +68,7 @@ namespace USBNotifyAgentDesktop
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "USBNotifyAgentDesktopForm";
             this.Text = "USBNotifyAgentD";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.USBNotifyAgentDesktopForm_FormClosed);
             this.Shown += new System.EventHandler(this.USBNotifyAgentDesktopForm_Shown);
             this.contextMenuStripUsb.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -76,7 +77,7 @@ namespace USBNotifyAgentDesktop
 
         #endregion
 
-        private System.Windows.Forms.NotifyIcon UsbNotifyIcon;
+        private System.Windows.Forms.NotifyIcon UsbNotifyTray;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripUsb;
         private System.Windows.Forms.ToolStripMenuItem NotifyItem_About;
     }

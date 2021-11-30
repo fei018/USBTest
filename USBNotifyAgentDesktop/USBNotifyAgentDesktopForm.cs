@@ -26,5 +26,11 @@ namespace USBNotifyAgentDesktop
         {
             new AboutForm().Show();
         }
+
+        private void USBNotifyAgentDesktopForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            this.contextMenuStripUsb?.Dispose();
+            this.UsbNotifyTray?.Dispose();
+        }
     }
 }

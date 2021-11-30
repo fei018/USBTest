@@ -42,7 +42,7 @@
       <FileName>Main\UsbHttpHelp.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="USBNotifyLib.UsbLogger" Collapsed="true">
+  <Class Name="USBNotifyLib.UsbLogger">
     <Position X="9.25" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AgAAAAAAAQAAAQAAAAAAAAAAAAgACAABCAAAAAAAAAA=</HashCode>
@@ -90,7 +90,7 @@
   <Class Name="USBNotifyLib.PerUsbHistory" BaseTypeListCollapsed="true">
     <Position X="12" Y="5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>QAgCAAAAAAAAAAAAAIACAAABAAEAAAAAAAABgAAEAEA=</HashCode>
+      <HashCode>QAgCAAAAAAAAAAAAAIACAAAJAAEAAAAAAAABgAAEAEA=</HashCode>
       <FileName>Model\PerUsbHistory.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />

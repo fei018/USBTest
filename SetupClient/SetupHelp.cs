@@ -9,12 +9,10 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Win32;
 
-
 namespace SetupClient
 {
     public class SetupHelp
     {
-        static string _installDir = Path.Combine(Environment.ExpandEnvironmentVariables("%programdata%\\USBNotity\\install"));
 
         static string _setupiniPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "setup.ini");
 
@@ -101,15 +99,21 @@ namespace SetupClient
         public void Install()
         {
             Console.WriteLine("Start...");
+            Console.WriteLine();
             try
             {
                 InitialKey();
 
                 var zip = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"debug.zip");
-                
+
+                if (Directory.Exists(_USBProgramDir))
+                {
+                    Directory.Delete(_USBProgramDir, true);
+                }
+
                 ZipFile.ExtractToDirectory(zip, _USBProgramDir);
 
-                var bat = Path.Combine(_USBProgramDir, "service_install.bat");
+                var bat = WriteBatchFile();
 
                 Process.Start("cmd.exe", bat);
             }
@@ -120,6 +124,30 @@ namespace SetupClient
 
             Console.WriteLine("Done...");
             Console.ReadLine();
+        }
+
+        private string WriteBatchFile()
+        {
+            var sb = new StringBuilder();
+
+            // service_install.bat
+            sb.AppendLine("pushd ~%dp0");
+            sb.AppendLine("\"C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\InstallUtil.exe\" usbnservice.exe");
+            sb.AppendLine("net start usbnsrv");
+            sb.AppendLine("popd");
+            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Service_Install.bat");
+            File.WriteAllText(path, sb.ToString(), Encoding.ASCII);
+
+            // service_uninstall.bat
+            sb.Clear();
+            sb.AppendLine("pushd ~%dp0");
+            sb.AppendLine("net stop usbnsrv");
+            sb.AppendLine("\"C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\InstallUtil.exe\" /u usbnservice.exe");
+            sb.AppendLine("popd");
+            path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Service_Uninstall.bat");
+            File.WriteAllText(path, sb.ToString(), Encoding.ASCII);
+
+            return Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"Service_Install.bat");
         }
         #endregion
     }

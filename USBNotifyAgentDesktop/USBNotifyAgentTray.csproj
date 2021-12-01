@@ -6,12 +6,13 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{BA0A3D1F-B3B3-4665-964F-B1C7B129D2F0}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>USBNotifyAgentDesktop</RootNamespace>
-    <AssemblyName>usbndesktop</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <RootNamespace>USBNotifyAgentTray</RootNamespace>
+    <AssemblyName>usbntray</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -35,6 +36,9 @@
   <PropertyGroup>
     <ApplicationIcon>logo2.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -55,19 +59,19 @@
     <Compile Include="Form\AboutForm.Designer.cs">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="USBNotifyAgentDesktopForm.cs">
+    <Compile Include="USBNotifyAgentTrayForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="USBNotifyAgentDesktopForm.Designer.cs">
-      <DependentUpon>USBNotifyAgentDesktopForm.cs</DependentUpon>
+    <Compile Include="USBNotifyAgentTrayForm.Designer.cs">
+      <DependentUpon>USBNotifyAgentTrayForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form\AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="USBNotifyAgentDesktopForm.resx">
-      <DependentUpon>USBNotifyAgentDesktopForm.cs</DependentUpon>
+    <EmbeddedResource Include="USBNotifyAgentTrayForm.resx">
+      <DependentUpon>USBNotifyAgentTrayForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -79,6 +83,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="app.config" />
+    <None Include="app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

@@ -8,16 +8,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace USBNotifyAgentDesktop
+namespace USBNotifyAgentTray
 {
-    public partial class USBNotifyAgentDesktopForm : Form
+    public partial class USBNotifyAgentTrayForm : Form
     {
-        public USBNotifyAgentDesktopForm()
+        public USBNotifyAgentTrayForm()
         {
             InitializeComponent();
         }
 
-        private void USBNotifyAgentDesktopForm_Shown(object sender, EventArgs e)
+        private void USBNotifyAgentTrayForm_Shown(object sender, EventArgs e)
         {
             this.Hide();
         }

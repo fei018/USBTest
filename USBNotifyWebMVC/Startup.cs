@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Text.Unicode;
 
 namespace USBNotifyWebMVC
 {
@@ -30,20 +31,25 @@ namespace USBNotifyWebMVC
 
             services.AddHttpContextAccessor();
 
-            services.AddUSBDB(Configuration.GetConnectionString("USBDB"));
+            // http response html 拉丁中文不编码
+            services.AddSingleton(System.Text.Encodings.Web.HtmlEncoder.Create(new[] { UnicodeRanges.BasicLatin, UnicodeRanges.CjkUnifiedIdeographs }));
+
+            services.AddUSBDB(Configuration.GetConnectionString("USBAdmin"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-            }
+            //if (env.IsDevelopment())
+            //{
+            //    app.UseDeveloperExceptionPage();
+            //}
+            //else
+            //{
+            //    app.UseExceptionHandler("/Home/Error");
+            //}
+            app.UseDeveloperExceptionPage();
+
             app.UseStaticFiles();
 
             app.UseRouting();

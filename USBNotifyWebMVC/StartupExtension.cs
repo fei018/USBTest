@@ -14,7 +14,7 @@ namespace USBNotifyWebMVC
 
             services.AddScoped(x => new UsbDbHelp(connstring));
 
-            new UsbDbHelp(connstring).TryCreateDatabase();
+           // new UsbDbHelp(connstring).TryCreateDatabase();
         }
     }
 }

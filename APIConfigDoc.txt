@@ -1,11 +1,12 @@
 ﻿[app]
 UsbNotifyService=usbnservice.exe
 UsbNotifyAgent=usbnagent.exe
-UsbNotifyAgentDesktop=usbndesktop.exe
+UsbNotifyAgentDesktop=usbntray.exe
 UsbUpdateAgent=usbnUpdate.exe
 
 [registry]
 UsbFilterEnabled=false
+UsbHistoryEnabled=true
 AgentTimerMinute=1
 AgentVersion=1.0.1
 UsbFilterDbUrl=http://localhost:5000/agent/usbFilterDb

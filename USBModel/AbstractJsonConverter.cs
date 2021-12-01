@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 
-namespace USBCommon
+namespace USBModel
 {
     public class AbstractJsonConverter<TReal, TAbstract> : JsonConverter where TReal : TAbstract
     {

@@ -1,5 +1,5 @@
 ﻿
-namespace USBNotifyAgentDesktop
+namespace USBNotifyAgentTray
 {
     partial class AboutForm
     {

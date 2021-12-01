@@ -8,10 +8,11 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>SetupClient</RootNamespace>
     <AssemblyName>Setup</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -62,9 +63,9 @@
       <Project>{90fd865d-6202-4a76-b765-4d5414b4204d}</Project>
       <Name>USBCommon</Name>
     </ProjectReference>
-    <ProjectReference Include="..\USBNotifyAgentDesktop\USBNotifyAgentDesktop.csproj">
+    <ProjectReference Include="..\USBNotifyAgentDesktop\USBNotifyAgentTray.csproj">
       <Project>{ba0a3d1f-b3b3-4665-964f-b1c7b129d2f0}</Project>
-      <Name>USBNotifyAgentDesktop</Name>
+      <Name>USBNotifyAgentTray</Name>
     </ProjectReference>
     <ProjectReference Include="..\USBNotifyAgent\USBNotifyAgent.csproj">
       <Project>{09f80c0b-bd6b-4f99-97ae-a02aed1e61ce}</Project>

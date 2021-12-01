@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "USBModel", "USBModel\USBMod
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "USBNotifyAgent", "USBNotifyAgent\USBNotifyAgent.csproj", "{09F80C0B-BD6B-4F99-97AE-A02AED1E61CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "USBNotifyAgentDesktop", "USBNotifyAgentDesktop\USBNotifyAgentDesktop.csproj", "{BA0A3D1F-B3B3-4665-964F-B1C7B129D2F0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "USBNotifyAgentTray", "USBNotifyAgentDesktop\USBNotifyAgentTray.csproj", "{BA0A3D1F-B3B3-4665-964F-B1C7B129D2F0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "USBNotifyService", "USBNotifyService\USBNotifyService.csproj", "{88A32AB6-DA9D-45B3-A812-A0A57B9DDE60}"
 EndProject
@@ -43,6 +43,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "APIConfigDoc", "APIConfigDo
 	ProjectSection(SolutionItems) = preProject
 		APIConfigDoc.txt = APIConfigDoc.txt
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{FB297808-6C29-4DB5-A880-6B605D7E7391}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "USBAdminDatabase", "USBAdminDatabase\USBAdminDatabase.csproj", "{CE9E0C83-916F-4061-942A-6B3BDC0DA4B7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -90,6 +94,10 @@ Global
 		{AAB212AA-6818-4455-BD50-8AFAAA28850A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AAB212AA-6818-4455-BD50-8AFAAA28850A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AAB212AA-6818-4455-BD50-8AFAAA28850A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE9E0C83-916F-4061-942A-6B3BDC0DA4B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE9E0C83-916F-4061-942A-6B3BDC0DA4B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE9E0C83-916F-4061-942A-6B3BDC0DA4B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE9E0C83-916F-4061-942A-6B3BDC0DA4B7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -110,6 +118,8 @@ Global
 		{C959399D-CCCD-4995-9B71-26C1124DC34C} = {0477CC87-7CE1-4EFC-973B-7FFC3DEB017C}
 		{164A995C-AF7A-4C24-9EEF-F64EEAC299E1} = {22E2B7D4-8A33-4BD9-9649-B6DF6175206D}
 		{AAB212AA-6818-4455-BD50-8AFAAA28850A} = {164A995C-AF7A-4C24-9EEF-F64EEAC299E1}
+		{FB297808-6C29-4DB5-A880-6B605D7E7391} = {03D361AB-D0D7-4E65-AC0E-BEB8BDF58081}
+		{CE9E0C83-916F-4061-942A-6B3BDC0DA4B7} = {FB297808-6C29-4DB5-A880-6B605D7E7391}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {55F982B7-5BDB-4B26-BF12-27C4E1A6407F}

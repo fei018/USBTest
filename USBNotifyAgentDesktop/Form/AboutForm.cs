@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace USBNotifyAgentDesktop
+namespace USBNotifyAgentTray
 {
     public partial class AboutForm : Form
     {

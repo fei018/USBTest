@@ -1,58 +1,53 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.ServiceProcess;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using USBNotifyService.Win32API;
 
 namespace USBNotifyService
 {
     public partial class UsbService
     {
-        private bool IsRebootUsbApp = true;
-
-        private bool IsRebootUsbDesktop = true;
+        private bool IsRebootUsbAgent = true;
+        private bool IsRebootUsbAgentTray = true;
 
         #region ServiceStart()
         private void Start_Service()
         {
-            IsRebootUsbApp = true;
-            StartProcess_USBNotifyFilter();
+            IsRebootUsbAgent = true;
+            StartProcess_USBNotifyAgent();
 
             // 判斷當前 windows session 是否 user session
             var sessionid = ProcessApiHelp.GetCurrentUserSessionID();
             if (sessionid > 0)
             {
-                IsRebootUsbDesktop = true;
-                StartProcess_USBNotifyDesktop();
-            }           
+                IsRebootUsbAgentTray = true;
+                StartProcess_USBNotifyAgentTray();
+            }
         }
         #endregion
 
         #region ServiceStop()
         private void Stop_Service()
         {
-            IsRebootUsbApp = false;
-            CloseProcess_USBNotifyFilter();
+            IsRebootUsbAgent = false;
+            CloseProcess_USBNotifyAgent();
 
-            IsRebootUsbDesktop = false;
-            CloseProcess_USBNotifyDesktop();
+            IsRebootUsbAgentTray = false;
+            CloseProcess_USBNotifyAgentTray();
         }
         #endregion
 
-        #region USBNotifyFilter Process
+        #region USBNotifyAgent Process
 
         private string _agentPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "usbnagent.exe");
 
         private Process _usbNotifyAppProcess;
 
-        private void StartProcess_USBNotifyFilter()
+        private void StartProcess_USBNotifyAgent()
         {
-            CloseProcess_USBNotifyFilter();
+            CloseProcess_USBNotifyAgent();
             try
             {
                 ProcessStartInfo startInfo = new ProcessStartInfo(_agentPath);
@@ -65,20 +60,20 @@ namespace USBNotifyService
                 // Exited Event 委託, 如果意外結束process, 可以自己啟動
                 _usbNotifyAppProcess.Exited += (s, e) =>
                 {
-                    if (IsRebootUsbApp)
+                    if (IsRebootUsbAgent)
                     {
-                        StartProcess_USBNotifyFilter();
+                        StartProcess_USBNotifyAgent();
                     }
                 };
 
                 _usbNotifyAppProcess.Start();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
         }
 
-        private void CloseProcess_USBNotifyFilter()
+        private void CloseProcess_USBNotifyAgent()
         {
             try
             {
@@ -91,24 +86,24 @@ namespace USBNotifyService
                         Thread.Sleep(new TimeSpan(0, 0, 3));
                         _usbNotifyAppProcess?.Kill();
                     }
-                                          
+
                     _usbNotifyAppProcess?.Close();
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
         }
         #endregion
 
-        #region USBNotityDesktop Process
-        private string _desktopPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "usbndesktop.exe");
+        #region USBNotityAgentTray Process
+        private string _desktopPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "usbntray.exe");
 
         private Process _usbNotifyDesktopProcess;
 
-        private void StartProcess_USBNotifyDesktop()
+        private void StartProcess_USBNotifyAgentTray()
         {
-            CloseProcess_USBNotifyDesktop();
+            CloseProcess_USBNotifyAgentTray();
 
             try
             {
@@ -118,18 +113,18 @@ namespace USBNotifyService
                 // Exited Event 委託, 如果意外結束process, 可以自己啟動
                 _usbNotifyDesktopProcess.Exited += (s, e) =>
                 {
-                    if (IsRebootUsbDesktop)
+                    if (IsRebootUsbAgentTray)
                     {
-                        StartProcess_USBNotifyDesktop();
+                        StartProcess_USBNotifyAgentTray();
                     }
                 };
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
         }
 
-        private void CloseProcess_USBNotifyDesktop()
+        private void CloseProcess_USBNotifyAgentTray()
         {
             try
             {
@@ -146,7 +141,7 @@ namespace USBNotifyService
                     _usbNotifyDesktopProcess?.Close();
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
         }
@@ -159,16 +154,16 @@ namespace USBNotifyService
             // startup Agent Desktop
             if (changeDescription.Reason == SessionChangeReason.SessionLogon)
             {
-                IsRebootUsbDesktop = true;
-                StartProcess_USBNotifyDesktop();
+                IsRebootUsbAgentTray = true;
+                StartProcess_USBNotifyAgentTray();
             }
 
             // user logoff windows
             // close Agent Desktop
             if (changeDescription.Reason == SessionChangeReason.SessionLogoff)
             {
-                IsRebootUsbDesktop = false;
-                CloseProcess_USBNotifyDesktop();
+                IsRebootUsbAgentTray = false;
+                CloseProcess_USBNotifyAgentTray();
             }
 
             base.OnSessionChange(changeDescription);

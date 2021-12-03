@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using USBModel;
 
-namespace USBNotifyWebMVC.Controllers
+namespace USBAdminWebMVC.Controllers
 {
     [Authorize]
     public class ComputerController : Controller

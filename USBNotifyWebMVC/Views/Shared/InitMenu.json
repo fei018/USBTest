@@ -5,7 +5,7 @@
   },
   "logoInfo": {
     "title": "USB Admin",
-    "image": "/images/logo.png",
+    "image": "usbadmin/images/logo.png",
     "href": ""
   },
   "menuInfo": [
@@ -35,13 +35,13 @@
             },
             {
               "title": "Registered",
-              "href": "/USB/Registered",
+              "href": "usbadmin/USB/Registered",
               "icon": "fa fa-list-alt",
               "target": "_self"
             },
             {
               "title": "Register",
-              "href": "/USB/Register",
+              "href": "usbadmin/USB/Register",
               "icon": "fa fa-floppy-o",
               "target": "_self"
             }
@@ -55,7 +55,7 @@
           "child": [
             {
               "title": "Index",
-              "href": "/Computer/Index",
+              "href": "usbadmin/Computer/Index",
               "icon": "fa fa-list-alt",
               "target": "_self"
             }

@@ -1,13 +1,9 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using System.Text.Unicode;
 
-namespace USBNotifyWebMVC
+namespace USBAdminWebMVC
 {
     public class Startup
     {
@@ -22,17 +18,8 @@ namespace USBNotifyWebMVC
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
-            {
-                options.LoginPath = new PathString("/account/login");
-                options.LogoutPath = new PathString("/account/login");
-                options.AccessDeniedPath = new PathString("/AccessDenied.html");
-            });
 
-            services.AddHttpContextAccessor();
-
-            // http response html 拉丁中文不编码
-            services.AddSingleton(System.Text.Encodings.Web.HtmlEncoder.Create(new[] { UnicodeRanges.BasicLatin, UnicodeRanges.CjkUnifiedIdeographs }));
+            services.AddMoreCustom(Configuration);
 
             services.AddUSBDB(Configuration.GetConnectionString("USBAdmin"));
         }
@@ -51,12 +38,12 @@ namespace USBNotifyWebMVC
             app.UseDeveloperExceptionPage();
 
             app.UseStaticFiles();
-
+            app.UseCookiePolicy();
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
-
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

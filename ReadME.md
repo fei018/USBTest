@@ -1,0 +1,17 @@
+﻿[app]
+UsbNotifyService=usbnservice.exe
+UsbNotifyAgent=usbnagent.exe
+UsbNotifyAgentDesktop=usbntray.exe
+UsbUpdateAgent=usbnUpdate.exe
+
+[registry]
+UsbFilterEnabled=false
+UsbHistoryEnabled=true
+AgentTimerMinute=1
+AgentVersion=1.0.1
+UsbFilterDbUrl=http://localhost:5000/agent/usbFilterDb
+AgentSettingUrl=http://localhost:5000/Agent/AgentSetting
+AgentUpdateUrl=http://localhost:5000/Agent/AgentUpdate
+RegisterUrl=http://localhost:5000/agent/register
+PostPerComputerUrl=http://localhost:5000/agent/PostPerComputer
+PostPerUsbHistoryUrl=http://localhost:5000/agent/PostPerUsbHistory

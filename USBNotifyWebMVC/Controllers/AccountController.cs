@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using LoginUserManager;
 using Microsoft.AspNetCore.Authorization;
 
-namespace USBNotifyWebMVC.Controllers
+namespace USBAdminWebMVC.Controllers
 {
     [Authorize]
     public class AccountController : Controller

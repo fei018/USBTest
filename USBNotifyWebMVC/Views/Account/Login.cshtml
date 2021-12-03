@@ -23,7 +23,7 @@
             <div class="admin-header">
                 <span>USB Admin</span>
             </div>
-            <form class="layui-form" action="/account/login" method="post">
+            <form class="layui-form" method="post" action="~/account/login">
                 <div>
                     <i class="layui-icon layui-icon-username admin-icon"></i>
                     <input type="text" name="username" placeholder="UserName" autocomplete="off" class="layui-input admin-input admin-input-username" required>
@@ -42,7 +42,7 @@
             }
         </div>
     </div>
-    <script src="../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+    <script src="~/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
     <script>
     layui.use(['form'], function () {
         var form = layui.form,

@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Text;
 
-namespace USBNotifyWebMVC.Controllers
+namespace USBAdminWebMVC.Controllers
 {
     public class AgentController : Controller
     {

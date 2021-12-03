@@ -3,8 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using USBModel;
+using USBCommon;
 
-namespace USBNotifyWebMVC.Controllers
+namespace USBAdminWebMVC.Controllers
 {
     [Authorize]
     public class HomeController : Controller
@@ -19,6 +20,13 @@ namespace USBNotifyWebMVC.Controllers
         public IActionResult Index()
         {
             return View();
+        }
+
+        [AllowAnonymous]
+        public IActionResult InitMenu()
+        {
+            var json = USBAdminHelp.GetInitMenuJson();
+            return Content(json, MimeTypeMap.GetMimeType("json"));
         }
 
         public async Task<IActionResult> Welcome()

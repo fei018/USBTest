@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Text.Json;
 
-namespace USBNotifyWebMVC.Controllers
+namespace USBAdminWebMVC.Controllers
 {
     public class JsonResultHelp
     {

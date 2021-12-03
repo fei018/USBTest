@@ -1,6 +1,7 @@
 ﻿@model Tbl_PerComputer
 @{ 
     var comIdentity = Model.ComputerIdentity;
+    var usbHistoryListUrl = USBAdminHelp.WebHttpUrlPrefix + "/computer/usbHistoryList";
 }
 
 <div>
@@ -26,11 +27,11 @@
 
             table.render({
                 elem: '#index'
-                , url: '/computer/usbHistoryList'
+                , url: '@usbHistoryListUrl'
                 , where: {comIdentity:'@comIdentity'}
                 , page: true
                 , cols: [[
-                    { field: 'pluginTimeString', title: 'PluginTimeString', width: 200, sort: true },
+                    { field: 'pluginTimeString', title: 'PluginTime', width: 200, sort: true },
                     { field: 'manufacturer', title: 'Manufacturer', width: 150, sort: true },
                     { field: 'product', title: 'Product', width: 200, sort: true },
                     { field: 'vid', title: 'Vid', width: 100, sort: true },

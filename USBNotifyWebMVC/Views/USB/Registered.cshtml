@@ -1,4 +1,8 @@
-﻿<div>
+﻿@{ 
+    var registeredIndexUrl = USBAdminHelp.WebHttpUrlPrefix + "/usb/RegisteredIndex";
+}
+
+<div>
     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
         <legend>Usb Index</legend>
     </fieldset>
@@ -16,7 +20,7 @@
 
             $.ajax({
                 type: 'get',
-                url: '/usb/RegisteredIndex',
+                url: '@registeredIndexUrl',
                 dataType: 'json',
                 success: function (json) {
                     if (json.code === 400) {

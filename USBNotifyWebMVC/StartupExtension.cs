@@ -2,11 +2,33 @@
 using USBModel;
 using LoginUserManager;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Text.Unicode;
+using Microsoft.Extensions.Configuration;
+using System.Text.Encodings.Web;
 
-namespace USBNotifyWebMVC
+namespace USBAdminWebMVC
 {
     public static class StartupExtension
     {
+        public static void AddMoreCustom(this IServiceCollection services, IConfiguration configuration)
+        {
+            USBAdminHelp.WebHttpUrlPrefix = configuration.GetSection("WebHttpUrlPrefix").Value;
+            USBAdminHelp.InitMenuName = configuration.GetSection("InitMenuName").Value;
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+            {
+                options.LoginPath = new PathString("/account/login");
+                options.LogoutPath = new PathString("/account/login");
+                options.AccessDeniedPath = new PathString("/AccessDenied.html");
+            });
+
+            services.AddHttpContextAccessor();
+
+            // http response html 拉丁中文不编码
+            services.AddSingleton(HtmlEncoder.Create(new[] { UnicodeRanges.BasicLatin, UnicodeRanges.CjkUnifiedIdeographs }));
+        }
+
         public static void AddUSBDB(this IServiceCollection services, string connstring)
         {
             services.AddScoped(x => new LoginUserDb(connstring));

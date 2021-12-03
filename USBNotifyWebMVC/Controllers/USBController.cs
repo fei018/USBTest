@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using USBModel;
 using LoginUserManager;
 
-namespace USBNotifyWebMVC.Controllers
+namespace USBAdminWebMVC.Controllers
 {
     [Authorize]
     public class USBController : Controller

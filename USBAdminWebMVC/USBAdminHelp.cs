@@ -17,15 +17,18 @@ namespace USBAdminWebMVC
         #region GetInitMenuJson()
         public static string GetInitMenuJson()
         {
-            var manifestEmbeddedProvider = new ManifestEmbeddedFileProvider(typeof(Program).Assembly);
+            //var manifestEmbeddedProvider = new ManifestEmbeddedFileProvider(typeof(Program).Assembly);
 
-            var menuPath = manifestEmbeddedProvider.Assembly.GetManifestResourceNames()
-                                            .Where(j => j.Contains(InitMenuName, StringComparison.OrdinalIgnoreCase))
-                                            .First();
+            //var menuPath = manifestEmbeddedProvider.Assembly.GetManifestResourceNames()
+            //                                .Where(j => j.Contains(InitMenuName, StringComparison.OrdinalIgnoreCase))
+            //                                .First();
 
-            using var menuStream = manifestEmbeddedProvider.Assembly.GetManifestResourceStream(menuPath);
-            using StreamReader reader = new StreamReader(menuStream, Encoding.UTF8);
-            var menuJson = reader.ReadToEnd();
+            //using var menuStream = manifestEmbeddedProvider.Assembly.GetManifestResourceStream(menuPath);
+            //using StreamReader reader = new StreamReader(menuStream, Encoding.UTF8);
+            //var menuJson = reader.ReadToEnd();
+
+            var menuPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\api",InitMenuName);
+            var menuJson = File.ReadAllText(menuPath);
             return menuJson;
         }
         #endregion

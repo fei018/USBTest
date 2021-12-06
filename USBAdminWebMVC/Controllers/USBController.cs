@@ -74,7 +74,7 @@ namespace USBAdminWebMVC.Controllers
         {
             try
             {
-                var (totalCount, list) = await _usbDb.Get_UsbHistoryDetailList(page,limit);
+                var (totalCount, list) = await _usbDb.Get_UsbHistoryVMList(page,limit);
                 return Json(JsonResultHelp.LayuiTableData(totalCount,list));
             }
             catch (Exception ex)

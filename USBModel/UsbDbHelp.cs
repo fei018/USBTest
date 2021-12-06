@@ -225,15 +225,16 @@ namespace USBModel
         }
         #endregion
 
-        #region + public async Task<(int totalCount, List<UsbHistoryDetail> list)> Get_UsbHistoryDetailList(int pageIndex, int pageSize)
-        public async Task<(int totalCount, List<UserUsbHistoryDetail> list)> Get_UsbHistoryDetailList(int pageIndex, int pageSize)
+        #region + public async Task<(int totalCount, List<UsbHistoryDetail> list)> Get_UsbHistoryVMList(int pageIndex, int pageSize)
+        public async Task<(int totalCount, List<PerUsbHistoryVM> list)> Get_UsbHistoryVMList(int pageIndex, int pageSize)
         {
             try
             {
                 var total = new RefAsync<int>();
 
-                var query = await _db.Queryable<Tbl_PerUsbHistory, Tbl_PerComputer>((h, c) => h.ComputerIdentity == c.ComputerIdentity)
-                                        .OrderBy(h => h.PluginTime)
+                var query = await _db.Queryable<Tbl_PerUsbHistory>()
+                                        .LeftJoin<Tbl_PerComputer>((h,c)=>h.ComputerIdentity == c.ComputerIdentity)
+                                        .OrderBy(h => h.PluginTime, OrderByType.Desc)
                                         .Select((h, c) => new { his = h, com = c })
                                         .ToPageListAsync(pageIndex, pageSize, total);
 
@@ -247,10 +248,10 @@ namespace USBModel
                 //                    .Take(pageSize)
                 //                    .ToList();
 
-                var usbList = new List<UserUsbHistoryDetail>();
+                var usbList = new List<PerUsbHistoryVM>();
                 foreach (var q in query)
                 {
-                    usbList.Add(new UserUsbHistoryDetail(q.com));
+                    usbList.Add(new PerUsbHistoryVM(q.his,q.com));
                 }
                 return (total.Value, usbList);
             }
@@ -270,7 +271,7 @@ namespace USBModel
 
                 var query = await _db.Queryable<Tbl_PerUsbHistory>()
                                         .Where(h => h.ComputerIdentity == computerIdentity)
-                                        .OrderBy(h => h.PluginTime)
+                                        .OrderBy(h => h.PluginTime, OrderByType.Desc)
                                         .ToPageListAsync(pageIndex, pageSize, total);
 
                 if (query == null || query.Count <= 0)

@@ -11,6 +11,7 @@
 *.sln.docstates
 .svn
 publish/
+USBNotifyWebMVC/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

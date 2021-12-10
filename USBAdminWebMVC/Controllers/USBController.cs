@@ -2,13 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using USBModel;
-using LoginUserManager;
 
 namespace USBAdminWebMVC.Controllers
 {
@@ -34,7 +29,7 @@ namespace USBAdminWebMVC.Controllers
         {
             try
             {
-                var query = await _usbDb.Get_UsbRegisteredList(page,limit);
+                var query = await _usbDb.Get_UsbRegisteredList(page, limit);
                 return Json(JsonResultHelp.Ok(query));
             }
             catch (Exception ex)
@@ -74,16 +69,14 @@ namespace USBAdminWebMVC.Controllers
         {
             try
             {
-                var (totalCount, list) = await _usbDb.Get_UsbHistoryVMList(page,limit);
-                return Json(JsonResultHelp.LayuiTableData(totalCount,list));
+                var (totalCount, list) = await _usbDb.Get_UsbHistoryVMList(page, limit);
+                return Json(JsonResultHelp.LayuiTableData(totalCount, list));
             }
             catch (Exception ex)
             {
                 return Json(JsonResultHelp.LayuiTableData(ex.Message));
             }
         }
-        #endregion
-
-        
+        #endregion       
     }
 }

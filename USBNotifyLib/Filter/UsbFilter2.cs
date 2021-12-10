@@ -22,6 +22,8 @@ namespace USBNotifyLib
         {
             try
             {
+                var usb = new NotifyUsb();
+
                 var scope = new ManagementScope(@"\\.\ROOT\Microsoft\Windows\Storage");
                 var query = new ObjectQuery($"SELECT * FROM MSFT_Partition WHERE DriveLetter='{driveLetter}'");
                 //var query = new ObjectQuery($"SELECT * FROM MSFT_Partition");
@@ -33,11 +35,14 @@ namespace USBNotifyLib
                         {
                             var number = Convert.ToUInt32(p["DiskNumber"]);
                             var diskId = Convert.ToString(p["DiskId"]);
-                            return new NotifyUsb { DiskPath = diskId, DiskNumber = number };
+
+                            usb.DiskPath = diskId;
+                            usb.DiskNumber = number;
+                            usb.DriveLetter = driveLetter.ToString() + ":";
                         }
                     }
                 }
-                return null;
+                return usb;
             }
             catch (Exception)
             {
@@ -104,7 +109,7 @@ namespace USBNotifyLib
                                 var result = disk.InvokeMethod("SetAttributes", inParams, null)["ReturnValue"].ToString();
                                 if (!string.IsNullOrWhiteSpace(result))
                                 {
-                                    UsbLogger.Log("DiskNumber: "+ diskNumber + "\r\n" + "Set readOnly result: \r\n");
+                                    UsbLogger.Log("DiskNumber: " + diskNumber + "\r\n" + "Set readOnly result: \r\n");
                                 }
                             }
                         }
@@ -149,7 +154,7 @@ namespace USBNotifyLib
             catch (Exception)
             {
                 throw;
-            }     
+            }
         }
 
         private string Set_Disk_IsReadOnly_WMI(ManagementObject disk, bool isReadOnly)

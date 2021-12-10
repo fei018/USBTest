@@ -13,29 +13,53 @@ namespace USBNotifyAgent
             InitializeComponent();
 
             AgentManager.Startup();
+
+            _agentPipe.Start();
         }
 
+        private AgentPipe _agentPipe = new AgentPipe();
+
+        // form
+        #region USBNofityForm_FormClosed(object sender, FormClosedEventArgs e)
+        private void USBNofityForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            base.Stop();
+        }
+        #endregion
+
+        #region USBNofityForm_Shown(object sender, EventArgs e)
+        private void USBNofityForm_Shown(object sender, EventArgs e)
+        {
+            // this.Hide();
+        }
+        #endregion
+
+        //
+
         #region OnUsbInterface(UsbEventDeviceInterfaceArgs args)
-        /// <summary>
-        /// Post Usb plugin history to server
-        /// </summary>
-        /// <param name="args"></param>
         public override void OnUsbInterface(UsbEventDeviceInterfaceArgs args)
         {
             try
             {
                 if (AgentManager.IsUsbHistoryEnable)
                 {
-                    if (args.Action == UsbDeviceChangeEvent.Arrival)
+                    if (args.Action != UsbDeviceChangeEvent.Arrival)
                     {
-                        if (args.DeviceInterface == UsbMonitor.UsbDeviceInterface.Disk)
-                        {
-                            Task.Run(() =>
-                            {
-                                new UsbHttpHelp().PostPerUsbHistory_byDisk_Http(args.Name);
-                            });
-                        }
+                        return;
                     }
+                    if (args.DeviceInterface != UsbMonitor.UsbDeviceInterface.Disk)
+                    {
+                        return;
+                    }
+                    Task.Run(() =>
+                    {
+                        // push usbmessage to agent tray pipe
+                        var usb = new UsbFilter().Find_NotifyUsb_Use_DiskPath(args.Name);
+                        _agentPipe.PushUsbMessage(usb);
+
+                        // post usb history to server
+                        //new UsbHttpHelp().PostPerUsbHistory_byDisk_Http(args.Name);
+                    });
                 }
             }
             catch (Exception)
@@ -74,22 +98,5 @@ namespace USBNotifyAgent
             }
         }
         #endregion
-
-
-        // form
-        #region USBNofityForm_FormClosed(object sender, FormClosedEventArgs e)
-        private void USBNofityForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            base.Stop();
-        }
-        #endregion
-
-        #region USBNofityForm_Shown(object sender, EventArgs e)
-        private void USBNofityForm_Shown(object sender, EventArgs e)
-        {
-            // this.Hide();
-        }
-        #endregion
-
     }
 }

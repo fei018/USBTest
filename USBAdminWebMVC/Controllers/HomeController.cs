@@ -22,7 +22,6 @@ namespace USBAdminWebMVC.Controllers
             return View();
         }
 
-        [AllowAnonymous]
         public IActionResult InitMenu()
         {
             var json = USBAdminHelp.GetInitMenuJson();

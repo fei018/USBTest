@@ -11,7 +11,7 @@ namespace USBNotifyLib
             _usbBus = new UsbBusController();
         }
 
-        // Filter
+        // Filter usb
 
         #region + public void Filter_NotifyUsb_Use_DriveLetter(char driveLetter)
         public void Filter_NotifyUsb_Use_DriveLetter(char driveLetter)
@@ -97,7 +97,7 @@ namespace USBNotifyLib
         }
         #endregion
 
-        //Find
+        //Find usb
 
         #region + public NotifyUSB Find_NotifyUsb_Use_DriveLetter(char driveLetter)
         public NotifyUsb Find_NotifyUsb_Use_DriveLetter(char driveLetter)

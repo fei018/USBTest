@@ -40,6 +40,5 @@
             UsbTimer.RunTask();
         }
         #endregion
-
     }
 }

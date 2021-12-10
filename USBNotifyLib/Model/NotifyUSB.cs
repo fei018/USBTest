@@ -3,6 +3,7 @@ using USBCommon;
 
 namespace USBNotifyLib
 {
+    [Serializable]
     public class NotifyUsb : IUsbInfo
     {
         public int Vid { get; set; }
@@ -31,6 +32,8 @@ namespace USBNotifyLib
 
         public uint DiskNumber { get; set; }
 
+        public string DriveLetter { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
@@ -39,7 +42,7 @@ namespace USBNotifyLib
 
         public override string ToString()
         {
-            string s = "*** USB Details ***" + Environment.NewLine +
+            string s = "USB Details :" + Environment.NewLine +
                        Vid_Hex + " - " + Vid + Environment.NewLine +
                        Pid_Hex + " - " + Pid + Environment.NewLine +
                        "SerialNumber: " + SerialNumber + Environment.NewLine +

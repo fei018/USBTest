@@ -52,7 +52,6 @@ namespace USBNotifyLib
         {
             try
             {
-                Debugger.Break();
                 using (var http = new HttpClient())
                 {
                     http.Timeout = TimeSpan.FromSeconds(10);

@@ -22,10 +22,10 @@
         </Grid>
 
         <Grid Grid.Row="1">
-            <Border BorderBrush="LightBlue" BorderThickness="1,0">
+            <GroupBox Header="Usb Detail" FontSize="16">
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
-                       Name="txtUsbDetail" FontSize="16"/>
-            </Border>
+                       Name="TxtUsbDetail" FontSize="16"/>
+            </GroupBox>
         </Grid>
 
         <Grid Grid.Row="2">

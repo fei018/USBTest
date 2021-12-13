@@ -67,6 +67,12 @@ namespace USBNotifyLib
             set=> SetUsbRegistryKey(nameof(PostPerUsbHistoryUrl), value, RegistryValueKind.String);
         }
 
+        public static string PostRegisterUsbUrl
+        {
+            get => ReadUsbRegistryKey(nameof(PostRegisterUsbUrl));
+            set => SetUsbRegistryKey(nameof(PostRegisterUsbUrl), value, RegistryValueKind.String);
+        }
+
 
         #region + private string ReadUsbRegistryKey(string name)
         private static string ReadUsbRegistryKey(string name)

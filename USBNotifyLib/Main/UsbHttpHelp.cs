@@ -157,6 +157,49 @@ namespace USBNotifyLib
         }
         #endregion
 
+        #region + public void PostRegisterUsb(NotifyUsb usb)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="usb"></param>
+        /// <exception cref="throw"></exception>
+        public void PostRegisterUsb(PostRegisterUsb post)
+        {
+            try
+            {
+                if (post == null)
+                {
+                    throw new Exception("NotifyUsb null reference.");
+                }
+
+                var usbJson = JsonConvert.SerializeObject(post);
+                using (var http = new HttpClient())
+                {
+                    http.Timeout = TimeSpan.FromSeconds(10);
+                    StringContent content = new StringContent(usbJson, Encoding.UTF8, MimeTypeMap.GetMimeType("json"));
+
+                    var response = http.PostAsync(UsbRegistry.PostRegisterUsbUrl, content).Result;
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var json = response.Content.ReadAsStringAsync().Result;
+
+                        var result = JsonConvert.DeserializeObject<AgentHttpResponseResult>(json);
+
+                        if (result.Code == 400)
+                        {
+                            throw new Exception(result.Msg);
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
 
         #region + public void PostUserUsbHistory_byVolume_Http(char driveLetter)
         //public void PostUserUsbHistory_byVolume_Http(char driveLetter)

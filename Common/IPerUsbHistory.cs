@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace USBCommon
 {
-    public interface IPerUsbHistory:IUsbInfo
-    {     
+    public interface IPerUsbHistory : IUsbInfo
+    {
 
         string ComputerIdentity { get; set; }
 

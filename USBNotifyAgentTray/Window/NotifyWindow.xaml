@@ -9,8 +9,8 @@
         Loaded="Window_Loaded" Icon="USB.ico">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.7*"/>
             <RowDefinition Height="1*"/>
+            <RowDefinition Height="2*"/>
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
@@ -22,18 +22,24 @@
         </Grid>
 
         <Grid Grid.Row="1">
-            <GroupBox Header="Usb Detail" FontSize="16">
-                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
-                       Name="TxtUsbDetail" FontSize="16"/>
+            <GroupBox Header="Usb Detail" FontSize="16" Margin="2">
+                <Canvas>
+                    <TextBlock Text="Manufacturer :" Canvas.Top="22"/>
+                    <TextBlock Text="Product :" Canvas.Left="43" Canvas.Top="66"/>
+                    <TextBlock x:Name="TxtManufacturer" Text="M" Canvas.Left="124" Canvas.Top="22"/>
+                    <TextBlock x:Name="TxtProduct" Text="P" Canvas.Left="124" Canvas.Top="66"/>
+                </Canvas>
             </GroupBox>
         </Grid>
 
         <Grid Grid.Row="2">
-            <Button FontSize="16" Margin="20" Content="Send a Request Form"></Button>
+            <Button x:Name="BtnRegisterUSB" FontSize="16" Margin="20" Content="Register USB"
+                    Click="BtnRegisterUSB_Click"></Button>
         </Grid>
 
         <Grid Grid.Row="3">
-            <Button FontSize="16" Margin="20" Content="Cancel"></Button>
+            <Button x:Name="BtnCancel" FontSize="16" Margin="20" Content="Cancel"
+                    Click="BtnCancel_Click"></Button>
         </Grid>
     </Grid>
 </Window>

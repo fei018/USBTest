@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace USBCommon
+﻿namespace USBCommon
 {
     public interface IUsbInfo
     {
@@ -18,6 +16,8 @@ namespace USBCommon
 
         string Product { get; set; }
 
-        string DeviceDescription { get; set; }      
+        string DeviceDescription { get; set; }
+
+        string UsbIdentity { get; }
     }
 }

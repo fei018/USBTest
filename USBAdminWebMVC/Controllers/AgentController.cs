@@ -32,9 +32,9 @@ namespace USBAdminWebMVC.Controllers
                 string json = JsonConvert.SerializeObject(query);
                 return Content(json, "application/json");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return NotFound();
+                return StatusCode(400, ex.Message);
             }
         }
         #endregion
@@ -48,9 +48,9 @@ namespace USBAdminWebMVC.Controllers
                 string json = JsonConvert.SerializeObject(query);
                 return Content(json, "application/json");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return NotFound();
+                return StatusCode(400, ex.Message);
             }
         }
         #endregion
@@ -69,9 +69,9 @@ namespace USBAdminWebMVC.Controllers
 
                 return Ok();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return NotFound();
+                return StatusCode(400, ex.Message);
             }
         }
         #endregion
@@ -91,9 +91,31 @@ namespace USBAdminWebMVC.Controllers
 
                 return Ok();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return NotFound();
+                return StatusCode(400, ex.Message);
+            }
+        }
+        #endregion
+
+        #region RegisterUsb
+        [HttpPost]
+        public async Task<IActionResult> RegisterUsb()
+        {
+            try
+            {
+                StreamReader body = new StreamReader(_httpContext.Request.Body, Encoding.UTF8);
+                var post = await body.ReadToEndAsync();
+
+                var info = JsonHttpConvert.Deserialize_PostRegisterUsb(post);
+
+                await _usbDb.Register_Usb(info.UsbInfo);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return Json(JsonResultHelp.AgentHttpResponseResult(400,ex.Message));
             }
         }
         #endregion

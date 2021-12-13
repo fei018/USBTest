@@ -29,7 +29,33 @@ namespace USBNotifyAgentTray
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            txtUsbDetail.Text = NotifyUsb?.ToString();
+            TxtManufacturer.Text = "";
+            TxtProduct.Text = "";
+
+            TxtManufacturer.Text = NotifyUsb?.Manufacturer;
+            TxtProduct.Text = NotifyUsb?.Product;
+        }
+
+        private void BtnRegisterUSB_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var reqWin = new RegisterWindow();
+                reqWin.Owner = this;
+                reqWin.NotifyUsb = NotifyUsb;
+                if (reqWin.ShowDialog().Value)
+                {
+                    Close();
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void BtnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }

@@ -63,10 +63,6 @@
       <Project>{90fd865d-6202-4a76-b765-4d5414b4204d}</Project>
       <Name>USBCommon</Name>
     </ProjectReference>
-    <ProjectReference Include="..\USBNotifyAgentDesktop\USBNotifyAgentTray1.csproj">
-      <Project>{ba0a3d1f-b3b3-4665-964f-b1c7b129d2f0}</Project>
-      <Name>USBNotifyAgentTray1</Name>
-    </ProjectReference>
     <ProjectReference Include="..\USBNotifyAgent\USBNotifyAgent.csproj">
       <Project>{09f80c0b-bd6b-4f99-97ae-a02aed1e61ce}</Project>
       <Name>USBNotifyAgent</Name>

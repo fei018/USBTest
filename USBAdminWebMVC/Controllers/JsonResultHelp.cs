@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Text.Json;
+using USBCommon;
 
 namespace USBAdminWebMVC.Controllers
 {
@@ -32,6 +33,11 @@ namespace USBAdminWebMVC.Controllers
         public static object LayuiTableData(string error)
         {
             return new { code = 400, msg = error };
+        }
+
+        public static AgentHttpResponseResult AgentHttpResponseResult(int code, string msg)
+        {
+            return new AgentHttpResponseResult { Code = code, Msg = msg };
         }
     }
 }

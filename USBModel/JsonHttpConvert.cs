@@ -18,7 +18,7 @@ namespace USBModel
                     }
                 };
 
-                var info = JsonConvert.DeserializeObject(postJson, typeof(Tbl_PerUsbHistory), settings) as Tbl_PerUsbHistory;
+                var info = JsonConvert.DeserializeObject<Tbl_PerUsbHistory>(postJson, settings);
                 return info;
             }
             catch (Exception)
@@ -45,7 +45,7 @@ namespace USBModel
         #endregion
 
         #region + public static UserUsb Deserialize_UsbRegistered(string usbJson)
-        public static Tbl_UsbRegistered Deserialize_UsbRegistered(string usbJson)
+        public static Tbl_UsbRegistered Deserialize_IUsbInfo(string usbJson)
         {
             try
             {
@@ -60,5 +60,26 @@ namespace USBModel
         }
         #endregion
 
+        #region + public static PostRegisterUsb Deserialize_PostRegisterUsb(string postJson)
+        public static PostRegisterUsb Deserialize_PostRegisterUsb(string postJson)
+        {
+            try
+            {
+                var settings = new JsonSerializerSettings
+                {
+                    Converters = {
+                        new AbstractJsonConverter<Tbl_UsbRegistered, IUsbInfo>()
+                    }
+                };
+
+                var post = JsonConvert.DeserializeObject<PostRegisterUsb>(postJson, settings);
+                return post;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
     }
 }

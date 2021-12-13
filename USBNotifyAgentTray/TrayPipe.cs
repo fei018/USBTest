@@ -32,10 +32,15 @@ namespace USBNotifyAgentTray
 
         private void _client_ServerMessage(NamedPipeConnection<NotifyUsb, NotifyUsb> connection, NotifyUsb usb)
         {
+            if (usb == null)
+            {
+                UsbLogger.Error("TrayPipe: NootifyUsb is Null from Pipe Message.");
+                return;
+            }
 
             App.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
-                Debugger.Break();
+                //Debugger.Break();
                 var notifyWin = new NotifyWindow();
                 notifyWin.NotifyUsb = usb;
                 notifyWin.Show();

@@ -1,11 +1,11 @@
-﻿<Window x:Class="USBNotifyAgentTray.RequestWindow"
+﻿<Window x:Class="USBNotifyAgentTray.RegisterWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:USBNotifyAgentTray"
         mc:Ignorable="d"
-        Title="Send USB Register Request to IT" Height="300" Width="500" WindowStyle="ToolWindow">
+        Title="Send USB Register Request to IT" Height="300" Width="500" WindowStyle="ToolWindow" WindowStartupLocation="CenterOwner">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="4*"/>
@@ -16,9 +16,10 @@
             <GroupBox Header="User Information" Margin="5" FontSize="18">
                 <Canvas>
                     <TextBlock Text="User Id :" Canvas.Left="39" Canvas.Top="40"/>
-                    <TextBlock Text="User Email :" Canvas.Left="10" Canvas.Top="110"/>
-                    <TextBox x:Name="TxtUserId" ToolTip="Intranet User Id" Width="300" Height="35" Canvas.Left="125" Canvas.Top="28"/>
-                    <TextBox x:Name="TxtUserEmail" ToolTip="Intranet Email Address" Width="300" Height="35" Canvas.Left="125" Canvas.Top="98"/>
+                    <TextBlock Text="User Email :" Canvas.Left="10" Canvas.Top="100"/>
+                    <TextBox x:Name="TxtUserId" Width="300" Height="30" Canvas.Left="125" Canvas.Top="33"/>
+                    <TextBox x:Name="TxtUserEmail" Width="300" Height="30" Canvas.Left="125" Canvas.Top="93"/>
+                    <TextBlock x:Name="TxtError" Text="error" Canvas.Left="125" Canvas.Top="143" Foreground="Red" FontSize="14"/>
                 </Canvas>
             </GroupBox>
         </Grid>
@@ -29,8 +30,8 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             
-            <Button Grid.Column="0" Margin="50 10" x:Name="BtnSend" Content="Send"></Button>
-            <Button Grid.Column="1" Margin="50 10" x:Name="BtnCancel" Content="Cancel"></Button>
+            <Button Click="BtnSend_Click" Grid.Column="0" Margin="50 10" x:Name="BtnSend" Content="Send"></Button>
+            <Button Click="BtnCancel_Click" Grid.Column="1" Margin="50 10" x:Name="BtnCancel" Content="Cancel"></Button>
         </Grid>
     </Grid>
 </Window>

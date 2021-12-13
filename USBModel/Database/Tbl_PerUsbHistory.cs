@@ -38,5 +38,8 @@ namespace USBModel
 
         [SugarColumn(IsIgnore = true)]
         public string PluginTimeString => PluginTime.ToString("yyyy-MM-dd HH:mm:ss");
+
+        [SugarColumn(IsIgnore = true)]
+        public string UsbIdentity => (Vid.ToString() + Pid.ToString() + SerialNumber).ToLower();
     }
 }

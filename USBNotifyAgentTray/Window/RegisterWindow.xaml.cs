@@ -24,16 +24,13 @@ namespace USBNotifyAgentTray
         public RegisterWindow()
         {
             InitializeComponent();
-            TxtError.Text = "";
         }
 
-        public NotifyUsb NotifyUsb {get;set;}
-
         private void BtnSend_Click(object sender, RoutedEventArgs e)
-        {           
-            if (string.IsNullOrWhiteSpace(TxtUserEmail.Text) || string.IsNullOrWhiteSpace(TxtUserId.Text))
+        {
+            if (string.IsNullOrWhiteSpace(TxtUserEmail.Text))
             {
-                TxtError.Text = " User Id and Email is Required";
+                TxtError.Text = "Email is Required";
                 return;
             }
 
@@ -42,13 +39,13 @@ namespace USBNotifyAgentTray
                 // http register usb
                 var post = new PostRegisterUsb
                 {
-                    UsbInfo = NotifyUsb,
+                    UsbInfo = TrayPipe.MessageNotifyUsb,
                     UserEmail = TxtUserEmail.Text,
-                    UserId = TxtUserId.Text
                 };
 
                 new UsbHttpHelp().PostRegisterUsb(post);
 
+                MessageBox.Show("Send succed.");
                 DialogResult = true;
             }
             catch (Exception ex)

@@ -176,10 +176,12 @@ namespace USBNotifyLib
                 using (var http = new HttpClient())
                 {
                     http.Timeout = TimeSpan.FromSeconds(10);
+                    http.DefaultRequestHeaders.Add("AgentCheckKey", "asdasdasd21312321");
                     StringContent content = new StringContent(usbJson, Encoding.UTF8, MimeTypeMap.GetMimeType("json"));
 
                     var response = http.PostAsync(UsbRegistry.PostRegisterUsbUrl, content).Result;
 
+                    Debugger.Break();
                     if (response.IsSuccessStatusCode)
                     {
                         var json = response.Content.ReadAsStringAsync().Result;

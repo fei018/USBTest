@@ -35,7 +35,7 @@ namespace USBAdminWebMVC.Controllers
             return new { code = 400, msg = error };
         }
 
-        public static AgentHttpResponseResult AgentHttpResponseResult(int code, string msg)
+        public static AgentHttpResponseResult AgentHttpResponseResult(int code, string msg=null)
         {
             return new AgentHttpResponseResult { Code = code, Msg = msg };
         }

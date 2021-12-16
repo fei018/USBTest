@@ -25,15 +25,13 @@ namespace USBNotifyAgentTray
             InitializeComponent();
         }
 
-        public NotifyUsb NotifyUsb { get; set; }
-
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            TxtManufacturer.Text = "";
+            TxtBrand.Text = "";
             TxtProduct.Text = "";
 
-            TxtManufacturer.Text = NotifyUsb?.Manufacturer;
-            TxtProduct.Text = NotifyUsb?.Product;
+            TxtBrand.Text = TrayPipe.MessageNotifyUsb?.Manufacturer;
+            TxtProduct.Text = TrayPipe.MessageNotifyUsb?.Product;
         }
 
         private void BtnRegisterUSB_Click(object sender, RoutedEventArgs e)
@@ -42,7 +40,7 @@ namespace USBNotifyAgentTray
             {
                 var reqWin = new RegisterWindow();
                 reqWin.Owner = this;
-                reqWin.NotifyUsb = NotifyUsb;
+
                 if (reqWin.ShowDialog().Value)
                 {
                     Close();

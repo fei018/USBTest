@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Text;
+using System.Diagnostics;
 
 namespace USBAdminWebMVC.Controllers
 {
@@ -100,18 +101,22 @@ namespace USBAdminWebMVC.Controllers
 
         #region RegisterUsb
         [HttpPost]
+        [AgentCheckFilter]
         public async Task<IActionResult> RegisterUsb()
         {
             try
             {
+                //Debugger.Break();
+
                 StreamReader body = new StreamReader(_httpContext.Request.Body, Encoding.UTF8);
                 var post = await body.ReadToEndAsync();
 
-                var info = JsonHttpConvert.Deserialize_PostRegisterUsb(post);
+                PostRegisterUsb info = JsonHttpConvert.Deserialize_PostRegisterUsb(post);
+                var usbRistered = info.UsbInfo as Tbl_UsbRegistered;
 
-                await _usbDb.Register_Usb(info.UsbInfo);
+                await _usbDb.Register_Usb(usbRistered);
 
-                return Ok();
+                return Json(JsonResultHelp.AgentHttpResponseResult(200));
             }
             catch (Exception ex)
             {

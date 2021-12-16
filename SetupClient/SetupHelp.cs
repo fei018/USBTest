@@ -66,7 +66,7 @@ namespace SetupClient
         #endregion
 
         #region + private void InitialKey()
-        private void InitialKey()
+        public void InitialKey()
         {
             try
             {

@@ -16,6 +16,8 @@ namespace USBNotifyAgentTray
 
         private NamedPipeClient<NotifyUsb> _client;
 
+        public static NotifyUsb MessageNotifyUsb { get; set; }
+
         public void Start()
         {
             _client?.Stop();
@@ -38,11 +40,12 @@ namespace USBNotifyAgentTray
                 return;
             }
 
+            MessageNotifyUsb = usb;
             App.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
                 //Debugger.Break();
                 var notifyWin = new NotifyWindow();
-                notifyWin.NotifyUsb = usb;
+
                 notifyWin.Show();
             }));
         }

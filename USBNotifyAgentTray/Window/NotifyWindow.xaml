@@ -5,12 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:USBNotifyAgentTray"
         mc:Ignorable="d"
-        Title="USB Notification" Height="400" Width="350" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" 
+        Title="USB Warning" Height="300" Width="300" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" 
         Loaded="Window_Loaded" Icon="USB.ico">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
-            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1.5*"/>
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
@@ -18,27 +18,25 @@
         <Grid Grid.Row="0">
             <TextBlock  Text="USB Device Not Registered"
                         VerticalAlignment="Center" HorizontalAlignment="Center"
-                        FontSize="18" />
+                        FontSize="14" Foreground="Red"/>
         </Grid>
 
         <Grid Grid.Row="1">
-            <GroupBox Header="Usb Detail" FontSize="16" Margin="2">
-                <Canvas>
-                    <TextBlock Text="Manufacturer :" Canvas.Top="22"/>
-                    <TextBlock Text="Product :" Canvas.Left="43" Canvas.Top="66"/>
-                    <TextBlock x:Name="TxtManufacturer" Text="M" Canvas.Left="124" Canvas.Top="22"/>
-                    <TextBlock x:Name="TxtProduct" Text="P" Canvas.Left="124" Canvas.Top="66"/>
-                </Canvas>
-            </GroupBox>
+            <Canvas>
+                <TextBlock Text="USB Brand :" Canvas.Top="10" Canvas.Left="31"/>
+                <TextBlock Text="USB Product :" Canvas.Left="31" Canvas.Top="45"/>
+                <TextBlock x:Name="TxtBrand" Text="M" Canvas.Left="128" Canvas.Top="10"/>
+                <TextBlock x:Name="TxtProduct" Text="P" Canvas.Left="128" Canvas.Top="45"/>
+            </Canvas>
         </Grid>
 
         <Grid Grid.Row="2">
-            <Button x:Name="BtnRegisterUSB" FontSize="16" Margin="20" Content="Register USB"
+            <Button x:Name="BtnRegisterUSB" FontSize="14" Margin="15" Content="Register USB"
                     Click="BtnRegisterUSB_Click"></Button>
         </Grid>
 
         <Grid Grid.Row="3">
-            <Button x:Name="BtnCancel" FontSize="16" Margin="20" Content="Cancel"
+            <Button x:Name="BtnCancel" FontSize="14" Margin="15" Content="Cancel"
                     Click="BtnCancel_Click"></Button>
         </Grid>
     </Grid>

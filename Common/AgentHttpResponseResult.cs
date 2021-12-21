@@ -8,8 +8,14 @@ namespace USBCommon
 {
     public class AgentHttpResponseResult
     {
-        public int Code { get; set; }
+        public bool Succeed { get; set; }
 
         public string Msg { get; set; }
+
+        public AgentHttpResponseResult(bool succeed=true, string msg = null)
+        {
+            Succeed = succeed;
+            Msg = msg;
+        }
     }
 }

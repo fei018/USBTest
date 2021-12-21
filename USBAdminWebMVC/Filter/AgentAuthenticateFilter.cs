@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace USBAdminWebMVC
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public class AgentCheckFilter : Attribute, IAsyncActionFilter
+    public class AgentAuthenticateFilter : Attribute, IAsyncActionFilter
     {       
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {

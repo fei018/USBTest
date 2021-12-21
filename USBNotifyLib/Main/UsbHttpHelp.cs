@@ -182,17 +182,18 @@ namespace USBNotifyLib
                     var response = http.PostAsync(UsbRegistry.PostRegisterUsbUrl, content).Result;
 
                     Debugger.Break();
-                    if (response.IsSuccessStatusCode)
+
+                    response.EnsureSuccessStatusCode();
+
+                    var json = response.Content.ReadAsStringAsync().Result;
+
+                    var result = JsonConvert.DeserializeObject<AgentHttpResponseResult>(json);
+
+                    if (!result.Succeed)
                     {
-                        var json = response.Content.ReadAsStringAsync().Result;
-
-                        var result = JsonConvert.DeserializeObject<AgentHttpResponseResult>(json);
-
-                        if (result.Code == 400)
-                        {
-                            throw new Exception(result.Msg);
-                        }
+                        throw new Exception(result.Msg);
                     }
+
                 }
             }
             catch (Exception)

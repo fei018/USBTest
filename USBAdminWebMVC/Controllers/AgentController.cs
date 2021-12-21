@@ -13,6 +13,7 @@ using System.Diagnostics;
 
 namespace USBAdminWebMVC.Controllers
 {
+    [AgentAuthenticateFilter]
     public class AgentController : Controller
     {
         private readonly UsbDbHelp _usbDb;
@@ -100,8 +101,7 @@ namespace USBAdminWebMVC.Controllers
         #endregion
 
         #region RegisterUsb
-        [HttpPost]
-        [AgentCheckFilter]
+        [HttpPost]      
         public async Task<IActionResult> RegisterUsb()
         {
             try
@@ -116,11 +116,11 @@ namespace USBAdminWebMVC.Controllers
 
                 await _usbDb.Register_Usb(usbRistered);
 
-                return Json(JsonResultHelp.AgentHttpResponseResult(200));
+                return Json(new AgentHttpResponseResult());
             }
             catch (Exception ex)
             {
-                return Json(JsonResultHelp.AgentHttpResponseResult(400,ex.Message));
+                return Json(new AgentHttpResponseResult(false,ex.Message));
             }
         }
         #endregion

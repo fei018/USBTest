@@ -47,13 +47,15 @@
     <Compile Include="Filter\UsbBusController.cs" />
     <Compile Include="Filter\UsbFilter.cs" />
     <Compile Include="Filter\UsbFilter2.cs" />
-    <Compile Include="Filter\UsbFilterDbHelp.cs" />
+    <Compile Include="Filter\UsbFilterDataHelp.cs" />
     <Compile Include="Main\AgentUpdate.cs" />
     <Compile Include="Main\AgentManager.cs" />
     <Compile Include="Main\UsbTimer.cs" />
+    <Compile Include="Model\AbstractJsonConverter.cs" />
     <Compile Include="Model\AgentSetting.cs" />
     <Compile Include="Model\PerComputer.cs" />
-    <Compile Include="Model\NotifyUsb.cs" />
+    <Compile Include="Model\UsbBase.cs" />
+    <Compile Include="Model\UsbDisk.cs" />
     <Compile Include="Model\UsbRegistry.cs" />
     <Compile Include="Main\UsbLogger.cs" />
     <Compile Include="Model\PerUsbHistory.cs" />
@@ -80,9 +82,6 @@
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.1</Version>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

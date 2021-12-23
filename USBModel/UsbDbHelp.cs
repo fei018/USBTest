@@ -67,16 +67,10 @@ namespace USBModel
         // AgentSetting
 
         #region + public async Task<t_AgentSetting> Get_AgentSetting()
-        public async Task<IAgentSetting> Get_AgentSetting(string comIdentity)
+        public async Task<IAgentSetting> Get_AgentSetting()
         {
             try
             {
-                var computerExist = await _db.Queryable<Tbl_PerComputer>().AnyAsync(c => c.ComputerIdentity == comIdentity);
-                if (!computerExist)
-                {
-                    throw new Exception("Not exist computerIdentity: " + comIdentity);
-                }
-
                 var query = await _db.Queryable<Tbl_AgentSetting>().FirstAsync();
                 if (query == null)
                 {
@@ -94,40 +88,8 @@ namespace USBModel
 
         // UsbFilerDb
 
-        #region + public async Task<UsbFilterDbHttp> Get_UsbFilterDb(string comIdentity)
-        public async Task<UsbFilterDbHttp> Get_UsbFilterDb(string comIdentity)
-        {
-            try
-            {
-                var computerExist = await _db.Queryable<Tbl_PerComputer>().AnyAsync(c => c.ComputerIdentity == comIdentity);
-                if (!computerExist)
-                {
-                    throw new Exception("Not exist computerIdentity: " + comIdentity);
-                }
-
-                var setting = await _db.Queryable<Tbl_AgentSetting>().FirstAsync();
-                if (setting == null)
-                {
-                    throw new Exception("Nothing AgentSetting in database.");
-                }
-
-                var http = new UsbFilterDbHttp();
-                if (setting.UsbFilterEnabled)
-                {
-                    http.UsbFilterDb = await Get_UsbFilterDb();
-                }
-
-                return http;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-        #endregion
-
-        #region + private async Task<string> Get_UsbFilterDb()
-        private async Task<string> Get_UsbFilterDb()
+        #region + public async Task<string> Get_UsbFilterData()
+        public async Task<string> Get_UsbFilterData()
         {
             StringBuilder filterDb = new StringBuilder();
             var query = await _db.Queryable<Tbl_UsbRegistered>().ToListAsync();
@@ -172,11 +134,6 @@ namespace USBModel
             try
             {
                 var query = await _db.Queryable<Tbl_UsbRegistered>().CountAsync();
-
-                if (query <= 0)
-                {
-                    throw new Exception("Nothing UsbRegistered in database.");
-                }
 
                 return query;
             }

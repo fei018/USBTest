@@ -8,9 +8,9 @@ using USBCommon;
 
 namespace USBNotifyLib
 {
-    public class UsbFilterDbHelp
+    public class UsbFilterDataHelp
     {
-        private static string _UsbFilterDbFile => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "usbFilterDb.dat");
+        private static string _UsbFilterDataFile => Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"usbfilter.dat");
 
         private static HashSet<string> CacheDb { get; set; }
 
@@ -22,20 +22,20 @@ namespace USBNotifyLib
         {
             if (CacheDb == null || CacheDb.Count <= 0)
             {
-                Reload_UsbFilterDb();
+                Reload_UsbFilterData();
             }
         }
         #endregion
 
-        #region + public void Reload_UsbFilterDb()
-        public static void Reload_UsbFilterDb()
+        #region + public void Reload_UsbFilterData()
+        public static void Reload_UsbFilterData()
         {
             try
             {
-                var table = ReadFile_UsbFilterDb();
+                var table = ReadFile_UsbFilterData();
                 if (table == null || table.Length <= 0)
                 {
-                    throw new Exception(_UsbFilterDbFile + " file is null or empty. ?");
+                    throw new Exception(_UsbFilterDataFile + " file is null or empty. ?");
                 }
 
                 var cache = new HashSet<string>();
@@ -65,8 +65,8 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + public bool IsFind(NotifyUSB usb)
-        public static bool IsFind(NotifyUsb usb)
+        #region + public bool IsFind(UsbDisk usb)
+        public static bool IsFind(UsbDisk usb)
         {
             CheckCacheDb();
 
@@ -99,12 +99,12 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + public static void Set_UsbFilterDb_byHttp(UsbFilterDbHttp setting)
-        public static void Set_UsbFilterDb_byHttp(UsbFilterDbHttp setting)
+        #region + public static void Set_UsbFilterData_byHttp(UsbFilterDbHttp setting)
+        public static void Set_UsbFilterData_byHttp(string usbFilterData)
         {
             try
             {
-                WriteFile_UsbFilterDb(setting.UsbFilterDb);
+                WriteFile_UsbFilterData(usbFilterData);
             }
             catch (Exception ex)
             {
@@ -113,22 +113,22 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + private static string[] ReadFile_UsbFilterDb()
+        #region + private static string[] ReadFile_UsbFilterData()
         private static readonly object _locker_UsbFilterDb = new object();
-        private static string[] ReadFile_UsbFilterDb()
+        private static string[] ReadFile_UsbFilterData()
         {
             lock (_locker_UsbFilterDb)
             {
                 try
                 {
-                    if (!File.Exists(_UsbFilterDbFile))
+                    if (!File.Exists(_UsbFilterDataFile))
                     {
-                        new UsbHttpHelp().GetUsbFilterDb_Http();
+                        new UsbHttpHelp().GetUsbFilterData_Http();
                     }
 
-                    if (File.Exists(_UsbFilterDbFile))
+                    if (File.Exists(_UsbFilterDataFile))
                     {
-                        return File.ReadAllLines(_UsbFilterDbFile, Encoding.UTF8);
+                        return File.ReadAllLines(_UsbFilterDataFile, Encoding.UTF8);
                     }
                     return null;
                 }
@@ -141,12 +141,12 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + private static void WriteFile_UsbFilterDb(string txt)
-        private static void WriteFile_UsbFilterDb(string txt)
+        #region + private static void WriteFile_UsbFilterData(string txt)
+        private static void WriteFile_UsbFilterData(string txt)
         {
             lock (_locker_UsbFilterDb)
             {
-                File.WriteAllText(_UsbFilterDbFile, txt, Encoding.UTF8);
+                File.WriteAllText(_UsbFilterDataFile, txt, Encoding.UTF8);
             }
         }
         #endregion

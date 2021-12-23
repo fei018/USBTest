@@ -7,22 +7,29 @@ using USBNotifyLib;
 using NamedPipeWrapper;
 using System.Diagnostics;
 using System.Windows.Threading;
+using Newtonsoft.Json;
 
 namespace USBNotifyAgentTray
 {
     public class TrayPipe
     {
-        private const string PipeName = "USB-b50ae7e9-5f14-4874-a273-9e119e8791e1";
+        private static string PipeName = UsbRegistry.AgentKey;
 
-        private NamedPipeClient<NotifyUsb> _client;
+        private NamedPipeClient<string> _client;
 
-        public static NotifyUsb MessageNotifyUsb { get; set; }
+        public static UsbDisk MessageUsbDisk { get; set; }
 
         public void Start()
         {
+            if (string.IsNullOrWhiteSpace(PipeName))
+            {
+                UsbLogger.Error("PipeName is empty");
+                return;
+            }
+
             _client?.Stop();
 
-            _client = new NamedPipeClient<NotifyUsb>(PipeName);
+            _client = new NamedPipeClient<string>(PipeName);
             _client.AutoReconnect = true;
 
             _client.ServerMessage += _client_ServerMessage;
@@ -32,15 +39,19 @@ namespace USBNotifyAgentTray
 
         }
 
-        private void _client_ServerMessage(NamedPipeConnection<NotifyUsb, NotifyUsb> connection, NotifyUsb usb)
+        private void _client_ServerMessage(NamedPipeConnection<string, string> connection, string usbJson)
         {
-            if (usb == null)
+            Debugger.Break();
+
+            if (string.IsNullOrEmpty(usbJson))
             {
-                UsbLogger.Error("TrayPipe: NootifyUsb is Null from Pipe Message.");
+                UsbLogger.Error("TrayPipe: UsbDisk is Null from Pipe Message.");
                 return;
             }
 
-            MessageNotifyUsb = usb;
+            var usb = JsonConvert.DeserializeObject<UsbDisk>(usbJson);
+
+            MessageUsbDisk = usb;
             App.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
                 //Debugger.Break();

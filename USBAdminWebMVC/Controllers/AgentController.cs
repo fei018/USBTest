@@ -13,7 +13,7 @@ using System.Diagnostics;
 
 namespace USBAdminWebMVC.Controllers
 {
-    [AgentAuthenticateFilter]
+    [AgentKeyFilter]
     public class AgentController : Controller
     {
         private readonly UsbDbHelp _usbDb;
@@ -25,34 +25,37 @@ namespace USBAdminWebMVC.Controllers
             _httpContext = httpContextAccessor.HttpContext;
         }
 
-        #region UsbFilterDb(string computerIdentity)
-        public async Task<IActionResult> UsbFilterDb(string computerIdentity)
+        #region UsbFilterData(string computerIdentity)
+        public async Task<IActionResult> UsbFilterData(string computerIdentity)
         {
             try
             {
-                var query = await _usbDb.Get_UsbFilterDb(computerIdentity);
-                string json = JsonConvert.SerializeObject(query);
-                return Content(json, "application/json");
+                var query = await _usbDb.Get_UsbFilterData();
+
+                var agent = new AgentHttpResponseResult { Succeed = true, UsbFilterData = query };
+
+                return Json(agent);
             }
             catch (Exception ex)
             {
-                return StatusCode(400, ex.Message);
+                return Json(new AgentHttpResponseResult(false, ex.Message));
             }
         }
         #endregion
 
         #region AgentSetting()
-        public async Task<IActionResult> AgentSetting(string computerIdentity)
+        public async Task<IActionResult> AgentSetting()
         {
             try
             {
-                IAgentSetting query = await _usbDb.Get_AgentSetting(computerIdentity);
-                string json = JsonConvert.SerializeObject(query);
-                return Content(json, "application/json");
+                IAgentSetting query = await _usbDb.Get_AgentSetting();
+                var agent = new AgentHttpResponseResult { Succeed = true, AgentSetting = query };
+
+                return Json(agent);
             }
             catch (Exception ex)
             {
-                return StatusCode(400, ex.Message);
+                return Json(new AgentHttpResponseResult(false,ex.Message));
             }
         }
         #endregion
@@ -69,11 +72,11 @@ namespace USBAdminWebMVC.Controllers
                 var com = JsonHttpConvert.Deserialize_PerComputer(comjosn);
                 await _usbDb.Update_PerComputer(com);
 
-                return Ok();
+                return Json(new AgentHttpResponseResult());
             }
             catch (Exception ex)
             {
-                return StatusCode(400, ex.Message);
+                return Json(new AgentHttpResponseResult(false,ex.Message));
             }
         }
         #endregion
@@ -91,11 +94,11 @@ namespace USBAdminWebMVC.Controllers
 
                 await _usbDb.Insert_UsbHistory(info);
 
-                return Ok();
+                return Json(new AgentHttpResponseResult());
             }
             catch (Exception ex)
             {
-                return StatusCode(400, ex.Message);
+                return Json(new AgentHttpResponseResult(false, ex.Message));
             }
         }
         #endregion

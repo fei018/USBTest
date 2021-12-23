@@ -14,6 +14,8 @@ namespace USBAdminWebMVC
 
         public static string InitMenuName { get; set; }
 
+        public static string AgentKey { get; set; }
+
         #region GetInitMenuJson()
         public static string GetInitMenuJson()
         {

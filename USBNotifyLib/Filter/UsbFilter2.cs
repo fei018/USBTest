@@ -12,17 +12,17 @@ namespace USBNotifyLib
     public partial class UsbFilter
     {
 
-        #region + private NotifyUSB Get_NotityUsb_DiskPath_by_DriveLetter_WMI(char driveLetter)
+        #region + private UsbDisk Get_UsbDisk_DiskPath_by_DriveLetter_WMI(char driveLetter)
         /// <summary>
         /// NotifyUSB 可能為 Null
         /// </summary>
         /// <param name="driveLetter"></param>
         /// <returns>DiskPath, DiskNumber</returns>
-        private NotifyUsb Get_NotityUsb_DiskPath_by_DriveLetter_WMI(char driveLetter)
+        private UsbDisk Get_UsbDisk_DiskPath_by_DriveLetter_WMI(char driveLetter)
         {
             try
             {
-                var usb = new NotifyUsb();
+                var usb = new UsbDisk();
 
                 var scope = new ManagementScope(@"\\.\ROOT\Microsoft\Windows\Storage");
                 var query = new ObjectQuery($"SELECT * FROM MSFT_Partition WHERE DriveLetter='{driveLetter}'");
@@ -51,13 +51,13 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + private NotifyUsb Get_NotityUsb_DiskPath_by_DiskNumber_WMI(uint diskNumber)
+        #region + private UsbDisk Get_UsbDisk_DiskPath_by_DiskNumber_WMI(uint diskNumber)
         /// <summary>
         /// NotifyUSB 可能為 Null
         /// </summary>
         /// <param name="diskNumber"></param>
         /// <returns>DiskPath, DiskNumber</returns>
-        private NotifyUsb Get_NotityUsb_DiskPath_by_DiskNumber_WMI(uint diskNumber)
+        private UsbDisk Get_UsbDisk_DiskPath_by_DiskNumber_WMI(uint diskNumber)
         {
             try
             {
@@ -71,7 +71,7 @@ namespace USBNotifyLib
                         foreach (ManagementObject disk in disks)
                         {
                             var path = Convert.ToString(disk["Path"]);
-                            return new NotifyUsb { DiskPath = path, DiskNumber = diskNumber };
+                            return new UsbDisk { DiskPath = path, DiskNumber = diskNumber };
                         }
                     }
                 }
@@ -179,8 +179,8 @@ namespace USBNotifyLib
         #endregion
 
 
-        #region + private List<NotifyUSB> Get_All_NotifyUsb_DiskPath_List_by_BusType_USB_WMI()
-        private List<NotifyUsb> Get_All_NotifyUsb_DiskPath_List_by_BusType_USB_WMI()
+        #region + private List<UsbDisk> Get_All_UsbDisk_DiskPath_by_BusType_USB_WMI()
+        private List<UsbDisk> Get_All_UsbDisk_DiskPath_by_BusType_USB_WMI()
         {
             var scope = new ManagementScope(@"\\.\ROOT\Microsoft\Windows\Storage");
             var query = new ObjectQuery("SELECT * FROM MSFT_Disk where BusType=7"); // "BusType=7", 7=USB
@@ -188,11 +188,11 @@ namespace USBNotifyLib
             {
                 using (var disks = searcher.Get())
                 {
-                    var list = new List<NotifyUsb>();
+                    var list = new List<UsbDisk>();
 
                     foreach (ManagementObject disk in disks)
                     {
-                        var usb = new NotifyUsb { DiskPath = Convert.ToString((disk["Path"])) };
+                        var usb = new UsbDisk { DiskPath = Convert.ToString((disk["Path"])) };
                         list.Add(usb);
                     }
                     return list;
@@ -202,7 +202,7 @@ namespace USBNotifyLib
         #endregion
 
         #region + private void NotMatchSendMessage(NotifyUSB usb)
-        private void NotMatchSendMessage(NotifyUsb usb)
+        private void NotMatchSendMessage(UsbDisk usb)
         {
             string s = "No Register USB Device:\r\n\r\n" + usb.ToString();
             WTSSendMessageApi.ShowMessageBox(s, "USB Warning");
@@ -211,13 +211,13 @@ namespace USBNotifyLib
 
         #region SetupDi
 
-        #region + Find_UsbDeviceId_By_DiskPath_SetupDi(ref NotifyUSB notifyUsb)
+        #region + Find_UsbDeviceId_By_DiskPath_SetupDi(UsbDisk usbDisk)
         /// <summary>
         /// ref NotifyUSB notifyUsb 需要賦值 notifyUsb.DiskPath <br />
         /// 只匹配 DeviceId format: ^USB\xxxx 
         /// </summary>
         /// <param name="notifyPath"></param>
-        private bool Find_UsbDeviceId_By_DiskPath_SetupDi(NotifyUsb notifyUsb)
+        private bool Find_UsbDeviceId_By_DiskPath_SetupDi(UsbDisk usbDisk)
         {
             Guid interfaceGuid = USetupApi.GUID_DEVINTERFACE.GUID_DEVINTERFACE_DISK;
 
@@ -245,11 +245,11 @@ namespace USBNotifyLib
                         if (isDetail)
                         {
                             // match enum path and notify path
-                            if (devPath.ToLower() == notifyUsb.DiskPath.ToLower())
+                            if (devPath.ToLower() == usbDisk.DiskPath.ToLower())
                             {
-                                notifyUsb.DiskDeviceId = GetDiskDeviceId(devInfoData.devInst);
-                                notifyUsb.DeviceId = GetUsbDeviceIdByChildDiskInstance(devInfoData.devInst);
-                                if (string.IsNullOrEmpty(notifyUsb.DeviceId))
+                                usbDisk.DiskDeviceId = GetDiskDeviceId(devInfoData.devInst);
+                                usbDisk.UsbDeviceId = GetUsbDeviceIdByChildDiskInstance(devInfoData.devInst);
+                                if (string.IsNullOrEmpty(usbDisk.UsbDeviceId))
                                 {
                                     return false;
                                 }

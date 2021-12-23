@@ -15,6 +15,7 @@ namespace USBAdminWebMVC
         {
             USBAdminHelp.WebHttpUrlPrefix = configuration.GetSection("WebHttpUrlPrefix").Value;
             USBAdminHelp.InitMenuName = configuration.GetSection("InitMenuName").Value;
+            USBAdminHelp.AgentKey = configuration.GetSection("AgentKey").Value;
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
             {
@@ -22,7 +23,7 @@ namespace USBAdminWebMVC
                 options.LogoutPath = new PathString("/account/login");
                 options.AccessDeniedPath = new PathString("/AccessDenied.html");
                 
-                // cookie 路徑設為 "/" 路徑， 防止 IIS虛擬目錄站點 http 請求時 不帶 cookie 導致 response code 401 錯誤
+                // cookie 路徑設為 "/" 路徑, 防止 IIS虛擬目錄站點 http 請求時 不帶 cookie 導致 response code 401 錯誤
                 options.Cookie.Path = "/";
             });
 

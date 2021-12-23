@@ -29,11 +29,11 @@ namespace USBAdminWebMVC.Controllers
             try
             {
                 var (totalCount, list) = await _usbDb.Get_PerComputerList(page, limit);
-                return Json(JsonResultHelp.LayuiTableData(totalCount, list));
+                return JsonResultHelp.LayuiTableData(totalCount, list);
             }
             catch (Exception ex)
             {
-                return Json(JsonResultHelp.LayuiTableData(ex.Message));
+                return JsonResultHelp.LayuiTableData(ex.Message);
             }
         }
         #endregion
@@ -58,7 +58,7 @@ namespace USBAdminWebMVC.Controllers
             {
                 (int totalCount, List<Tbl_PerUsbHistory> list) = await _usbDb.Get_UsbHistoryListByComputerIdentity(comIdentity, page, limit);
 
-                return Json(JsonResultHelp.LayuiTableData(totalCount, list));
+                return JsonResultHelp.LayuiTableData(totalCount, list);
             }
             catch (Exception)
             {

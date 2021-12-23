@@ -45,7 +45,6 @@
     <Compile Include="AgentHttpResponseResult.cs" />
     <Compile Include="IAgentSetting.cs" />
     <Compile Include="PostRegisterUsb.cs" />
-    <Compile Include="UsbFilterDbHttp.cs" />
     <Compile Include="IPerComputer.cs" />
     <Compile Include="IPerUsbHistory.cs" />
     <Compile Include="MimeTypeMap.cs" />

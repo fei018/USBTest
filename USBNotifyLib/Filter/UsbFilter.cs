@@ -13,15 +13,15 @@ namespace USBNotifyLib
 
         // Filter usb
 
-        #region + public void Filter_NotifyUsb_Use_DriveLetter(char driveLetter)
-        public void Filter_NotifyUsb_Use_DriveLetter(char driveLetter)
+        #region + public void Filter_UsbDisk_Use_DriveLetter(char driveLetter)
+        public void Filter_UsbDisk_Use_DriveLetter(char driveLetter)
         {
             try
             {
-                var usb = Get_NotityUsb_DiskPath_by_DriveLetter_WMI(driveLetter);
+                var usb = Get_UsbDisk_DiskPath_by_DriveLetter_WMI(driveLetter);
                 if (usb != null)
                 {
-                    Filter_NotifyUsb_Use_DiskPath(usb);
+                    Filter_UsbDisk_Use_DiskPath(usb);
                 }
                 else
                 {
@@ -35,40 +35,40 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + public viod Filter_NotifyUsb_Use_DiskPath(NotifyUSB notifyUsb)
+        #region + public viod Filter_UsbDisk_Use_DiskPath(UsbDisk usb)
         /// <summary>
         /// 只需 notifyUsb.DiskPath 賦值
         /// </summary>
         /// <param name="notifyUsb"></param>
-        public void Filter_NotifyUsb_Use_DiskPath(NotifyUsb notifyUsb)
+        public void Filter_UsbDisk_Use_DiskPath(UsbDisk usb)
         {
             try
             {
-                if (!Find_UsbDeviceId_By_DiskPath_SetupDi(notifyUsb))
+                if (!Find_UsbDeviceId_By_DiskPath_SetupDi(usb))
                 {
-                    Rule_NotFound_UsbDeviceID_By_DiskPath_SetupDi(notifyUsb);
+                    Rule_NotFound_UsbDeviceID_By_DiskPath_SetupDi(usb);
                     return;
                 }
 
-                if (!_usbBus.Find_NotifyUSB_Detail_In_UsbBus(notifyUsb))
+                if (!_usbBus.Find_NotifyUSB_Detail_In_UsbBus(usb))
                 {
-                    Rule_NotFound_NotifyUsb_Detail_In_UsbBus(notifyUsb);
+                    Rule_NotFound_UsbDisk_Detail_In_UsbBus(usb);
                     return;
                 }
 
-                if (UsbFilterDbHelp.IsFind(notifyUsb))
+                if (UsbFilterDataHelp.IsFind(usb))
                 {
-                    Rule_Match_In_UsbFilterDb(notifyUsb);
+                    Rule_Match_In_UsbFilterData(usb);
                     return;
                 }
                 else
                 {
-                    Rule_NotMatch_In_UsbFilterDb(notifyUsb);
+                    Rule_NotMatch_In_UsbFilterData(usb);
                 }
             }
             catch (Exception ex)
             {
-                UsbLogger.Error(ex.Message + "\r\n" + notifyUsb.ToString());
+                UsbLogger.Error(ex.Message + "\r\n" + usb.ToString());
             }
         }
         #endregion
@@ -81,12 +81,12 @@ namespace USBNotifyLib
         {
             try
             {
-                var usbList = Get_All_NotifyUsb_DiskPath_List_by_BusType_USB_WMI();
+                var usbList = Get_All_UsbDisk_DiskPath_by_BusType_USB_WMI();
                 if (usbList.Count > 0)
                 {
                     foreach (var usb in usbList)
                     {
-                        Filter_NotifyUsb_Use_DiskPath(usb);
+                        Filter_UsbDisk_Use_DiskPath(usb);
                     }
                 }
             }
@@ -99,12 +99,12 @@ namespace USBNotifyLib
 
         //Find usb
 
-        #region + public NotifyUSB Find_NotifyUsb_Use_DriveLetter(char driveLetter)
-        public NotifyUsb Find_NotifyUsb_Use_DriveLetter(char driveLetter)
+        #region + public UsbDisk Find_UsbDisk_Use_DriveLetter(char driveLetter)
+        public UsbDisk Find_UsbDisk_Use_DriveLetter(char driveLetter)
         {
             try
             {
-                var usb = Get_NotityUsb_DiskPath_by_DriveLetter_WMI(driveLetter);
+                var usb = Get_UsbDisk_DiskPath_by_DriveLetter_WMI(driveLetter);
                 if (usb != null)
                 {
                     if (Find_UsbDeviceId_By_DiskPath_SetupDi(usb))
@@ -124,12 +124,12 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + public NotifyUsb Find_NotifyUsb_Use_DiskPath(string diskPath)
-        public NotifyUsb Find_NotifyUsb_Use_DiskPath(string diskPath)
+        #region + public UsbDisk Find_UsbDisk_Use_DiskPath(string diskPath)
+        public UsbDisk Find_UsbDisk_Use_DiskPath(string diskPath)
         {
             try
             {
-                var usb = new NotifyUsb { DiskPath = diskPath };
+                var usb = new UsbDisk { DiskPath = diskPath };
                 if (Find_UsbDeviceId_By_DiskPath_SetupDi(usb))
                 {
                     if (_usbBus.Find_NotifyUSB_Detail_In_UsbBus(usb))
@@ -148,30 +148,30 @@ namespace USBNotifyLib
 
         //* Filter Rule *//
 
-        #region + private void Rule_NotFound_UsbDeviceID_By_DiskPath_SetupDi(NotifyUSB usb)
+        #region + private void Rule_NotFound_UsbDeviceID_By_DiskPath_SetupDi(UsbDisk usb)
         /// <summary>
         /// 找不到 大多數係 非 USB device
         /// </summary>
         /// <param name="usb"></param>
-        private void Rule_NotFound_UsbDeviceID_By_DiskPath_SetupDi(NotifyUsb usb)
+        private void Rule_NotFound_UsbDeviceID_By_DiskPath_SetupDi(UsbDisk usb)
         {
             UsbLogger.Log("Not Find In SetupDi Usb DeviceId:\r\n" + usb.ToString());
         }
         #endregion
 
-        #region + private void Rule_NotFound_NotifyUsb_Detail_In_UsbBus(NotifyUsb notifyUsb)
+        #region + private void Rule_NotFound_UsbDisk_Detail_In_UsbBus(UsbDisk usb)
         /// <summary>
         /// should not happen
         /// </summary>
         /// <param name="notifyUsb"></param>
-        private void Rule_NotFound_NotifyUsb_Detail_In_UsbBus(NotifyUsb notifyUsb)
+        private void Rule_NotFound_UsbDisk_Detail_In_UsbBus(UsbDisk usb)
         {
             // should not happen
         }
         #endregion
 
-        #region + private void Rule_Match_In_UsbFilterDb(NotifyUsb usb)
-        private void Rule_Match_In_UsbFilterDb(NotifyUsb usb)
+        #region + private void Rule_Match_In_UsbFilterData(UsbDisk usb)
+        private void Rule_Match_In_UsbFilterData(UsbDisk usb)
         {
             try
             {
@@ -187,8 +187,8 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + private void Rule_NotMatch_In_UsbFilterDb(NotifyUsb usb)
-        private void Rule_NotMatch_In_UsbFilterDb(NotifyUsb usb)
+        #region + private void Rule_NotMatch_In_UsbFilterDb(UsbDisk usb)
+        private void Rule_NotMatch_In_UsbFilterData(UsbDisk usb)
         {
             try
             {

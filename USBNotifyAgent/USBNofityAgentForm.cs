@@ -41,7 +41,7 @@ namespace USBNotifyAgent
         {
             try
             {
-                if (AgentManager.IsUsbHistoryEnable)
+                if (UsbRegistry.UsbHistoryEnabled)
                 {
                     if (args.Action != UsbDeviceChangeEvent.Arrival)
                     {
@@ -54,7 +54,7 @@ namespace USBNotifyAgent
                     Task.Run(() =>
                     {
                         // push usbmessage to agent tray pipe
-                        var usb = new UsbFilter().Find_NotifyUsb_Use_DiskPath(args.Name);
+                        var usb = new UsbFilter().Find_UsbDisk_Use_DiskPath(args.Name);
                         _agentPipe.PushUsbMessage(usb);
 
                         // post usb history to server
@@ -74,7 +74,7 @@ namespace USBNotifyAgent
         {
             try
             {
-                if (AgentManager.IsUsbFilterEnable)
+                if (UsbRegistry.UsbFilterEnabled)
                 {
                     lock (_Locker_OnVolume)
                     {
@@ -86,7 +86,7 @@ namespace USBNotifyAgent
                             {
                                 Task.Run(() =>
                                 {
-                                    new UsbFilter().Filter_NotifyUsb_Use_DriveLetter(letter);
+                                    new UsbFilter().Filter_UsbDisk_Use_DriveLetter(letter);
                                 });
                             }
                         }

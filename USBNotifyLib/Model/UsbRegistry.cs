@@ -1,22 +1,25 @@
 ﻿using Microsoft.Win32;
 using System;
-using System.IO;
-using System.Text;
-using USBCommon;
 
 namespace USBNotifyLib
 {
-    internal class UsbRegistry
+    public class UsbRegistry
     {
         private const string _usbRegistryKey = "SOFTWARE\\Hiphing\\USBNotify";
-       
+
 
         // Registry
+
+        public static string AgentKey
+        {
+            get => ReadUsbRegistryKey(nameof(AgentKey));
+            set => SetUsbRegistryKey(nameof(AgentKey), value, RegistryValueKind.String);
+        }
 
         public static bool UsbFilterEnabled
         {
             get => Convert.ToBoolean(ReadUsbRegistryKey(nameof(UsbFilterEnabled)));
-            set => SetUsbRegistryKey(nameof(UsbFilterEnabled),value,RegistryValueKind.String);
+            set => SetUsbRegistryKey(nameof(UsbFilterEnabled), value, RegistryValueKind.String);
         }
 
         public static bool UsbHistoryEnabled
@@ -25,22 +28,22 @@ namespace USBNotifyLib
             set => SetUsbRegistryKey(nameof(UsbHistoryEnabled), value, RegistryValueKind.String);
         }
 
-        public static string UsbFilterDbUrl
+        public static string UsbFilterDataUrl
         {
-            get => ReadUsbRegistryKey(nameof(UsbFilterDbUrl));
-            set => SetUsbRegistryKey(nameof(UsbFilterDbUrl), value, RegistryValueKind.String);
+            get => ReadUsbRegistryKey(nameof(UsbFilterDataUrl));
+            set => SetUsbRegistryKey(nameof(UsbFilterDataUrl), value, RegistryValueKind.String);
         }
 
         public static string AgentSettingUrl
         {
             get => ReadUsbRegistryKey(nameof(AgentSettingUrl));
-            set=> SetUsbRegistryKey(nameof(AgentSettingUrl), value, RegistryValueKind.String);
+            set => SetUsbRegistryKey(nameof(AgentSettingUrl), value, RegistryValueKind.String);
         }
 
-        public static int AgentTimerMinute 
-        { 
-            get=> Convert.ToInt32(ReadUsbRegistryKey(nameof(AgentTimerMinute)));
-            set=> SetUsbRegistryKey(nameof(AgentTimerMinute), value, RegistryValueKind.String);
+        public static int AgentTimerMinute
+        {
+            get => Convert.ToInt32(ReadUsbRegistryKey(nameof(AgentTimerMinute)));
+            set => SetUsbRegistryKey(nameof(AgentTimerMinute), value, RegistryValueKind.String);
         }
 
         public static string AgentVersion
@@ -57,14 +60,14 @@ namespace USBNotifyLib
 
         public static string PostPerComputerUrl
         {
-            get=> ReadUsbRegistryKey(nameof(PostPerComputerUrl));
-            set=> SetUsbRegistryKey(nameof(PostPerComputerUrl), value, RegistryValueKind.String);
+            get => ReadUsbRegistryKey(nameof(PostPerComputerUrl));
+            set => SetUsbRegistryKey(nameof(PostPerComputerUrl), value, RegistryValueKind.String);
         }
 
         public static string PostPerUsbHistoryUrl
         {
-            get=> ReadUsbRegistryKey(nameof(PostPerUsbHistoryUrl));
-            set=> SetUsbRegistryKey(nameof(PostPerUsbHistoryUrl), value, RegistryValueKind.String);
+            get => ReadUsbRegistryKey(nameof(PostPerUsbHistoryUrl));
+            set => SetUsbRegistryKey(nameof(PostPerUsbHistoryUrl), value, RegistryValueKind.String);
         }
 
         public static string PostRegisterUsbUrl

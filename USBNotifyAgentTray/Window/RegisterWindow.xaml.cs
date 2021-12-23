@@ -39,13 +39,13 @@ namespace USBNotifyAgentTray
                 // http register usb
                 var post = new PostRegisterUsb
                 {
-                    UsbInfo = TrayPipe.MessageNotifyUsb,
+                    UsbInfo = TrayPipe.MessageUsbDisk,
                     UserEmail = TxtUserEmail.Text,
                 };
 
                 new UsbHttpHelp().PostRegisterUsb(post);
 
-                MessageBox.Show("Send succed.");
+                MessageBox.Show("Send succeed.");
                 DialogResult = true;
             }
             catch (Exception ex)

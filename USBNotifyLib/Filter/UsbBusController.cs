@@ -81,7 +81,7 @@ namespace USBNotifyLib
         /// </summary>
         /// <param name="notifyUsb"></param>
         /// <returns></returns>
-        public bool Find_NotifyUSB_Detail_In_UsbBus(NotifyUsb notifyUsb)
+        public bool Find_NotifyUSB_Detail_In_UsbBus(UsbDisk notifyUsb)
         {
             try
             {
@@ -92,12 +92,12 @@ namespace USBNotifyLib
 
                 foreach (Device d in _busUsbList)
                 {
-                    if (d.InstanceId.Equals(notifyUsb.DeviceId, StringComparison.OrdinalIgnoreCase))
+                    if (d.InstanceId.Equals(notifyUsb.UsbDeviceId, StringComparison.OrdinalIgnoreCase))
                     {
                         notifyUsb.Vid = d.DeviceDescriptor.idVendor;
                         notifyUsb.Pid = d.DeviceDescriptor.idProduct;
                         notifyUsb.SerialNumber = d.SerialNumber;
-                        notifyUsb.Path = d.DevicePath;
+                        notifyUsb.UsbDevicePath = d.DevicePath;
                         notifyUsb.Manufacturer = d.Manufacturer;
                         notifyUsb.Product = d.Product;
                         notifyUsb.DeviceDescription = d.DeviceDescription;

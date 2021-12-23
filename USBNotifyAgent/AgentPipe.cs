@@ -5,22 +5,29 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using USBNotifyLib;
+using Newtonsoft.Json;
 
 namespace USBNotifyAgent
 {
     public class AgentPipe
     {
-        private const string PipeName = "USB-b50ae7e9-5f14-4874-a273-9e119e8791e1";
+        private static string PipeName = UsbRegistry.AgentKey;
 
-        private NamedPipeServer<NotifyUsb> _server;
+        private NamedPipeServer<string> _server;
 
         public void Start()
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(PipeName))
+                {
+                    UsbLogger.Error("PipeName is empty");
+                    return;
+                }
+
                 _server?.Stop();
 
-                _server = new NamedPipeServer<NotifyUsb>(PipeName);
+                _server = new NamedPipeServer<string>(PipeName);
                 _server.Start();
             }
             catch (Exception)
@@ -39,7 +46,7 @@ namespace USBNotifyAgent
             }
         }
 
-        public void PushUsbMessage(NotifyUsb usb)
+        public void PushUsbMessage(UsbDisk usb)
         {
             try
             {
@@ -47,7 +54,8 @@ namespace USBNotifyAgent
 
                 if (usb != null)
                 {
-                    _server.PushMessage(usb);
+                    var usbJson = JsonConvert.SerializeObject(usb);
+                    _server.PushMessage(usbJson);
                 }
             }
             catch (Exception)

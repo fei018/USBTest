@@ -30,11 +30,11 @@ namespace USBAdminWebMVC.Controllers
             try
             {
                 var query = await _usbDb.Get_UsbRegisteredList(page, limit);
-                return Json(JsonResultHelp.Ok(query));
+                return JsonResultHelp.Ok(query);
             }
             catch (Exception ex)
             {
-                return Json(JsonResultHelp.Error(ex.Message));
+                return JsonResultHelp.Error(ex.Message);
             }
         }
         #endregion
@@ -50,11 +50,11 @@ namespace USBAdminWebMVC.Controllers
             try
             {
                 await _usbDb.Register_Usb(usb);
-                return Json(JsonResultHelp.Ok("Register Success."));
+                return JsonResultHelp.Ok("Register Success.");
             }
             catch (Exception ex)
             {
-                return Json(JsonResultHelp.Error(ex.Message));
+                return JsonResultHelp.Error(ex.Message);
             }
         }
         #endregion
@@ -70,11 +70,11 @@ namespace USBAdminWebMVC.Controllers
             try
             {
                 var (totalCount, list) = await _usbDb.Get_UsbHistoryVMList(page, limit);
-                return Json(JsonResultHelp.LayuiTableData(totalCount, list));
+                return JsonResultHelp.LayuiTableData(totalCount, list);
             }
             catch (Exception ex)
             {
-                return Json(JsonResultHelp.LayuiTableData(ex.Message));
+                return JsonResultHelp.LayuiTableData(ex.Message);
             }
         }
         #endregion       

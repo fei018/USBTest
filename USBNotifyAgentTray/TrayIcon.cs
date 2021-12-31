@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using USBNotifyLib;
 
 namespace USBNotifyAgentTray
 {
@@ -8,7 +10,7 @@ namespace USBNotifyAgentTray
         private NotifyIcon _trayIcon;
         private ContextMenu _contextMenu;
 
-        #region TrayIcon
+        #region + private void AddTrayIcon()
         private void AddTrayIcon()
         {
             RemoveTrayIcon();
@@ -26,12 +28,30 @@ namespace USBNotifyAgentTray
 
         private void AddTrayIconItem()
         {
-            var aboutItem = new MenuItem { Text = "About" };
-            aboutItem.Click += (s, e) => { };
+            var updateItem = new MenuItem { Text = "check update" };
+            updateItem.Click += UpdateItem_Click;
 
-            _contextMenu.MenuItems.Add(aboutItem);
+            _contextMenu.MenuItems.Add(updateItem);
         }
 
+        private void UpdateItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Task.Run(() =>
+                {
+                    _trayPipe.CheckAndUpdateAgent();
+                });
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        #endregion
+
+        #region + private void RemoveTrayIcon()
         private void RemoveTrayIcon()
         {
             if (_contextMenu != null)

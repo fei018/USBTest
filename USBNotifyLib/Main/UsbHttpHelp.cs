@@ -74,6 +74,9 @@ namespace USBNotifyLib
         #endregion
 
         #region + public void GetAgentSetting_Http()
+        /// <summary>
+        /// 獲取 agent setting 並且 check and update agent
+        /// </summary>
         public void GetAgentSetting_Http()
         {
             try
@@ -102,7 +105,8 @@ namespace USBNotifyLib
                     }
 
                     UsbRegistry.AgentTimerMinute = agentSetting.AgentTimerMinute;
-                    AgentUpdate.Check(agentSetting.AgentVersion);
+
+                    AgentUpdate.CheckAndUpdate(agentSetting.AgentVersion);
                 }
             }
             catch (Exception ex)

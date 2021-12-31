@@ -19,6 +19,12 @@ namespace USBNotifyAgentTray
 
         public static UsbDisk MessageUsbDisk { get; set; }
 
+        #region
+        public void Stop()
+        {
+            _client?.Stop();
+        }
+
         public void Start()
         {
             if (string.IsNullOrWhiteSpace(PipeName))
@@ -35,10 +41,10 @@ namespace USBNotifyAgentTray
             _client.ServerMessage += _client_ServerMessage;
 
             _client.Start();
-            _client.WaitForConnection();
-
         }
+        #endregion
 
+        #region + private void _client_ServerMessage(NamedPipeConnection<string, string> connection, string usbJson)
         private void _client_ServerMessage(NamedPipeConnection<string, string> connection, string usbJson)
         {
             Debugger.Break();
@@ -60,10 +66,14 @@ namespace USBNotifyAgentTray
                 notifyWin.Show();
             }));
         }
+        #endregion
 
-        public void Stop()
+        #region + public void CheckAndUpdateAgent()
+        public void CheckAndUpdateAgent()
         {
-            _client?.Stop();
+            _client?.PushMessage("UpdateAgent");
         }
+        #endregion
+
     }
 }

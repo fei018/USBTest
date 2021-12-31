@@ -15,6 +15,7 @@ namespace USBNotifyAgent
 
         private NamedPipeServer<string> _server;
 
+        #region 
         public void Start()
         {
             try
@@ -28,6 +29,9 @@ namespace USBNotifyAgent
                 _server?.Stop();
 
                 _server = new NamedPipeServer<string>(PipeName);
+
+                _server.ClientMessage += _server_ClientMessage;
+
                 _server.Start();
             }
             catch (Exception)
@@ -45,7 +49,23 @@ namespace USBNotifyAgent
             {
             }
         }
+        #endregion
 
+        #region + private void _server_ClientMessage(NamedPipeConnection<string, string> connection, string message)
+        private void _server_ClientMessage(NamedPipeConnection<string, string> connection, string message)
+        {
+            // check and update agent
+            if (message == "UpdateAgent")
+            {
+                Task.Run(() =>
+                {
+                    new UsbHttpHelp().GetAgentSetting_Http();
+                });
+            }
+        }
+        #endregion
+
+        #region + public void PushUsbMessage(UsbDisk usb)
         public void PushUsbMessage(UsbDisk usb)
         {
             try
@@ -58,11 +78,12 @@ namespace USBNotifyAgent
                     _server.PushMessage(usbJson);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                UsbLogger.Error(ex.Message);
             }
         }
+        #endregion
+
     }
 }

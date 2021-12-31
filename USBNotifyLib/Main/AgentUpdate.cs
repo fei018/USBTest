@@ -23,7 +23,7 @@ namespace USBNotifyLib
         private static string _updateExe = Path.Combine(_updateDir, "update.exe");
 
         #region + public static void Check(string getVersion)
-        public static void Check(string getVersion)
+        public static void CheckAndUpdate(string getVersion)
         {
             try
             {

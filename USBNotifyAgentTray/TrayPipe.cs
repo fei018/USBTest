@@ -8,12 +8,13 @@ using NamedPipeWrapper;
 using System.Diagnostics;
 using System.Windows.Threading;
 using Newtonsoft.Json;
+using System.Windows;
 
 namespace USBNotifyAgentTray
 {
     public class TrayPipe
     {
-        private static string PipeName = UsbRegistry.AgentKey;
+        private static string PipeName = AgentRegistry.AgentKey;
 
         private NamedPipeClient<string> _client;
 
@@ -70,8 +71,22 @@ namespace USBNotifyAgentTray
 
         #region + public void CheckAndUpdateAgent()
         public void CheckAndUpdateAgent()
-        {
-            _client?.PushMessage("UpdateAgent");
+        {           
+            try
+            {
+                if(new AgentUpdate().IsNeedToUpdate())
+                {
+                    _client?.PushMessage("UpdateAgent");
+                }
+                else
+                {
+                    MessageBox.Show("Agent is Newest version.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         #endregion
 

@@ -41,7 +41,7 @@ namespace USBNotifyAgent
         {
             try
             {
-                if (UsbRegistry.UsbHistoryEnabled)
+                if (AgentRegistry.UsbHistoryEnabled)
                 {
                     if (args.Action != UsbDeviceChangeEvent.Arrival)
                     {
@@ -74,7 +74,7 @@ namespace USBNotifyAgent
         {
             try
             {
-                if (UsbRegistry.UsbFilterEnabled)
+                if (AgentRegistry.UsbFilterEnabled)
                 {
                     lock (_Locker_OnVolume)
                     {

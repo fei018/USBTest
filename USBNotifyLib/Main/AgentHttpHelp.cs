@@ -10,20 +10,20 @@ using USBCommon;
 
 namespace USBNotifyLib
 {
-    public class UsbHttpHelp
+    public class AgentHttpHelp
     {
-        #region + private HttpClient CreateHttpClient()
-        private HttpClient CreateHttpClient()
+        #region + public static HttpClient CreateHttpClient()
+        public static HttpClient CreateHttpClient()
         {
             var http = new HttpClient();
             http.Timeout = TimeSpan.FromSeconds(10);
-            http.DefaultRequestHeaders.Add("AgentKey", UsbRegistry.AgentKey);
+            http.DefaultRequestHeaders.Add("AgentKey", AgentRegistry.AgentKey);
             return http;
         }
         #endregion
 
-        #region + private AgentHttpResponseResult DeserialAgentResult(string json)
-        private AgentHttpResponseResult DeserialAgentResult(string json)
+        #region + public static AgentHttpResponseResult DeserialAgentResult(string json)
+        public static AgentHttpResponseResult DeserialAgentResult(string json)
         {
             try
             {
@@ -53,7 +53,7 @@ namespace USBNotifyLib
                 {
                     http.Timeout = TimeSpan.FromSeconds(20);
                     
-                    var response = http.GetAsync(UsbRegistry.UsbFilterDataUrl).Result;
+                    var response = http.GetAsync(AgentRegistry.UsbFilterDataUrl).Result;
                     response.EnsureSuccessStatusCode();
 
                     string json = response.Content.ReadAsStringAsync().Result;
@@ -74,16 +74,13 @@ namespace USBNotifyLib
         #endregion
 
         #region + public void GetAgentSetting_Http()
-        /// <summary>
-        /// 獲取 agent setting 並且 check and update agent
-        /// </summary>
         public void GetAgentSetting_Http()
         {
             try
             {
                 using (var http = CreateHttpClient())
                 {
-                    var response = http.GetAsync(UsbRegistry.AgentSettingUrl).Result;
+                    var response = http.GetAsync(AgentRegistry.AgentSettingUrl).Result;
                     response.EnsureSuccessStatusCode();
 
                     var json = response.Content.ReadAsStringAsync().Result;
@@ -96,17 +93,9 @@ namespace USBNotifyLib
 
                     var agentSetting = agentResult.AgentSetting;
 
-                    UsbRegistry.UsbFilterEnabled = agentSetting.UsbFilterEnabled;
-                    UsbRegistry.UsbHistoryEnabled = agentSetting.UsbHistoryEnabled;
-
-                    if (agentSetting.UsbFilterEnabled)
-                    {
-                        GetUsbFilterData_Http();
-                    }
-
-                    UsbRegistry.AgentTimerMinute = agentSetting.AgentTimerMinute;
-
-                    AgentUpdate.CheckAndUpdate(agentSetting.AgentVersion);
+                    AgentRegistry.AgentTimerMinute = agentSetting.AgentTimerMinute;
+                    AgentRegistry.UsbFilterEnabled = agentSetting.UsbFilterEnabled;
+                    AgentRegistry.UsbHistoryEnabled = agentSetting.UsbHistoryEnabled;
                 }
             }
             catch (Exception ex)
@@ -128,7 +117,7 @@ namespace USBNotifyLib
                 {
                     StringContent content = new StringContent(comJson, Encoding.UTF8, MimeTypeMap.GetMimeType("json"));
 
-                    var response =  http.PostAsync(UsbRegistry.PostPerComputerUrl, content).Result;
+                    var response =  http.PostAsync(AgentRegistry.PostPerComputerUrl, content).Result;
 
                     response.EnsureSuccessStatusCode();
 
@@ -173,7 +162,7 @@ namespace USBNotifyLib
                 using (var http = CreateHttpClient())
                 {
                     StringContent content = new StringContent(usbHistoryJosn, Encoding.UTF8, "application/json");
-                    var response = http.PostAsync(UsbRegistry.PostPerUsbHistoryUrl, content).Result;
+                    var response = http.PostAsync(AgentRegistry.PostPerUsbHistoryUrl, content).Result;
                     response.EnsureSuccessStatusCode();
 
                     var json = response.Content.ReadAsStringAsync().Result;
@@ -211,7 +200,7 @@ namespace USBNotifyLib
                 {
                     StringContent content = new StringContent(usbJson, Encoding.UTF8, MimeTypeMap.GetMimeType("json"));
 
-                    var response = http.PostAsync(UsbRegistry.PostRegisterUsbUrl, content).Result;
+                    var response = http.PostAsync(AgentRegistry.PostRegisterUsbUrl, content).Result;
 
                     response.EnsureSuccessStatusCode();
 

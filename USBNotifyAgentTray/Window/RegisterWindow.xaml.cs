@@ -43,7 +43,7 @@ namespace USBNotifyAgentTray
                     UserEmail = TxtUserEmail.Text,
                 };
 
-                new UsbHttpHelp().PostRegisterUsb(post);
+                new AgentHttpHelp().PostRegisterUsb(post);
 
                 MessageBox.Show("Send succeed.");
                 DialogResult = true;

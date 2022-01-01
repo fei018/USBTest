@@ -123,7 +123,7 @@ namespace USBNotifyLib
                 {
                     if (!File.Exists(_UsbFilterDataFile))
                     {
-                        new UsbHttpHelp().GetUsbFilterData_Http();
+                        new AgentHttpHelp().GetUsbFilterData_Http();
                     }
 
                     if (File.Exists(_UsbFilterDataFile))

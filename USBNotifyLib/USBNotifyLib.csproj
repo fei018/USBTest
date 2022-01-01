@@ -56,10 +56,10 @@
     <Compile Include="Model\PerComputer.cs" />
     <Compile Include="Model\UsbBase.cs" />
     <Compile Include="Model\UsbDisk.cs" />
-    <Compile Include="Model\UsbRegistry.cs" />
+    <Compile Include="Model\AgentRegistry.cs" />
     <Compile Include="Main\UsbLogger.cs" />
     <Compile Include="Model\PerUsbHistory.cs" />
-    <Compile Include="Main\UsbHttpHelp.cs" />
+    <Compile Include="Main\AgentHttpHelp.cs" />
     <Compile Include="Model\PerComputerHelp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Win32API\ProcessApi.cs" />

@@ -6,10 +6,10 @@
         public static void Startup()
         {
             // 上載 本機資訊
-            new UsbHttpHelp().PostPerComputer_Http();
+            new AgentHttpHelp().PostPerComputer_Http();
 
             // registry 讀取 UsbFilterEnable 設定
-            if (UsbRegistry.UsbFilterEnabled)
+            if (AgentRegistry.UsbFilterEnabled)
             {
                 // 載入 UsbFilterDb cache
                 UsbFilterDataHelp.Reload_UsbFilterData();

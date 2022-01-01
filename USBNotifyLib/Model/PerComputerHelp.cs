@@ -51,9 +51,9 @@ namespace USBNotifyLib
             try
             {
                 PerComputer userComputer = new PerComputer();
-                userComputer.AgentVersion = UsbRegistry.AgentVersion;
-                userComputer.UsbFilterEnabled = UsbRegistry.UsbFilterEnabled;
-                userComputer.UsbHistoryEnabled = UsbRegistry.UsbHistoryEnabled;
+                userComputer.AgentVersion = AgentRegistry.AgentVersion;
+                userComputer.UsbFilterEnabled = AgentRegistry.UsbFilterEnabled;
+                userComputer.UsbHistoryEnabled = AgentRegistry.UsbHistoryEnabled;
                 userComputer.HostName = IPGlobalProperties.GetIPGlobalProperties().HostName;
                 userComputer.Domain = IPGlobalProperties.GetIPGlobalProperties().DomainName;
                 SetIPMacAddress(userComputer);

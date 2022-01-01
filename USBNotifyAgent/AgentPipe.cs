@@ -11,7 +11,7 @@ namespace USBNotifyAgent
 {
     public class AgentPipe
     {
-        private static string PipeName = UsbRegistry.AgentKey;
+        private static string PipeName = AgentRegistry.AgentKey;
 
         private NamedPipeServer<string> _server;
 
@@ -54,13 +54,20 @@ namespace USBNotifyAgent
         #region + private void _server_ClientMessage(NamedPipeConnection<string, string> connection, string message)
         private void _server_ClientMessage(NamedPipeConnection<string, string> connection, string message)
         {
-            // check and update agent
-            if (message == "UpdateAgent")
+            try
             {
-                Task.Run(() =>
+                // check and update agent
+                if (message == "UpdateAgent")
                 {
-                    new UsbHttpHelp().GetAgentSetting_Http();
-                });
+                    Task.Run(() =>
+                    {
+                        new AgentUpdate().Update();
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                UsbLogger.Error(ex.Message);
             }
         }
         #endregion

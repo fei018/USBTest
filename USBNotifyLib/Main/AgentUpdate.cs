@@ -22,12 +22,15 @@ namespace USBNotifyLib
 
         private static string _updateExe = Path.Combine(_updateDir, "update.exe");
 
-        #region + public static void Check(string getVersion)
-        public static void CheckAndUpdate(string getVersion)
+        #region + public static void CheckAndUpdate()
+        /// <summary>
+        /// run on task
+        /// </summary>
+        public static void CheckAndUpdate()
         {
             try
             {
-                if (!UsbRegistry.AgentVersion.Equals(getVersion, StringComparison.OrdinalIgnoreCase))
+                if (new AgentUpdate().IsNeedToUpdate())
                 {
                     Task.Run(() =>
                     {
@@ -35,9 +38,46 @@ namespace USBNotifyLib
                     });
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                UsbLogger.Error(ex.Message);
+            }
+        }
+        #endregion
 
+        #region public bool IsNeedToUpdate()
+        public bool IsNeedToUpdate()
+        {
+            try
+            {
+                using (var http = AgentHttpHelp.CreateHttpClient())
+                {
+                    var response = http.GetAsync(AgentRegistry.AgentSettingUrl).Result;
+                    response.EnsureSuccessStatusCode();
+
+                    var json = response.Content.ReadAsStringAsync().Result;
+                    var agentResult = AgentHttpHelp.DeserialAgentResult(json);
+
+                    if (!agentResult.Succeed)
+                    {
+                        throw new Exception(agentResult.Msg);
+                    }
+
+                    string newVersion = agentResult.AgentSetting.AgentVersion;
+
+                    if (AgentRegistry.AgentVersion.Equals(newVersion, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                UsbLogger.Error(ex.Message);
                 throw;
             }
         }
@@ -59,9 +99,9 @@ namespace USBNotifyLib
                     throw new Exception("update.exe not exist.");
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                UsbLogger.Error(ex.Message);
             }
         }
         #endregion
@@ -80,10 +120,10 @@ namespace USBNotifyLib
         #region + private void DownloadFile()
         private void DownloadFile()
         {
-            using (var http = new HttpClient())
+            using (var http = AgentHttpHelp.CreateHttpClient())
             {
                 http.Timeout = TimeSpan.FromMinutes(10);
-                var response = http.GetAsync(UsbRegistry.AgentUpdateUrl).Result;
+                var response = http.GetAsync(AgentRegistry.AgentUpdateUrl).Result;
 
                 if (response.IsSuccessStatusCode)
                 {

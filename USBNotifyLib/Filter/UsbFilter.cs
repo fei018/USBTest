@@ -13,15 +13,15 @@ namespace USBNotifyLib
 
         // Filter usb
 
-        #region + public void Filter_UsbDisk_Use_DriveLetter(char driveLetter)
-        public void Filter_UsbDisk_Use_DriveLetter(char driveLetter)
+        #region + public void Filter_UsbDisk_By_DriveLetter(char driveLetter)
+        public void Filter_UsbDisk_By_DriveLetter(char driveLetter)
         {
             try
             {
                 var usb = Get_UsbDisk_DiskPath_by_DriveLetter_WMI(driveLetter);
                 if (usb != null)
                 {
-                    Filter_UsbDisk_Use_DiskPath(usb);
+                    Filter_UsbDisk_By_DiskPath(usb);
                 }
                 else
                 {
@@ -35,12 +35,12 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + public viod Filter_UsbDisk_Use_DiskPath(UsbDisk usb)
+        #region + public viod Filter_UsbDisk_By_DiskPath(UsbDisk usb)
         /// <summary>
         /// 只需 notifyUsb.DiskPath 賦值
         /// </summary>
         /// <param name="notifyUsb"></param>
-        public void Filter_UsbDisk_Use_DiskPath(UsbDisk usb)
+        public void Filter_UsbDisk_By_DiskPath(UsbDisk usb)
         {
             try
             {
@@ -86,7 +86,7 @@ namespace USBNotifyLib
                 {
                     foreach (var usb in usbList)
                     {
-                        Filter_UsbDisk_Use_DiskPath(usb);
+                        Filter_UsbDisk_By_DiskPath(usb);
                     }
                 }
             }
@@ -99,8 +99,8 @@ namespace USBNotifyLib
 
         //Find usb
 
-        #region + public UsbDisk Find_UsbDisk_Use_DriveLetter(char driveLetter)
-        public UsbDisk Find_UsbDisk_Use_DriveLetter(char driveLetter)
+        #region + public UsbDisk Find_UsbDisk_By_DriveLetter(char driveLetter)
+        public UsbDisk Find_UsbDisk_By_DriveLetter(char driveLetter)
         {
             try
             {
@@ -124,8 +124,8 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + public UsbDisk Find_UsbDisk_Use_DiskPath(string diskPath)
-        public UsbDisk Find_UsbDisk_Use_DiskPath(string diskPath)
+        #region + public UsbDisk Find_UsbDisk_By_DiskPath(string diskPath)
+        public UsbDisk Find_UsbDisk_By_DiskPath(string diskPath)
         {
             try
             {

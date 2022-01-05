@@ -10,6 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using USBNotifyLib.Win32API;
 using USBNotifyLib;
+using MailKit.Net.Smtp;
+using MimeKit;
 
 namespace USBTestConsole
 {
@@ -19,22 +21,16 @@ namespace USBTestConsole
         {
             try
             {
-                //Console.WriteLine("Start...");
-
-                //var p = new Program();
-
-                //p.OnStart();
-
-                //Console.ReadLine();
-
-                //p.OnStop();
-                var nics =NetworkInterface.GetAllNetworkInterfaces();
+                Console.WriteLine("Start...");
+                Email();
+               
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
 
+            Console.WriteLine("done...");
             Console.ReadLine();
         }
 
@@ -155,6 +151,41 @@ namespace USBTestConsole
         }
         #endregion
 
-       
+        #region email
+        static void Email()
+        {
+            try
+            {
+                MimeMessage message = new MimeMessage();
+
+                MailboxAddress from = new MailboxAddress("USBAdmin",
+                "e_fei_huang@hiphing.com.hk");
+                message.From.Add(from);
+
+                MailboxAddress to = new MailboxAddress("fei",
+                "e_fei_huang@hiphing.com.hk");
+                message.To.Add(to);
+
+                message.Subject = "USBAdmin Test";
+                BodyBuilder bodyBuilder = new BodyBuilder { TextBody = "test!!!" };
+                message.Body = bodyBuilder.ToMessageBody();
+
+                using (SmtpClient client = new SmtpClient())
+                {
+                    client.Connect("mailgw.hiphing.com.hk", 25,false);
+                    //client.Authenticate("e_fei", "fei");
+
+                    client.Send(message);
+                    client.Disconnect(true);
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+               
+        }
+        #endregion
     }
 }

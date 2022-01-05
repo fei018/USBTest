@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using UsbMonitor;
@@ -34,69 +35,112 @@ namespace USBNotifyAgent
         }
         #endregion
 
-        //
+        // OnUsbInterface
 
-        #region OnUsbInterface(UsbEventDeviceInterfaceArgs args)
+        #region + public override void OnUsbInterface(UsbEventDeviceInterfaceArgs args)
         public override void OnUsbInterface(UsbEventDeviceInterfaceArgs args)
         {
-            try
+            if (args.Action == UsbDeviceChangeEvent.Arrival)
             {
-                if (AgentRegistry.UsbHistoryEnabled)
+                if (args.DeviceInterface == UsbMonitor.UsbDeviceInterface.Disk)
                 {
-                    if (args.Action != UsbDeviceChangeEvent.Arrival)
-                    {
-                        return;
-                    }
-                    if (args.DeviceInterface != UsbMonitor.UsbDeviceInterface.Disk)
-                    {
-                        return;
-                    }
-                    Task.Run(() =>
-                    {
-                        // push usbmessage to agent tray pipe
-                        var usb = new UsbFilter().Find_UsbDisk_Use_DiskPath(args.Name);
-                        _agentPipe.PushUsbMessage(usb);
+                    FilterUsbDisk(args.Name);
 
-                        // post usb history to server
-                        //new UsbHttpHelp().PostPerUsbHistory_byDisk_Http(args.Name);
-                    });
+                    CheckUsbWhetherNeedRegister(args.Name);
+
+                    PostUsbHistoryToHttpServer(args.Name);
                 }
-            }
-            catch (Exception)
-            {
-            }
+            }          
         }
         #endregion
 
-        #region OnUsbVolume(UsbEventVolumeArgs args)
-        private readonly object _Locker_OnVolume = new object();
-        public override void OnUsbVolume(UsbEventVolumeArgs args)
+        #region + private void PostUsbHistoryToHttpServer()
+        private void PostUsbHistoryToHttpServer(string diskPath)
         {
-            try
+            Task.Run(() =>
             {
-                if (AgentRegistry.UsbFilterEnabled)
-                {
-                    lock (_Locker_OnVolume)
-                    {
-                        if (args.Flags == UsbVolumeFlags.Net) return;
+                if (!AgentRegistry.UsbHistoryEnabled) return;
 
-                        if (args.Action == UsbDeviceChangeEvent.Arrival)
-                        {
-                            foreach (char letter in args.Drives)
-                            {
-                                Task.Run(() =>
-                                {
-                                    new UsbFilter().Filter_UsbDisk_Use_DriveLetter(letter);
-                                });
-                            }
-                        }
+                // post usb history to server
+                new AgentHttpHelp().PostPerUsbHistory_byDisk_Http(diskPath);
+            });
+        }
+        #endregion
+
+        #region + private void CheckUsbWhetherNeedRegister()
+        private void CheckUsbWhetherNeedRegister(string diskPath)
+        {
+            Task.Run(() =>
+            {
+                try
+                {
+                    // push usbmessage to agent tray pipe
+                    var usb = new UsbFilter().Find_UsbDisk_By_DiskPath(diskPath);
+                    if (!UsbFilterDataHelp.IsFind(usb))
+                    {
+                        _agentPipe.PushUsbMessage(usb);
                     }
                 }
-            }
-            catch (Exception)
-            {
-            }
+                catch (Exception)
+                {
+                }
+            });
         }
+        #endregion
+
+        #region + private void FilterUsbDisk(string diskPath)
+        private void FilterUsbDisk(string diskPath)
+        {
+            Task.Run(() =>
+            {
+                try
+                {
+                    if (!AgentRegistry.UsbFilterEnabled) return;
+
+                    var disk = new UsbDisk { DiskPath = diskPath };
+                    new UsbFilter().Filter_UsbDisk_By_DiskPath(disk);
+                }
+                catch (Exception)
+                {
+                }
+            });
+        }
+        #endregion
+
+        // OnUsbVolume
+
+        #region + public override void OnUsbVolume(UsbEventVolumeArgs args)
+        //public override void OnUsbVolume(UsbEventVolumeArgs args)
+        //{
+        //    if (args.Action == UsbDeviceChangeEvent.Arrival)
+        //    {
+        //        if (args.Flags == UsbVolumeFlags.Media)
+        //        {
+        //            foreach (char letter in args.Drives)
+        //            {
+        //                FilterUsbDisk(letter);
+        //            }
+        //        }
+        //    }
+        //}
+        #endregion
+
+        #region + private void FilterUsbDisk(char letter)
+        //private void FilterUsbDisk(char letter)
+        //{
+        //    Task.Run(() =>
+        //    {
+        //        try
+        //        {
+        //            if (!AgentRegistry.UsbFilterEnabled) return;
+
+        //            new UsbFilter().Filter_UsbDisk_By_DriveLetter(letter);
+        //        }
+        //        catch (Exception)
+        //        {
+        //        }
+        //    });
+        //}
         #endregion
     }
 }

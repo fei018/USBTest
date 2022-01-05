@@ -10,6 +10,7 @@ namespace USBAdminWebMVC
 {
     public class USBAdminHelp
     {
+
         public static string WebHttpUrlPrefix { get; set; }
 
         public static string InitMenuName { get; set; }

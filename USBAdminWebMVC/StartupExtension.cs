@@ -17,6 +17,7 @@ namespace USBAdminWebMVC
             USBAdminHelp.InitMenuName = configuration.GetSection("InitMenuName").Value;
             USBAdminHelp.AgentKey = configuration.GetSection("AgentKey").Value;
 
+            // cookie
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
             {
                 options.LoginPath = new PathString("/account/login");
@@ -43,9 +44,9 @@ namespace USBAdminWebMVC
             services.AddScoped(x => new LoginUserDb(connstring));
             services.AddScoped<LoginUserService>();
 
-            services.AddScoped(x => new UsbDbHelp(connstring));
+            services.AddScoped(x => new UsbAdminDbHelp(connstring));
 
-           // new UsbDbHelp(connstring).TryCreateDatabase();
+            services.AddScoped<EmailHelp>();
         }
     }
 }

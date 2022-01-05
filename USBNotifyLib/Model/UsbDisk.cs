@@ -21,8 +21,7 @@ namespace USBNotifyLib
                        "Manufacturer: " + Manufacturer + Environment.NewLine +
                        "Product: " + Product + Environment.NewLine +
                        "DeviceDescription: " + Environment.NewLine +
-                       "DeviceId: " + UsbDeviceId + Environment.NewLine +
-                       "Device Path: " + UsbDevicePath + Environment.NewLine + Environment.NewLine;
+                       "DeviceId: " + UsbDeviceId + Environment.NewLine + Environment.NewLine;
 
             return s;
         }

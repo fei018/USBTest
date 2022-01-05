@@ -54,7 +54,7 @@ namespace USBNotifyLib
                     http.Timeout = TimeSpan.FromSeconds(20);
                     
                     var response = http.GetAsync(AgentRegistry.UsbFilterDataUrl).Result;
-                    response.EnsureSuccessStatusCode();
+                    if (!response.IsSuccessStatusCode) throw new Exception("Http Error StatusCode: " + response.StatusCode.ToString());
 
                     string json = response.Content.ReadAsStringAsync().Result;
                     var agentResult = DeserialAgentResult(json);
@@ -64,6 +64,7 @@ namespace USBNotifyLib
                     }
 
                     UsbFilterDataHelp.Set_UsbFilterData_byHttp(agentResult.UsbFilterData);
+                    UsbLogger.Log("Get UsbFilterData from Http Server done.");
                 }
             }
             catch (Exception ex)
@@ -81,7 +82,7 @@ namespace USBNotifyLib
                 using (var http = CreateHttpClient())
                 {
                     var response = http.GetAsync(AgentRegistry.AgentSettingUrl).Result;
-                    response.EnsureSuccessStatusCode();
+                    if (!response.IsSuccessStatusCode) throw new Exception("Http Error StatusCode: " + response.StatusCode.ToString());
 
                     var json = response.Content.ReadAsStringAsync().Result;
                     var agentResult = DeserialAgentResult(json);
@@ -118,8 +119,7 @@ namespace USBNotifyLib
                     StringContent content = new StringContent(comJson, Encoding.UTF8, MimeTypeMap.GetMimeType("json"));
 
                     var response =  http.PostAsync(AgentRegistry.PostPerComputerUrl, content).Result;
-
-                    response.EnsureSuccessStatusCode();
+                    if (!response.IsSuccessStatusCode) throw new Exception("Http Error StatusCode: " + response.StatusCode.ToString());
 
                     var json = response.Content.ReadAsStringAsync().Result;
                     var result = JsonConvert.DeserializeObject<AgentHttpResponseResult>(json);
@@ -143,7 +143,7 @@ namespace USBNotifyLib
             {
                 //Debugger.Break();
                 var comIdentity = PerComputerHelp.GetComputerIdentity();
-                var usb = new UsbFilter().Find_UsbDisk_Use_DiskPath(diskPath);
+                var usb = new UsbFilter().Find_UsbDisk_By_DiskPath(diskPath);
 
                 IPerUsbHistory usbHistory = new PerUsbHistory
                 {
@@ -163,7 +163,7 @@ namespace USBNotifyLib
                 {
                     StringContent content = new StringContent(usbHistoryJosn, Encoding.UTF8, "application/json");
                     var response = http.PostAsync(AgentRegistry.PostPerUsbHistoryUrl, content).Result;
-                    response.EnsureSuccessStatusCode();
+                    if (!response.IsSuccessStatusCode) throw new Exception("Http Error StatusCode: " + response.StatusCode.ToString());
 
                     var json = response.Content.ReadAsStringAsync().Result;
                     var result = JsonConvert.DeserializeObject<AgentHttpResponseResult>(json);
@@ -180,19 +180,19 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + public void PostRegisterUsb(PostRegisterUsb usb)
+        #region + public void PostUsbRegisterRequest(UsbRegisterRequest usb)
         /// <summary>
         /// 
         /// </summary>
         /// <param name="usb"></param>
         /// <exception cref="throw"></exception>
-        public void PostRegisterUsb(PostRegisterUsb post)
+        public void PostUsbRegisterRequest(UsbRegRequest post)
         {
             try
             {
                 if (post == null)
                 {
-                    throw new Exception("UsbDisk null reference.");
+                    throw new Exception("UsbRegisterRequest null reference.");
                 }
 
                 var usbJson = JsonConvert.SerializeObject(post);
@@ -200,9 +200,9 @@ namespace USBNotifyLib
                 {
                     StringContent content = new StringContent(usbJson, Encoding.UTF8, MimeTypeMap.GetMimeType("json"));
 
-                    var response = http.PostAsync(AgentRegistry.PostRegisterUsbUrl, content).Result;
+                    var response = http.PostAsync(AgentRegistry.PostUsbRegRequestUrl, content).Result;
 
-                    response.EnsureSuccessStatusCode();
+                    if (!response.IsSuccessStatusCode) throw new Exception("Http Error StatusCode: " + response.StatusCode.ToString());
 
                     var json = response.Content.ReadAsStringAsync().Result;
                     var result = JsonConvert.DeserializeObject<AgentHttpResponseResult>(json);
@@ -212,8 +212,9 @@ namespace USBNotifyLib
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                UsbLogger.Error(ex.Message);
                 throw;
             }
         }

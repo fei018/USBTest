@@ -18,7 +18,7 @@ namespace USBNotifyAgentTray
 
         private NamedPipeClient<string> _client;
 
-        public static UsbDisk MessageUsbDisk { get; set; }
+        public static UsbDisk UsbDiskMessage { get; set; }
 
         #region
         public void Stop()
@@ -41,15 +41,21 @@ namespace USBNotifyAgentTray
 
             _client.ServerMessage += _client_ServerMessage;
 
+            _client.Error += _client_Error;
+
             _client.Start();
+
+        }
+
+        private void _client_Error(Exception exception)
+        {
+            MessageBox.Show(exception.Message,"TrapPipe Error");
         }
         #endregion
 
         #region + private void _client_ServerMessage(NamedPipeConnection<string, string> connection, string usbJson)
         private void _client_ServerMessage(NamedPipeConnection<string, string> connection, string usbJson)
         {
-            Debugger.Break();
-
             if (string.IsNullOrEmpty(usbJson))
             {
                 UsbLogger.Error("TrayPipe: UsbDisk is Null from Pipe Message.");
@@ -58,7 +64,12 @@ namespace USBNotifyAgentTray
 
             var usb = JsonConvert.DeserializeObject<UsbDisk>(usbJson);
 
-            MessageUsbDisk = usb;
+            if (usb == null)
+            {
+                throw new Exception("UsbRegisterRequest is Null.");
+            }
+
+            UsbDiskMessage = usb;
             App.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
                 //Debugger.Break();

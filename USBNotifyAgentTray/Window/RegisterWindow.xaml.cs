@@ -28,22 +28,40 @@ namespace USBNotifyAgentTray
 
         private void BtnSend_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(TxtUserEmail.Text))
+            var email = TxtUserEmail.Text;
+
+            // 檢查 email address format
+            try
             {
-                TxtError.Text = "Email is Required";
+                if (string.IsNullOrWhiteSpace(email))
+                {
+                    throw new Exception();
+                }
+
+                // check email format
+                var address = new System.Net.Mail.MailAddress(email);
+                if (address.Address != email)
+                {
+                    throw new Exception();
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Email format error or required", "Error");
                 return;
             }
 
+            // post UsbRegRequest to http server
             try
             {
-                // http register usb
-                var post = new PostRegisterUsb
+                if (TrayPipe.UsbDiskMessage == null)
                 {
-                    UsbInfo = TrayPipe.MessageUsbDisk,
-                    UserEmail = TxtUserEmail.Text,
-                };
+                    throw new Exception("TrayPipe.UsbDiskMessage");
+                }
 
-                new AgentHttpHelp().PostRegisterUsb(post);
+                var post = new UsbRegRequest(TrayPipe.UsbDiskMessage, email.Trim());
+
+                new AgentHttpHelp().PostUsbRegisterRequest(post);
 
                 MessageBox.Show("Send succeed.");
                 DialogResult = true;
@@ -51,7 +69,6 @@ namespace USBNotifyAgentTray
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error");
-                DialogResult = false;
             }
         }
 

@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using USBNotifyLib;
 using Newtonsoft.Json;
+using System.IO.Pipes;
+using System.Security.AccessControl;
 
 namespace USBNotifyAgent
 {
@@ -28,7 +30,19 @@ namespace USBNotifyAgent
 
                 _server?.Stop();
 
-                _server = new NamedPipeServer<string>(PipeName);
+                PipeSecurity pipeSecurity = new PipeSecurity();
+
+                pipeSecurity.AddAccessRule(new PipeAccessRule("CREATOR OWNER", PipeAccessRights.FullControl, AccessControlType.Allow));
+                pipeSecurity.AddAccessRule(new PipeAccessRule("SYSTEM", PipeAccessRights.FullControl, AccessControlType.Allow));
+
+                // Allow Everyone read and write access to the pipe.
+                pipeSecurity.AddAccessRule(
+                            new PipeAccessRule(
+                            "Authenticated Users",
+                            PipeAccessRights.ReadWrite | PipeAccessRights.CreateNewInstance,
+                            AccessControlType.Allow));                
+
+                _server = new NamedPipeServer<string>(PipeName,pipeSecurity);                
 
                 _server.ClientMessage += _server_ClientMessage;
 

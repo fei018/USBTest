@@ -44,7 +44,7 @@ namespace USBModel
         }
         #endregion
 
-        #region + public static UserUsb Deserialize_UsbRegistered(string usbJson)
+        #region + public static Tbl_UsbRegistered Deserialize_UsbRegistered(string usbJson)
         public static Tbl_UsbRegistered Deserialize_IUsbInfo(string usbJson)
         {
             try
@@ -60,19 +60,19 @@ namespace USBModel
         }
         #endregion
 
-        #region + public static PostRegisterUsb Deserialize_PostRegisterUsb(string postJson)
-        public static PostRegisterUsb Deserialize_PostRegisterUsb(string postJson)
+        #region + public static Tbl_UsbRegisterRequest Deserialize_UsbRegisterRequest(string postJson)
+        public static Tbl_UsbRegRequest Deserialize_UsbRegisterRequest(string postJson)
         {
             try
             {
                 var settings = new JsonSerializerSettings
                 {
                     Converters = {
-                        new AbstractJsonConverter<Tbl_UsbRegistered, IUsbInfo>()
+                        new AbstractJsonConverter<Tbl_UsbRegRequest, IUsbRegRequest>()
                     }
                 };
 
-                var post = JsonConvert.DeserializeObject<PostRegisterUsb>(postJson, settings);
+                var post = JsonConvert.DeserializeObject<Tbl_UsbRegRequest>(postJson, settings);
                 return post;
             }
             catch (Exception)

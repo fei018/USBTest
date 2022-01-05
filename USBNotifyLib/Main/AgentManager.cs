@@ -19,7 +19,7 @@
             }
 
             // 執行 agent 定時任務
-            UsbTimer.RunTask();
+            AgentTimer.RunTask();
         }
         #endregion
     }

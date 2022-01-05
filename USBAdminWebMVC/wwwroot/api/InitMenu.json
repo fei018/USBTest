@@ -34,6 +34,12 @@
               "target": "_self"
             },
             {
+              "title": "Request",
+              "href": "usbadmin/USB/UsbRequest",
+              "icon": "fa fa-list-alt",
+              "target": "_self"
+            },
+            {
               "title": "Registered",
               "href": "usbadmin/USB/Registered",
               "icon": "fa fa-list-alt",

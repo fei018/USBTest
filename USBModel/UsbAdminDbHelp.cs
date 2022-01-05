@@ -8,11 +8,11 @@ using LoginUserManager;
 
 namespace USBModel
 {
-    public class UsbDbHelp
+    public class UsbAdminDbHelp
     {
         private readonly ISqlSugarClient _db;
 
-        public UsbDbHelp(string connString)
+        public UsbAdminDbHelp(string connString)
         {
             _db = GetSqlClient(connString);
         }
@@ -36,31 +36,25 @@ namespace USBModel
         #region + public void TryCreateDatabase()
         public void TryCreateDatabase()
         {
-            if (_db.DbMaintenance.CreateDatabase())
+            try
             {
-                _db.CodeFirst.SetStringDefaultLength(100).InitTables<Tbl_PerUsbHistory>();
-                _db.CodeFirst.SetStringDefaultLength(100).InitTables<Tbl_UsbRegistered>();
-                _db.CodeFirst.SetStringDefaultLength(100).InitTables<Tbl_PerComputer>();
-                _db.CodeFirst.SetStringDefaultLength(100).InitTables<Tbl_AgentSetting>();
+                if (_db.DbMaintenance.CreateDatabase())
+                {
+                    _db.CodeFirst.SetStringDefaultLength(100).InitTables<Tbl_PerUsbHistory>();
+                    _db.CodeFirst.SetStringDefaultLength(100).InitTables<Tbl_UsbRegistered>();
+                    _db.CodeFirst.SetStringDefaultLength(100).InitTables<Tbl_PerComputer>();
+                    _db.CodeFirst.SetStringDefaultLength(100).InitTables<Tbl_AgentSetting>();
+                    _db.CodeFirst.SetStringDefaultLength(100).InitTables<Tbl_UsbRegRequest>();
 
-
-                _db.CodeFirst.InitTables<LoginUser>();
-                _db.CodeFirst.InitTables<LoginErrorCountLimit>();
+                    _db.CodeFirst.InitTables<LoginUser>();
+                    _db.CodeFirst.InitTables<LoginErrorCountLimit>();
+                }
             }
-        }
-        #endregion
+            catch (Exception)
+            {
 
-        #region Base64Encode
-        private string Base64Encode(string plainText)
-        {
-            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
-            return System.Convert.ToBase64String(plainTextBytes);
-        }
-
-        private string Base64Decode(string base64EncodedData)
-        {
-            var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
-            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
+                throw;
+            }
         }
         #endregion
 
@@ -98,7 +92,7 @@ namespace USBModel
                 // UsbIdentity encode to Base64                   
                 foreach (var u in query)
                 {
-                    filterDb.AppendLine(Base64Encode(u.UsbIdentity));
+                    filterDb.AppendLine(Base64CodeHelp.Base64Encode(u.UsbIdentity));
                 }
             }
             return filterDb.ToString();
@@ -107,8 +101,8 @@ namespace USBModel
 
         // UsbRegistry
 
-        #region + public async Task Register_Usb(UsbInfo usb)
-        public async Task Register_Usb(Tbl_UsbRegistered usb)
+        #region + public async Task Insert_UsbRegistered(UsbInfo usb)
+        public async Task Insert_UsbRegistered(Tbl_UsbRegistered usb)
         {
             try
             {
@@ -118,7 +112,11 @@ namespace USBModel
 
                 if (usbInDb == null)
                 {
-                    await _db.Insertable(usb).ExecuteCommandAsync();
+                    var succeed = await _db.Insertable(usb).ExecuteCommandIdentityIntoEntityAsync();
+                    if (!succeed)
+                    {
+                        throw new Exception("UsbRegistered insert fail.");
+                    }
                 }
             }
             catch (Exception)
@@ -150,7 +148,9 @@ namespace USBModel
             try
             {
                 RefAsync<int> total = new RefAsync<int>();
-                var query = await _db.Queryable<Tbl_UsbRegistered>().ToPageListAsync(pageIndex, pageSize, total);
+                var query = await _db.Queryable<Tbl_UsbRegistered>()
+                                        .OrderBy(u => u.Id, OrderByType.Desc)
+                                        .ToPageListAsync(pageIndex, pageSize, total);
 
                 if (query == null || query.Count <= 0)
                 {
@@ -158,6 +158,108 @@ namespace USBModel
                 }
 
                 return (total.Value, query);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        // UsbRegRequest
+
+        #region + public async Task<Tbl_UsbRegRequest> Insert_UsbRegRequest(Tbl_UsbRegRequest usb)
+        public async Task<Tbl_UsbRegRequest> Insert_UsbRegRequest(Tbl_UsbRegRequest usb)
+        {
+            try
+            {
+                var exist = await _db.Queryable<Tbl_UsbRegRequest>().FirstAsync(u => u.UsbIdentity == usb.UsbIdentity);
+                if (exist != null)
+                {
+                    return exist;
+                }
+
+                var usbR = await _db.Insertable(usb).ExecuteReturnEntityAsync();
+                return usbR;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        #endregion
+
+        #region + public async Task<(int total, List<Tbl_UsbRegRequest> list)> Get_UsbRegRequestList(int pageIdnex, int pageSize)
+        public async Task<(int total, List<Tbl_UsbRegRequest> list)> Get_UsbRegRequestList(int pageIdnex, int pageSize)
+        {
+            try
+            {
+                RefAsync<int> total = new RefAsync<int>();
+                var query = await _db.Queryable<Tbl_UsbRegRequest>()
+                                        .OrderBy(u => u.RequestTime, OrderByType.Desc)
+                                        .ToPageListAsync(pageIdnex, pageSize, total);
+
+                if (query == null || query.Count <= 0)
+                {
+                    throw new Exception("Nothing UsbRegRequest in Database.");
+                }
+
+                return (total, query);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        #region + public async Task<Tbl_UsbRegRequest> Get_UsbRegRequestById(int id)
+        public async Task<Tbl_UsbRegRequest> Get_UsbRegRequestById(int id)
+        {
+            try
+            {
+                var query = await _db.Queryable<Tbl_UsbRegRequest>().InSingleAsync(id);
+                if (query == null)
+                {
+                    throw new Exception("Tbl_UsbRegRequest cannot find, Id: " + id);
+                }
+
+                return query;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        #endregion
+
+        #region + public async Task UsbRegRequestToRegistered(Tbl_UsbRegRequest usbRegRequest)
+        public async Task UsbRegRequestToRegistered(Tbl_UsbRegRequest usbRegRequest)
+        {
+            try
+            {
+                if (usbRegRequest == null)
+                {
+                    throw new Exception("Tbl_UsbRegRequest is Null.");
+                }
+
+                var usb = new Tbl_UsbRegistered
+                {
+                    DeviceDescription = usbRegRequest.DeviceDescription,
+                    Manufacturer = usbRegRequest.Manufacturer,
+                    Pid = usbRegRequest.Pid,
+                    Vid = usbRegRequest.Vid,
+                    Product = usbRegRequest.Product,
+                    SerialNumber = usbRegRequest.SerialNumber,
+                    UsbIdentity = usbRegRequest.UsbIdentity
+                };
+
+                await Insert_UsbRegistered(usb);
+
+                // 刪除 Tbl_UsbRegRequest
+                //await _db.Deleteable(usbRegRequest).ExecuteCommandAsync();
             }
             catch (Exception)
             {
@@ -248,7 +350,7 @@ namespace USBModel
 
         // PerComputer
 
-        #region +  public async Task<UserComputer> Get_PerComputerById(int id)
+        #region +  public async Task<Tbl_PerComputer> Get_PerComputerById(int id)
         public async Task<Tbl_PerComputer> Get_PerComputerById(int id)
         {
             try
@@ -268,7 +370,7 @@ namespace USBModel
         }
         #endregion
 
-        #region + public async Task<(int totalCount,List<UserComputer> list)> Get_PerComputerList(int index, int size)
+        #region + public async Task<(int totalCount,List<Tbl_PerComputer> list)> Get_PerComputerList(int index, int size)
         public async Task<(int totalCount, List<Tbl_PerComputer> list)> Get_PerComputerList(int index, int size)
         {
             try
@@ -290,7 +392,7 @@ namespace USBModel
         }
         #endregion
 
-        #region + public async Task<List<UserComputer>> Get_PerComputerListByIdentity(string computerIdentity)
+        #region + public async Task<List<Tbl_PerComputer>> Get_PerComputerListByIdentity(string computerIdentity)
         public async Task<List<Tbl_PerComputer>> Get_PerComputerListByIdentity(string computerIdentity)
         {
             try
@@ -310,7 +412,7 @@ namespace USBModel
         }
         #endregion
 
-        #region + public async Task Update_PerComputer(UserComputer com)
+        #region + public async Task Update_PerComputer(Tbl_PerComputer com)
         public async Task Update_PerComputer(Tbl_PerComputer com)
         {
             try

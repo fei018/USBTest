@@ -44,9 +44,9 @@ namespace USBNotifyLib
                 {
                     try
                     {
-                        if (string.IsNullOrWhiteSpace(line))
+                        if (!string.IsNullOrWhiteSpace(line))
                         {
-                            var data = Base64Decode(line.Trim());
+                            var data = Base64CodeHelp.Base64Decode(line.Trim());
                             cache.Add(data);
                         }
                     }
@@ -85,20 +85,6 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region Base64Encode
-        private static string Base64Encode(string plainText)
-        {
-            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
-            return System.Convert.ToBase64String(plainTextBytes);
-        }
-
-        private static string Base64Decode(string base64EncodedData)
-        {
-            var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
-            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
-        }
-        #endregion
-
         #region + public static void Set_UsbFilterData_byHttp(UsbFilterDbHttp setting)
         public static void Set_UsbFilterData_byHttp(string usbFilterData)
         {
@@ -128,7 +114,7 @@ namespace USBNotifyLib
 
                     if (File.Exists(_UsbFilterDataFile))
                     {
-                        return File.ReadAllLines(_UsbFilterDataFile, Encoding.UTF8);
+                        return File.ReadAllLines(_UsbFilterDataFile, new UTF8Encoding(false));
                     }
                     return null;
                 }
@@ -146,7 +132,7 @@ namespace USBNotifyLib
         {
             lock (_locker_UsbFilterDb)
             {
-                File.WriteAllText(_UsbFilterDataFile, txt, Encoding.UTF8);
+                File.WriteAllText(_UsbFilterDataFile, txt, new UTF8Encoding(false));
             }
         }
         #endregion

@@ -1,0 +1,31 @@
+﻿@model Tbl_UsbRegRequest
+@{ 
+    
+}
+
+<div class="layui-row layui-col-space15">
+
+    <div class="layui-col-md6">
+
+        <div class="layui-panel">
+
+            <div style="padding: 30px;">
+                <div>Usb Detial:</div>
+                <div>
+                    @Model.ToString()
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <hr>
+    <div>
+        <form action="~/USB/UsbRequestToReg" method="post" class="layui-form">
+            <input type="hidden" name="usbRegRequestId" value="@Model.Id"/>
+            <button type="submit" class="layui-btn layui-btn-normal">To Register</button>
+        </form>
+    </div>
+</div>   
+

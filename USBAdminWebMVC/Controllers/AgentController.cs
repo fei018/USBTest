@@ -16,17 +16,19 @@ namespace USBAdminWebMVC.Controllers
     [AgentKeyFilter]
     public class AgentController : Controller
     {
-        private readonly UsbDbHelp _usbDb;
+        private readonly UsbAdminDbHelp _usbDb;
         private readonly HttpContext _httpContext;
+        private readonly EmailHelp _email;
 
-        public AgentController(IHttpContextAccessor httpContextAccessor, UsbDbHelp usbDb)
+        public AgentController(IHttpContextAccessor httpContextAccessor, UsbAdminDbHelp usbDb, EmailHelp emailHelp)
         {
             _usbDb = usbDb;
             _httpContext = httpContextAccessor.HttpContext;
+            _email = emailHelp;
         }
 
-        #region UsbFilterData(string computerIdentity)
-        public async Task<IActionResult> UsbFilterData(string computerIdentity)
+        #region UsbFilterData()
+        public async Task<IActionResult> UsbFilterData()
         {
             try
             {
@@ -103,9 +105,9 @@ namespace USBAdminWebMVC.Controllers
         }
         #endregion
 
-        #region RegisterUsb
+        #region UsbRegRequest()
         [HttpPost]      
-        public async Task<IActionResult> RegisterUsb()
+        public async Task<IActionResult> UsbRegRequest()
         {
             try
             {
@@ -114,10 +116,13 @@ namespace USBAdminWebMVC.Controllers
                 StreamReader body = new StreamReader(_httpContext.Request.Body, Encoding.UTF8);
                 var post = await body.ReadToEndAsync();
 
-                PostRegisterUsb info = JsonHttpConvert.Deserialize_PostRegisterUsb(post);
-                var usbRistered = info.UsbInfo as Tbl_UsbRegistered;
+                Tbl_UsbRegRequest usbRequest = JsonHttpConvert.Deserialize_UsbRegisterRequest(post);
 
-                await _usbDb.Register_Usb(usbRistered);
+                await _usbDb.Insert_UsbRegRequest(usbRequest);
+                await _email.SendUsbRegisterRequestNotify(usbRequest);
+
+                // change to UsbRegistered
+                await _usbDb.UsbRegRequestToRegistered(usbRequest);
 
                 return Json(new AgentHttpResponseResult());
             }
@@ -126,6 +131,11 @@ namespace USBAdminWebMVC.Controllers
                 return Json(new AgentHttpResponseResult(false,ex.Message));
             }
         }
+        #endregion
+
+
+        #region AgentUpdate()
+
         #endregion
     }
 }

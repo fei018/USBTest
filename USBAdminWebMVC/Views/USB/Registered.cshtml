@@ -1,4 +1,4 @@
-﻿@{ 
+﻿@{
     var registeredIndexUrl = USBAdminHelp.WebHttpUrlPrefix + "/usb/RegisteredIndex";
 }
 
@@ -18,24 +18,9 @@
                 table = layui.table,
                 layer = layui.layer;
 
-            $.ajax({
-                type: 'get',
-                url: '@registeredIndexUrl',
-                dataType: 'json',
-                success: function (json) {
-                    if (json.code === 400) {
-                        layer.alert(json.msg);
-                    }
-                    if (json.code === 200) {
-                        showTable(json.data);
-                    }
-                }
-            });
-
-            function showTable(dataSet) {
-                table.render({
+            table.render({
                     elem: '#index',
-                    data: dataSet,
+                    url:'@registeredIndexUrl',
                     page: true,
                     cols: [[
                         { field: 'id', width: 60, title: 'Id', sort: true }
@@ -47,7 +32,6 @@
                         , { field: 'serialNumber', title: 'SerialNumber', width: 250, sort: true }
                     ]]
                 });
-            }
         });
     </script>
 

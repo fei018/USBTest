@@ -11,9 +11,9 @@ namespace USBAdminWebMVC.Controllers
     [Authorize]
     public class ComputerController : Controller
     {
-        private readonly UsbDbHelp _usbDb;
+        private readonly UsbAdminDbHelp _usbDb;
 
-        public ComputerController(UsbDbHelp usbDbHelp)
+        public ComputerController(UsbAdminDbHelp usbDbHelp)
         {
             _usbDb = usbDbHelp;
         }

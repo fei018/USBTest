@@ -30,8 +30,8 @@ namespace USBNotifyAgentTray
             TxtBrand.Text = "";
             TxtProduct.Text = "";
 
-            TxtBrand.Text = TrayPipe.MessageUsbDisk?.Manufacturer;
-            TxtProduct.Text = TrayPipe.MessageUsbDisk?.Product;
+            TxtBrand.Text = TrayPipe.UsbDiskMessage?.Manufacturer;
+            TxtProduct.Text = TrayPipe.UsbDiskMessage?.Product;
         }
 
         private void BtnRegisterUSB_Click(object sender, RoutedEventArgs e)

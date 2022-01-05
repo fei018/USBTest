@@ -10,7 +10,9 @@ namespace SetupClient
     {
         static void Main(string[] args)
         {
-            new SetupHelp().InitialKey();
+            new SetupHelp().Install();
+
+            Environment.Exit(0);
         }
     }
 }

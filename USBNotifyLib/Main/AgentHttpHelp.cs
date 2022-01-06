@@ -67,9 +67,9 @@ namespace USBNotifyLib
                     UsbLogger.Log("Get UsbFilterData from Http Server done.");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                UsbLogger.Error(ex.Message);
+                throw;
             }
         }
         #endregion
@@ -99,9 +99,9 @@ namespace USBNotifyLib
                     AgentRegistry.UsbHistoryEnabled = agentSetting.UsbHistoryEnabled;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                UsbLogger.Error(ex.Message);
+                throw;
             }
         }
         #endregion
@@ -129,9 +129,9 @@ namespace USBNotifyLib
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                UsbLogger.Error(ex.Message);
+                throw;
             }
         }
         #endregion
@@ -173,9 +173,9 @@ namespace USBNotifyLib
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                UsbLogger.Error(ex.Message);
+                throw;
             }
         }
         #endregion
@@ -212,9 +212,8 @@ namespace USBNotifyLib
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                UsbLogger.Error(ex.Message);
                 throw;
             }
         }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:USBNotifyAgentTray"
         mc:Ignorable="d"
-        Title="USB Warning" Height="300" Width="300" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" 
+        Title="USB Warning" Height="300" Width="300" ResizeMode="NoResize" WindowStartupLocation="Manual" 
         Loaded="Window_Loaded" Icon="USB.ico" Topmost="True">
     <Grid>
         <Grid.RowDefinitions>

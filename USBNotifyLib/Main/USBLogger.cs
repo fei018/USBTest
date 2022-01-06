@@ -9,7 +9,7 @@ namespace USBNotifyLib
 {
     public class UsbLogger
     {
-        private static readonly string _baseDir = AppDomain.CurrentDomain.BaseDirectory;
+        private static readonly string _baseDir = Environment.ExpandEnvironmentVariables("%ProgramData%\\USBNotify");
 
 
         private static string LogPath => Path.Combine(_baseDir, "log.txt");
@@ -33,8 +33,14 @@ namespace USBNotifyLib
             {
                 lock (_locker)
                 {
-                    var l = Environment.NewLine + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + Environment.NewLine + log + Environment.NewLine;
-                    File.AppendAllText(path, l);
+                    try
+                    {
+                        var l = Environment.NewLine + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + Environment.NewLine + log + Environment.NewLine;
+                        File.AppendAllText(path, l);
+                    }
+                    catch (Exception)
+                    {
+                    }
                 }
             });         
         }

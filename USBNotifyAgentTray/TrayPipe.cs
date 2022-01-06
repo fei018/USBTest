@@ -87,19 +87,48 @@ namespace USBNotifyAgentTray
             {
                 if(new AgentUpdate().IsNeedToUpdate())
                 {
-                    _client?.PushMessage("UpdateAgent");
+                    _client?.PushMessage(PipeMsgType.UpdateAgent);
                 }
                 else
                 {
                     MessageBox.Show("Agent is Newest version.");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                MessageBox.Show(ex.Message);
+                throw;
             }
         }
         #endregion
 
+        #region + public void UpdateUsbFilterData()
+        public void UpdateUsbFilterData()
+        {
+            try
+            {
+                _client?.PushMessage(PipeMsgType.UpdateUsbFilterData);
+                MessageBox.Show("Update Done.", "Updata Usb Filter Data");
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        #region MyRegion
+        public void UpdateAgentSetting()
+        {
+            try
+            {
+                _client?.PushMessage(PipeMsgType.UpdateAgentSetting);
+                MessageBox.Show("Update Done.");
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
     }
 }

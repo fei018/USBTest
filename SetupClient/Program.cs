@@ -10,7 +10,20 @@ namespace SetupClient
     {
         static void Main(string[] args)
         {
-            new SetupHelp().Install();
+            try
+            {
+                Console.WriteLine("Install Start ...");
+                Console.WriteLine();
+
+                new SetupHelp().Install();
+
+                Console.WriteLine("Install Done !!!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.ReadLine();
+            }
 
             Environment.Exit(0);
         }

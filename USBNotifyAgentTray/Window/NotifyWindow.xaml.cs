@@ -23,6 +23,9 @@ namespace USBNotifyAgentTray
         public NotifyWindow()
         {
             InitializeComponent();
+
+            this.Top = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Bottom - this.Height;
+            this.Left = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Right - this.Width;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -31,7 +34,7 @@ namespace USBNotifyAgentTray
             TxtProduct.Text = "";
 
             TxtBrand.Text = TrayPipe.UsbDiskMessage?.Manufacturer;
-            TxtProduct.Text = TrayPipe.UsbDiskMessage?.Product;
+            TxtProduct.Text = TrayPipe.UsbDiskMessage?.Product;           
         }
 
         private void BtnRegisterUSB_Click(object sender, RoutedEventArgs e)

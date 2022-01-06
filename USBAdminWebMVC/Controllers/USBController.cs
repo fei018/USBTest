@@ -119,7 +119,9 @@ namespace USBAdminWebMVC.Controllers
             {
                 var query = await _usbDb.Get_UsbRegRequestById(usbRegRequestId);
                 await _usbDb.UsbRegRequestToRegistered(query);
-                return RedirectToAction("UsbRequest");
+
+                ViewBag.OK = "Register Succeed: " + query.ToString();
+                return View("OK");
             }
             catch (Exception ex)
             {

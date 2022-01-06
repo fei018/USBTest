@@ -88,18 +88,16 @@ namespace SetupClient
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine(ex.Message);
+                throw;
             }
         }
         #endregion
 
         #region setup
         public void Install()
-        {
-            Console.WriteLine("Start...");
-            Console.WriteLine();
+        {          
             try
             {
                 InitialKey();
@@ -117,12 +115,10 @@ namespace SetupClient
                 Console.WriteLine(bat);
                 Process.Start("cmd.exe", "/c call " + "\"" + bat + "\"");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine(ex.Message);
+                throw;
             }
-
-            Console.WriteLine("Done...");
         }
 
         private string WriteBatchFile()

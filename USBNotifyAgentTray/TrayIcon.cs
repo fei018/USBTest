@@ -8,7 +8,6 @@ namespace USBNotifyAgentTray
     public partial class App
     {
         private NotifyIcon _trayIcon;
-        private ContextMenu _contextMenu;
 
         #region + private void AddTrayIcon()
         private void AddTrayIcon()
@@ -21,44 +20,62 @@ namespace USBNotifyAgentTray
                 Text = "USB Notify",
                 Visible = true
             };
-            _contextMenu = new ContextMenu();
-            AddTrayIconItem();
-            _trayIcon.ContextMenu = _contextMenu;
+
+            _trayIcon.ContextMenuStrip = new ContextMenuStrip();
+            _trayIcon.ContextMenuStrip.Items.Add("Update Agent Setting", null, UpdateAgentSettingItem_Click);
+            _trayIcon.ContextMenuStrip.Items.Add("Update Usb Filter", null, UpdateUsbFilterDataItem_Click);
+            _trayIcon.ContextMenuStrip.Items.Add("Update Agent", null, UpdateAgentItem_Click);
         }
 
-        private void AddTrayIconItem()
+        private void UpdateAgentSettingItem_Click(object sender, EventArgs e)
         {
-            var updateItem = new MenuItem { Text = "check update" };
-            updateItem.Click += UpdateItem_Click;
-
-            _contextMenu.MenuItems.Add(updateItem);
-        }
-
-        private void UpdateItem_Click(object sender, EventArgs e)
-        {
-            try
+            Task.Run(() =>
             {
-                Task.Run(() =>
+                try
+                {
+                    _trayPipe.UpdateAgentSetting();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            });
+        }
+
+        private void UpdateUsbFilterDataItem_Click(object sender, EventArgs e)
+        {
+            Task.Run(() =>
+            {
+                try
+                {
+                    _trayPipe.UpdateUsbFilterData();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Update Usb Filter Data Error");
+                }
+            });
+        }
+
+        private void UpdateAgentItem_Click(object sender, EventArgs e)
+        {
+            Task.Run(() =>
+            {
+                try
                 {
                     _trayPipe.CheckAndUpdateAgent();
-                });
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Update Agent Error");
+                }
+            });
         }
         #endregion
 
         #region + private void RemoveTrayIcon()
         private void RemoveTrayIcon()
         {
-            if (_contextMenu != null)
-            {
-                _contextMenu.Dispose();
-            }
-
             if (_trayIcon != null)
             {
                 _trayIcon.Visible = false;

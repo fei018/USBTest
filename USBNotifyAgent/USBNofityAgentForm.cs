@@ -59,10 +59,16 @@ namespace USBNotifyAgent
         {
             Task.Run(() =>
             {
-                if (!AgentRegistry.UsbHistoryEnabled) return;
+                try
+                {
+                    if (!AgentRegistry.UsbHistoryEnabled) return;
 
-                // post usb history to server
-                new AgentHttpHelp().PostPerUsbHistory_byDisk_Http(diskPath);
+                    // post usb history to server
+                    new AgentHttpHelp().PostPerUsbHistory_byDisk_Http(diskPath);
+                }
+                catch (Exception)
+                {
+                }
             });
         }
         #endregion
@@ -74,11 +80,13 @@ namespace USBNotifyAgent
             {
                 try
                 {
+                    if (!AgentRegistry.UsbFilterEnabled) return;
+
                     // push usbmessage to agent tray pipe
                     var usb = new UsbFilter().Find_UsbDisk_By_DiskPath(diskPath);
                     if (!UsbFilterDataHelp.IsFind(usb))
                     {
-                        _agentPipe.PushUsbMessage(usb);
+                        _agentPipe.PushUsbMessageToTray(usb);
                     }
                 }
                 catch (Exception)

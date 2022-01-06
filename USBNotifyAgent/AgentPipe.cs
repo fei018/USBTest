@@ -1,13 +1,9 @@
 ﻿using NamedPipeWrapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using USBNotifyLib;
 using Newtonsoft.Json;
+using System;
 using System.IO.Pipes;
 using System.Security.AccessControl;
+using USBNotifyLib;
 
 namespace USBNotifyAgent
 {
@@ -40,11 +36,11 @@ namespace USBNotifyAgent
                             new PipeAccessRule(
                             "Authenticated Users",
                             PipeAccessRights.ReadWrite | PipeAccessRights.CreateNewInstance,
-                            AccessControlType.Allow));                
+                            AccessControlType.Allow));
 
-                _server = new NamedPipeServer<string>(PipeName,pipeSecurity);                
+                _server = new NamedPipeServer<string>(PipeName, pipeSecurity);
 
-                _server.ClientMessage += _server_ClientMessage;
+                _server.ClientMessage += _server_FromClientMessage;
 
                 _server.Start();
             }
@@ -66,17 +62,26 @@ namespace USBNotifyAgent
         #endregion
 
         #region + private void _server_ClientMessage(NamedPipeConnection<string, string> connection, string message)
-        private void _server_ClientMessage(NamedPipeConnection<string, string> connection, string message)
+        private void _server_FromClientMessage(NamedPipeConnection<string, string> connection, string message)
         {
             try
             {
                 // check and update agent
-                if (message == "UpdateAgent")
+                if (message == PipeMsgType.UpdateAgent)
                 {
-                    Task.Run(() =>
-                    {
-                        new AgentUpdate().Update();
-                    });
+                    new AgentUpdate().Update();
+                }
+
+                // update usb filter data
+                if (message == PipeMsgType.UpdateUsbFilterData)
+                {
+                    new AgentHttpHelp().GetUsbFilterData_Http();
+                }
+
+                // Update Agent Setting
+                if (message == PipeMsgType.UpdateAgentSetting)
+                {
+                    new AgentHttpHelp().GetAgentSetting_Http();
                 }
             }
             catch (Exception ex)
@@ -86,8 +91,8 @@ namespace USBNotifyAgent
         }
         #endregion
 
-        #region + public void PushUsbMessage(UsbDisk usb)
-        public void PushUsbMessage(UsbDisk usb)
+        #region + public void PushUsbMessageToTray(UsbDisk usb)
+        public void PushUsbMessageToTray(UsbDisk usb)
         {
             try
             {

@@ -20,7 +20,7 @@ namespace USBNotifyLib
                        "SerialNumber: " + SerialNumber + Environment.NewLine +
                        "Manufacturer: " + Manufacturer + Environment.NewLine +
                        "Product: " + Product + Environment.NewLine +
-                       "DeviceDescription: " + Environment.NewLine +
+                       "DeviceDescription: " + DeviceDescription + Environment.NewLine +
                        "DeviceId: " + UsbDeviceId + Environment.NewLine + Environment.NewLine;
 
             return s;

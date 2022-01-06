@@ -91,6 +91,7 @@ namespace USBNotifyLib
             try
             {
                 WriteFile_UsbFilterData(usbFilterData);
+                Reload_UsbFilterData();
             }
             catch (Exception ex)
             {

@@ -151,9 +151,9 @@ namespace USBNotifyLib
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception("Set UsbDisk ReadOnly: " + ex.Message);
             }
         }
 

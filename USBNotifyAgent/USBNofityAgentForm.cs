@@ -25,6 +25,7 @@ namespace USBNotifyAgent
         private void USBNofityForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             base.Stop();
+            _agentPipe.Stop();
         }
         #endregion
 
@@ -84,9 +85,9 @@ namespace USBNotifyAgent
 
                     // push usbmessage to agent tray pipe
                     var usb = new UsbFilter().Find_UsbDisk_By_DiskPath(diskPath);
-                    if (!UsbFilterDataHelp.IsFind(usb))
+                    if (!UsbWhitelistHelp.IsFind(usb))
                     {
-                        _agentPipe.PushUsbMessageToTray(usb);
+                        _agentPipe.PushUsbDiskToTray(usb);
                     }
                 }
                 catch (Exception)

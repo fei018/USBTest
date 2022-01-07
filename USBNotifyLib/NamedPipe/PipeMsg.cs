@@ -3,22 +3,34 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace USBNotifyLib
 {
     public class PipeMsg
     {
+        public PipeMsgType PipeMsgType { get; set; }
+
         public UsbDisk UsbDisk { get; set; }
 
-        public string Error { get; set; }
+        public string Message { get; set; }
 
-        public PipeMsg(string error=null)
+        public PipeMsg() { }
+
+        public PipeMsg(PipeMsgType msgType)
         {
-            Error = error;
+            PipeMsgType = msgType;
+        }
+
+        public PipeMsg(PipeMsgType msgType, string message)
+        {
+            PipeMsgType = msgType;
+            Message = message;
         }
 
         public PipeMsg(UsbDisk usbDisk)
         {
+            PipeMsgType = PipeMsgType.UsbDisk;
             UsbDisk = usbDisk;
         }
     }

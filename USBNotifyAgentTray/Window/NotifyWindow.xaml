@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:USBNotifyAgentTray"
         mc:Ignorable="d"
-        Title="USB Warning" Height="300" Width="300" ResizeMode="NoResize" WindowStartupLocation="Manual" 
+        Title="USB Control" Height="300" Width="300" ResizeMode="NoResize" WindowStartupLocation="Manual" 
         Loaded="Window_Loaded" Icon="USB.ico" Topmost="True">
     <Grid>
         <Grid.RowDefinitions>
@@ -16,7 +16,7 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
-            <TextBlock  Text="USB Device Not Registered"
+            <TextBlock  Text="This USB is not registered"
                         VerticalAlignment="Center" HorizontalAlignment="Center"
                         FontSize="14" Foreground="Red"/>
         </Grid>
@@ -31,7 +31,7 @@
         </Grid>
 
         <Grid Grid.Row="2">
-            <Button x:Name="BtnRegisterUSB" FontSize="14" Margin="15" Content="Register USB"
+            <Button x:Name="BtnRegisterUSB" FontSize="14" Margin="15" Content="USB registration request"
                     Click="BtnRegisterUSB_Click"></Button>
         </Grid>
 

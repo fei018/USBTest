@@ -6,23 +6,44 @@ namespace USBNotifyLib
 {
     public class AgentTimer
     {
-        public static void RunTask()
+        private static Timer _Timer;
+
+        public static void ReloadTask()
         {
+            ClearTimerTask();
             SetTimerTask();
         }
 
+        #region + private static void ClearTimerTask()
+        private static void ClearTimerTask()
+        {
+            try
+            {
+                if (_Timer != null)
+                {
+                    _Timer.Elapsed -= TimerTask_Elapsed;
+                    _Timer.Enabled = false;
+                    _Timer.Dispose();
+                }
+            }
+            catch (Exception ex)
+            {
+                UsbLogger.Error(ex.Message);
+            }
+        }
+        #endregion
 
         #region + private static void SetTimerTask()
         private static void SetTimerTask()
         {
             try
             {
-                var timerTask = new Timer();
-                timerTask.Interval = TimeSpan.FromMinutes(AgentRegistry.AgentTimerMinute).TotalMilliseconds;
-                timerTask.AutoReset = true;
-                timerTask.Elapsed += TimerTask_Elapsed;
+                _Timer = new Timer();
+                _Timer.Interval = TimeSpan.FromMinutes(AgentRegistry.AgentTimerMinute).TotalMilliseconds;
+                _Timer.AutoReset = true;
+                _Timer.Elapsed += TimerTask_Elapsed;
 
-                timerTask.Enabled = true;                            
+                _Timer.Enabled = true;                            
             }
             catch (Exception ex)
             {
@@ -38,6 +59,8 @@ namespace USBNotifyLib
         }
         #endregion
 
+        // Timer Task Handler
+
         #region + private static void TimerTask_Get_AgentSetting()
         private static void TimerTask_Get_AgentSetting()
         {
@@ -49,7 +72,7 @@ namespace USBNotifyLib
 
                     if (AgentRegistry.UsbFilterEnabled)
                     {
-                        new AgentHttpHelp().GetUsbFilterData_Http();
+                        new AgentHttpHelp().GetUsbWhitelist_Http();
                     }
                 }
                 catch (Exception ex)

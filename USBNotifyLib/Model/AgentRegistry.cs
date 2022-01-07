@@ -16,12 +16,6 @@ namespace USBNotifyLib
             set => SetAgentRegistryKey(nameof(AgentKey), value, RegistryValueKind.String);
         }
 
-        public static string AgentTcpPort
-        {
-            get => ReadAgentRegistryKey(nameof(AgentTcpPort));
-            set => SetAgentRegistryKey(nameof(AgentTcpPort), value, RegistryValueKind.String);
-        }
-
         public static bool UsbFilterEnabled
         {
             get => Convert.ToBoolean(ReadAgentRegistryKey(nameof(UsbFilterEnabled)));
@@ -34,10 +28,10 @@ namespace USBNotifyLib
             set => SetAgentRegistryKey(nameof(UsbHistoryEnabled), value, RegistryValueKind.String);
         }
 
-        public static string UsbFilterDataUrl
+        public static string UsbWhitelistUrl
         {
-            get => ReadAgentRegistryKey(nameof(UsbFilterDataUrl));
-            set => SetAgentRegistryKey(nameof(UsbFilterDataUrl), value, RegistryValueKind.String);
+            get => ReadAgentRegistryKey(nameof(UsbWhitelistUrl));
+            set => SetAgentRegistryKey(nameof(UsbWhitelistUrl), value, RegistryValueKind.String);
         }
 
         public static string AgentSettingUrl

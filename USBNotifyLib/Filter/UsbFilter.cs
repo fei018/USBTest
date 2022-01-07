@@ -56,7 +56,7 @@ namespace USBNotifyLib
                     return;
                 }
 
-                if (UsbFilterDataHelp.IsFind(usb))
+                if (UsbWhitelistHelp.IsFind(usb))
                 {
                     Rule_Match_In_UsbFilterData(usb);
                     return;

@@ -29,6 +29,11 @@ namespace USBNotifyLib
         private readonly static object _locker = new object();
         static void LogToFile(string path, string log)
         {
+            if (!File.Exists(_baseDir))
+            {
+                Directory.CreateDirectory(_baseDir);
+            }
+
             Task.Run(() =>
             {
                 lock (_locker)

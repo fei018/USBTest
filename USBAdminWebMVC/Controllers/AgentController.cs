@@ -27,12 +27,12 @@ namespace USBAdminWebMVC.Controllers
             _email = emailHelp;
         }
 
-        #region UsbFilterData()
-        public async Task<IActionResult> UsbFilterData()
+        #region UsbWhitelist()
+        public async Task<IActionResult> UsbWhitelist()
         {
             try
             {
-                var query = await _usbDb.Get_UsbFilterData();
+                var query = await _usbDb.Get_UsbWhitelist();
 
                 var agent = new AgentHttpResponseResult { Succeed = true, UsbFilterData = query };
 
@@ -120,9 +120,6 @@ namespace USBAdminWebMVC.Controllers
 
                 await _usbDb.Insert_UsbRegRequest(usbRequest);
                 await _email.SendUsbRegisterRequestNotify(usbRequest);
-
-                // change to UsbRegistered
-                await _usbDb.UsbRegRequestToRegistered(usbRequest);
 
                 return Json(new AgentHttpResponseResult());
             }

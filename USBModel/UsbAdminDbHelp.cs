@@ -82,8 +82,8 @@ namespace USBModel
 
         // UsbFilerDb
 
-        #region + public async Task<string> Get_UsbFilterData()
-        public async Task<string> Get_UsbFilterData()
+        #region + public async Task<string> Get_UsbWhitelist()
+        public async Task<string> Get_UsbWhitelist()
         {
             StringBuilder filterDb = new StringBuilder();
             var query = await _db.Queryable<Tbl_UsbRegistered>().ToListAsync();

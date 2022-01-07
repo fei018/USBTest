@@ -8,9 +8,9 @@ using USBCommon;
 
 namespace USBNotifyLib
 {
-    public class UsbFilterDataHelp
+    public class UsbWhitelistHelp
     {
-        private static string _UsbFilterDataFile => Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"usbfilter.dat");
+        private static string _UsbWhitelistFile => Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"usbwhitelist.dat");
 
         private static HashSet<string> CacheDb { get; set; }
 
@@ -22,20 +22,20 @@ namespace USBNotifyLib
         {
             if (CacheDb == null || CacheDb.Count <= 0)
             {
-                Reload_UsbFilterData();
+                Reload_UsbWhitelist();
             }
         }
         #endregion
 
         #region + public void Reload_UsbFilterData()
-        public static void Reload_UsbFilterData()
+        public static void Reload_UsbWhitelist()
         {
             try
             {
-                var table = ReadFile_UsbFilterData();
+                var table = ReadFile_UsbWhitelist();
                 if (table == null || table.Length <= 0)
                 {
-                    throw new Exception(_UsbFilterDataFile + " file is null or empty. ?");
+                    throw new Exception(_UsbWhitelistFile + " file is null or empty. ?");
                 }
 
                 var cache = new HashSet<string>();
@@ -85,13 +85,13 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + public static void Set_UsbFilterData_byHttp(UsbFilterDbHttp setting)
-        public static void Set_UsbFilterData_byHttp(string usbFilterData)
+        #region + public static void Set_UsbWhitelist_byHttp(UsbFilterDbHttp setting)
+        public static void Set_UsbWhitelist_byHttp(string usbWhitelist)
         {
             try
             {
-                WriteFile_UsbFilterData(usbFilterData);
-                Reload_UsbFilterData();
+                WriteFile_UsbWhitelist(usbWhitelist);
+                Reload_UsbWhitelist();
             }
             catch (Exception ex)
             {
@@ -100,22 +100,22 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + private static string[] ReadFile_UsbFilterData()
-        private static readonly object _locker_UsbFilterDb = new object();
-        private static string[] ReadFile_UsbFilterData()
+        #region + private static string[] ReadFile_UsbWhitelist()
+        private static readonly object _locker_UsbWhitelist = new object();
+        private static string[] ReadFile_UsbWhitelist()
         {
-            lock (_locker_UsbFilterDb)
+            lock (_locker_UsbWhitelist)
             {
                 try
                 {
-                    if (!File.Exists(_UsbFilterDataFile))
+                    if (!File.Exists(_UsbWhitelistFile))
                     {
-                        new AgentHttpHelp().GetUsbFilterData_Http();
+                        new AgentHttpHelp().GetUsbWhitelist_Http();
                     }
 
-                    if (File.Exists(_UsbFilterDataFile))
+                    if (File.Exists(_UsbWhitelistFile))
                     {
-                        return File.ReadAllLines(_UsbFilterDataFile, new UTF8Encoding(false));
+                        return File.ReadAllLines(_UsbWhitelistFile, new UTF8Encoding(false));
                     }
                     return null;
                 }
@@ -128,12 +128,12 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + private static void WriteFile_UsbFilterData(string txt)
-        private static void WriteFile_UsbFilterData(string txt)
+        #region + private static void WriteFile_UsbWhitelist(string txt)
+        private static void WriteFile_UsbWhitelist(string txt)
         {
-            lock (_locker_UsbFilterDb)
+            lock (_locker_UsbWhitelist)
             {
-                File.WriteAllText(_UsbFilterDataFile, txt, new UTF8Encoding(false));
+                File.WriteAllText(_UsbWhitelistFile, txt, new UTF8Encoding(false));
             }
         }
         #endregion

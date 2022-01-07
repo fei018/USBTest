@@ -47,7 +47,7 @@
     <Compile Include="Filter\UsbBusController.cs" />
     <Compile Include="Filter\UsbFilter.cs" />
     <Compile Include="Filter\UsbFilter2.cs" />
-    <Compile Include="Filter\UsbFilterDataHelp.cs" />
+    <Compile Include="Filter\UsbWhitelistHelp.cs" />
     <Compile Include="Main\AgentUpdate.cs" />
     <Compile Include="Main\AgentManager.cs" />
     <Compile Include="Main\AgentTimer.cs" />

@@ -18,115 +18,169 @@ namespace USBNotifyAgentTray
 
         private NamedPipeClient<string> _client;
 
-        public static UsbDisk UsbDiskMessage { get; set; }
+        public static UsbDisk UsbDiskInfo { get; set; }
 
-        #region
+        #region Start()
         public void Stop()
         {
-            _client?.Stop();
+            try
+            {
+                if (_client != null)
+                {
+                    _client.Error -= pipeConnection_Error;
+                    _client.ServerMessage -= ReceiveMessageFromAgentPipe;
+                    _client.Stop();
+                    _client = null;
+                }
+            }
+            catch (Exception)
+            {
+            }        
         }
 
         public void Start()
         {
-            if (string.IsNullOrWhiteSpace(PipeName))
+            try
             {
-                UsbLogger.Error("PipeName is empty");
-                return;
+                if (string.IsNullOrWhiteSpace(PipeName))
+                {
+                    UsbLogger.Error("PipeName is empty");
+                    return;
+                }
+
+                Stop();
+
+                _client = new NamedPipeClient<string>(PipeName);
+                _client.AutoReconnect = true;
+
+                _client.ServerMessage += ReceiveMessageFromAgentPipe;
+
+                _client.Error += pipeConnection_Error;
+
+                _client.Start();
             }
-
-            _client?.Stop();
-
-            _client = new NamedPipeClient<string>(PipeName);
-            _client.AutoReconnect = true;
-
-            _client.ServerMessage += _client_ServerMessage;
-
-            _client.Error += _client_Error;
-
-            _client.Start();
-
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "TrayPipe Start()");
+            }
         }
 
-        private void _client_Error(Exception exception)
+        private void pipeConnection_Error(Exception exception)
         {
             MessageBox.Show(exception.Message,"TrapPipe Error");
         }
         #endregion
 
-        #region + private void _client_ServerMessage(NamedPipeConnection<string, string> connection, string usbJson)
-        private void _client_ServerMessage(NamedPipeConnection<string, string> connection, string usbJson)
+        #region + private void ReceiveMessageFromAgentPipe(NamedPipeConnection<string, string> connection, string usbJson)
+        private void ReceiveMessageFromAgentPipe(NamedPipeConnection<string, string> connection, string message)
         {
-            if (string.IsNullOrEmpty(usbJson))
+            try
             {
-                UsbLogger.Error("TrayPipe: UsbDisk is Null from Pipe Message.");
-                return;
+                var pipeMsg = JsonConvert.DeserializeObject<PipeMsg>(message);
+
+                if (pipeMsg == null)
+                {
+                    throw new Exception("TrayPipe: PipeMsg is Null.");
+                }
+
+                switch (pipeMsg.PipeMsgType)
+                {
+                    case PipeMsgType.Error:
+                        MessageFromAgentPipe(pipeMsg.Message);
+                        break;
+
+                    case PipeMsgType.Message:
+                        MessageFromAgentPipe(pipeMsg.Message);
+                        break;
+
+                    case PipeMsgType.UsbDisk:
+                        OpenTrayNotifyWindow(pipeMsg.UsbDisk);
+                        break;
+
+                    case PipeMsgType.CloseAgentTray:
+                        break;
+
+                    default:
+                        break;
+                }
             }
-
-            var usb = JsonConvert.DeserializeObject<UsbDisk>(usbJson);
-
-            if (usb == null)
+            catch (Exception ex)
             {
-                throw new Exception("UsbRegisterRequest is Null.");
-            }
-
-            UsbDiskMessage = usb;
-            App.Current.Dispatcher.BeginInvoke(new Action(() =>
-            {
-                //Debugger.Break();
-                var notifyWin = new NotifyWindow();
-
-                notifyWin.Show();
-            }));
+                MessageBox.Show(ex.Message, "TrayPipe Error");
+            }          
         }
         #endregion
+
+        // ReceiveMessageFromAgentPipe handler
+
+        #region + private void MessageFromAgentPipe(string message)
+        private void MessageFromAgentPipe(string message)
+        {
+            MessageBox.Show(message, "USB Control");
+        }
+        #endregion
+
+        #region + private void OpenTrayNotifyWindow(UsbDisk usbDisk)
+        private void OpenTrayNotifyWindow(UsbDisk usbDisk)
+        {
+            try
+            {
+                UsbDiskInfo = usbDisk;
+                App.Current.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    //Debugger.Break();
+                    var notifyWin = new NotifyWindow();
+
+                    notifyWin.Show();
+                }));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
+            }
+        }
+        #endregion
+
+        // push message to agent pipe server
 
         #region + public void CheckAndUpdateAgent()
         public void CheckAndUpdateAgent()
         {           
             try
             {
-                if(new AgentUpdate().IsNeedToUpdate())
-                {
-                    _client?.PushMessage(PipeMsgType.UpdateAgent);
-                }
-                else
-                {
-                    MessageBox.Show("Agent is Newest version.");
-                }
+                var json = JsonConvert.SerializeObject(new PipeMsg(PipeMsgType.UpdateAgent));
+                _client?.PushMessage(json);
             }
             catch (Exception)
             {
-                throw;
             }
         }
         #endregion
 
-        #region + public void UpdateUsbFilterData()
-        public void UpdateUsbFilterData()
+        #region + public void UpdateUsbWhitelist()
+        public void UpdateUsbWhitelist()
         {
             try
             {
-                _client?.PushMessage(PipeMsgType.UpdateUsbFilterData);
-                MessageBox.Show("Update Done.", "Updata Usb Filter Data");
+                var json = JsonConvert.SerializeObject(new PipeMsg(PipeMsgType.UpdateUsbWhitelist));
+                _client?.PushMessage(json);
             }
             catch (Exception)
             {
-                throw;
             }
         }
         #endregion
 
-        #region MyRegion
+        #region + public void UpdateAgentSetting()
         public void UpdateAgentSetting()
         {
             try
             {
-                _client?.PushMessage(PipeMsgType.UpdateAgentSetting);
-                MessageBox.Show("Update Done.");
+                var json = JsonConvert.SerializeObject(new PipeMsg(PipeMsgType.UpdateAgentSetting));
+                _client?.PushMessage(json);
             }
             catch (Exception)
             {
-                throw;
             }
         }
         #endregion

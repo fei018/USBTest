@@ -44,8 +44,8 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + public void GetUsbFilterData_Http()
-        public void GetUsbFilterData_Http()
+        #region + public void GetUsbWhitelist_Http()
+        public void GetUsbWhitelist_Http()
         {
             try
             {
@@ -53,7 +53,7 @@ namespace USBNotifyLib
                 {
                     http.Timeout = TimeSpan.FromSeconds(20);
                     
-                    var response = http.GetAsync(AgentRegistry.UsbFilterDataUrl).Result;
+                    var response = http.GetAsync(AgentRegistry.UsbWhitelistUrl).Result;
                     if (!response.IsSuccessStatusCode) throw new Exception("Http Error StatusCode: " + response.StatusCode.ToString());
 
                     string json = response.Content.ReadAsStringAsync().Result;
@@ -63,7 +63,7 @@ namespace USBNotifyLib
                         throw new Exception(agentResult.Msg);
                     }
 
-                    UsbFilterDataHelp.Set_UsbFilterData_byHttp(agentResult.UsbFilterData);
+                    UsbWhitelistHelp.Set_UsbWhitelist_byHttp(agentResult.UsbFilterData);
                     UsbLogger.Log("Get UsbFilterData from Http Server done.");
                 }
             }

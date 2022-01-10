@@ -16,7 +16,11 @@ namespace SetupClient
 
         static string _setupiniPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "setup.ini");
 
-        static string _USBProgramDir = Path.Combine(Environment.ExpandEnvironmentVariables("%programfiles%\\USBNotify"));
+        static string _InstallProgramDir = Path.Combine(Environment.ExpandEnvironmentVariables("%programfiles%\\USBNotify"));
+
+        static string _installServiceBatch = Path.Combine(_InstallProgramDir, "Service_Install.bat");
+
+        static string _uninstallServiceBatch = Path.Combine(_InstallProgramDir, "Service_Uninstall.bat");
 
         #region + private Setupini GetSetupini()
         private Dictionary<string, string> GetSetupini()
@@ -77,6 +81,7 @@ namespace SetupClient
                 {
                     var key = "SOFTWARE\\Hiphing\\USBNotify";
 
+                    // delete old key
                     hklm.DeleteSubKey(key, false);
 
                     using (var usbKey = hklm.CreateSubKey(key, true))
@@ -95,6 +100,10 @@ namespace SetupClient
         }
         #endregion
 
+        #region unsetup
+
+        #endregion
+
         #region setup
         public void Install()
         {          
@@ -102,18 +111,22 @@ namespace SetupClient
             {
                 InitialKey();
 
-                var zip = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"debug.zip");
+                var updateDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"update");
 
-                if (Directory.Exists(_USBProgramDir))
+                if (Directory.Exists(_InstallProgramDir))
                 {
-                    Directory.Delete(_USBProgramDir, true);
+                    Directory.Delete(_InstallProgramDir, true);
                 }
 
-                ZipFile.ExtractToDirectory(zip, _USBProgramDir);
+                var files = Directory.GetFiles(updateDir);
+                foreach (var f in files)
+                {
+                    File.Copy(f, Path.Combine(_InstallProgramDir, Path.GetFileName(f)), true);
+                }
 
-                var bat = WriteBatchFile();
-                Console.WriteLine(bat);
-                Process.Start("cmd.exe", "/c call " + "\"" + bat + "\"");
+                var installServiceBatch = WriteBatchFile();
+                Console.WriteLine(installServiceBatch);
+                Process.Start("cmd.exe", "/c call " + "\"" + installServiceBatch + "\"");
             }
             catch (Exception)
             {
@@ -126,21 +139,19 @@ namespace SetupClient
             var sb = new StringBuilder();
 
             // service_install.bat
-            sb.AppendLine($"\"C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\InstallUtil.exe\" \"{_USBProgramDir}\\usbnservice.exe\"");
+            sb.AppendLine($"\"C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\InstallUtil.exe\" \"{_InstallProgramDir}\\usbnservice.exe\"");
             sb.AppendLine("net start usbnsrv");
             sb.AppendLine("popd");
-            var InstallPath = Path.Combine(_USBProgramDir, "Service_Install.bat");
-            File.WriteAllText(InstallPath, sb.ToString(), new UTF8Encoding(false));
+            File.WriteAllText(_installServiceBatch, sb.ToString(), new UTF8Encoding(false));
 
             // service_uninstall.bat
             sb.Clear();
             sb.AppendLine("net stop usbnsrv");
-            sb.AppendLine($"\"C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\InstallUtil.exe\" /u \"{_USBProgramDir}\\usbnservice.exe\"");
+            sb.AppendLine($"\"C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\InstallUtil.exe\" /u \"{_InstallProgramDir}\\usbnservice.exe\"");
             sb.AppendLine("popd");
-            var path = Path.Combine(_USBProgramDir, "Service_Uninstall.bat");
-            File.WriteAllText(path, sb.ToString(), new UTF8Encoding(false));
+            File.WriteAllText(_uninstallServiceBatch, sb.ToString(), new UTF8Encoding(false));
 
-            return InstallPath;
+            return _installServiceBatch;
         }
         #endregion
     }

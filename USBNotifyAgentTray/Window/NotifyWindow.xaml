@@ -31,7 +31,7 @@
         </Grid>
 
         <Grid Grid.Row="2">
-            <Button x:Name="BtnRegisterUSB" FontSize="14" Margin="15" Content="USB registration request"
+            <Button x:Name="BtnRegisterUSB" FontSize="14" Margin="15" Content="USB registration request..."
                     Click="BtnRegisterUSB_Click"></Button>
         </Grid>
 

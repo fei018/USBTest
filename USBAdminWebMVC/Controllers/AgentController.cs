@@ -132,7 +132,19 @@ namespace USBAdminWebMVC.Controllers
 
 
         #region AgentUpdate()
+        public Task<IActionResult> AgentUpdate()
+        {
+            try
+            {
+                var install = Path.Combine(Directory.GetCurrentDirectory(), "Update",);
 
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
         #endregion
     }
 }

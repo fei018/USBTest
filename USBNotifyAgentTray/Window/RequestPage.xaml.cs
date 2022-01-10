@@ -10,44 +10,47 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 using USBNotifyLib;
-using USBCommon;
 
 namespace USBNotifyAgentTray
 {
     /// <summary>
-    /// RequestWindow.xaml 的互動邏輯
+    /// RequestPage.xaml 的互動邏輯
     /// </summary>
-    public partial class RegisterWindow : Window
+    public partial class RequestPage : Page
     {
-        public RegisterWindow()
+        public RequestPage()
         {
             InitializeComponent();
         }
 
-        private void BtnSend_Click(object sender, RoutedEventArgs e)
-        {
-            var email = TxtUserEmail.Text;
+        public event EventHandler<string> USBRequestSubmittedEvent;
+
+        private void BtnSubmit_Click(object sender, RoutedEventArgs e)
+        {           
+            var select = ComboBoxEmail.SelectedItem as ComboBoxItem;
+            var email = TxtUserEmail.Text?.Trim() + select?.Content;
 
             // 檢查 email address format
             try
             {
-                if (string.IsNullOrWhiteSpace(email))
-                {
-                    throw new Exception();
-                }
-
                 // check email format
                 var address = new System.Net.Mail.MailAddress(email);
                 if (address.Address != email)
                 {
-                    throw new Exception();
+                    throw new Exception("Email format error.");
+                }
+
+                if (string.IsNullOrWhiteSpace(TxtReason.Text))
+                {
+                    throw new Exception("Request reason is empty.");
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show("Email format error or required", "Error");
+                MessageBox.Show(ex.Message, "Error");
                 return;
             }
 
@@ -63,19 +66,12 @@ namespace USBNotifyAgentTray
 
                 new AgentHttpHelp().PostUsbRegisterRequest(post);
 
-                MessageBox.Show("Send succeed.");
-                DialogResult = true;
+                USBRequestSubmittedEvent?.Invoke(this, "Your request was submitted successfully.");
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error");
             }
-        }
-
-        private void BtnCancel_Click(object sender, RoutedEventArgs e)
-        {
-            DialogResult = false;
-            Close();
         }
     }
 }

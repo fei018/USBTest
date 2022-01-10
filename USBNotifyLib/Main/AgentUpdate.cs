@@ -20,7 +20,7 @@ namespace USBNotifyLib
 
         private static string _updateDir = Path.Combine(_baseDir, "update");
 
-        private static string _updateExe = Path.Combine(_updateDir, "update.exe");
+        private static string _updateExe = Path.Combine(_updateDir, "Setup.exe");
 
         #region + public static void CheckAndUpdate()
         /// <summary>
@@ -103,17 +103,24 @@ namespace USBNotifyLib
             {
                 UsbLogger.Error(ex.Message);
             }
+            CleanDownloadDir();
         }
         #endregion
 
         #region + private void CleanDownloadDir()
         private void CleanDownloadDir()
         {
-            if (Directory.Exists(_downloadFileDir))
+            try
             {
-                Directory.Delete(_downloadFileDir, true);
+                if (Directory.Exists(_downloadFileDir))
+                {
+                    Directory.Delete(_downloadFileDir, true);
+                }
+                Directory.CreateDirectory(_downloadFileDir);
             }
-            Directory.CreateDirectory(_downloadFileDir);
+            catch (Exception)
+            {
+            }
         }
         #endregion
 
@@ -122,7 +129,6 @@ namespace USBNotifyLib
         {
             using (var http = AgentHttpHelp.CreateHttpClient())
             {
-                http.Timeout = TimeSpan.FromMinutes(10);
                 var response = http.GetAsync(AgentRegistry.AgentUpdateUrl).Result;
 
                 if (response.IsSuccessStatusCode)

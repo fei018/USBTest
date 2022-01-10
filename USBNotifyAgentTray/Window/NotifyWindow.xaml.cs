@@ -41,13 +41,11 @@ namespace USBNotifyAgentTray
         {
             try
             {
-                var reqWin = new RegisterWindow();
+                var reqWin = new RequestWindow();
                 reqWin.Owner = this;
 
-                if (reqWin.ShowDialog().Value)
-                {
-                    Close();
-                }
+                reqWin.ShowDialog();
+                Close();
             }
             catch (Exception)
             {

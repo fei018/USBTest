@@ -59,7 +59,7 @@ namespace USBNotifyAgentTray
         }
         #endregion
 
-        #region + private void UpdateUsbFilterDataItem_Click(object sender, EventArgs e)
+        #region + private void UpdateUsbWhitelistItem_Click(object sender, EventArgs e)
         private void UpdateUsbWhitelistItem_Click(object sender, EventArgs e)
         {
             Task.Run(() =>

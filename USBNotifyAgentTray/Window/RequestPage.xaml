@@ -20,7 +20,7 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Grid>
-                <TextBlock Text="Submit USB Registration request to IT Dept" 
+                <TextBlock Text="Submit USB registration request to IT Dept" 
                        VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16"/>
             </Grid>
 

@@ -11,9 +11,9 @@ namespace USBAdminWebMVC.Controllers
     [Authorize]
     public class ComputerController : Controller
     {
-        private readonly UsbAdminDbHelp _usbDb;
+        private readonly USBAdminDatabaseHelp _usbDb;
 
-        public ComputerController(UsbAdminDbHelp usbDbHelp)
+        public ComputerController(USBAdminDatabaseHelp usbDbHelp)
         {
             _usbDb = usbDbHelp;
         }
@@ -28,7 +28,7 @@ namespace USBAdminWebMVC.Controllers
         {
             try
             {
-                var (totalCount, list) = await _usbDb.Get_PerComputerList(page, limit);
+                var (totalCount, list) = await _usbDb.PerComputer_Get_All(page, limit);
                 return JsonResultHelp.LayuiTableData(totalCount, list);
             }
             catch (Exception ex)
@@ -43,7 +43,7 @@ namespace USBAdminWebMVC.Controllers
         {
             try
             {
-                var query = await _usbDb.Get_PerComputerById(comId);
+                var query = await _usbDb.PerComputer_Get_ById(comId);
                 return View(query);
             }
             catch (Exception)

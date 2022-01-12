@@ -7,11 +7,11 @@ namespace USBNotifyLib
     {
         public int Vid { get; set; }
 
-        public string Vid_Hex => "Vid_" + Vid.ToString("X").PadLeft(4, '0');
+        public string Vid_Hex => "0x_" + Vid.ToString("X").PadLeft(4, '0');
 
         public int Pid { get; set; }
 
-        public string Pid_Hex => "Pid_" + Pid.ToString("X").PadLeft(4, '0');
+        public string Pid_Hex => "0x_" + Pid.ToString("X").PadLeft(4, '0');
 
         public string SerialNumber { get; set; }
 
@@ -20,10 +20,6 @@ namespace USBNotifyLib
         public string Product { get; set; }
 
         public string DeviceDescription { get; set; }
-
-        public string UsbDeviceId { get; set; }
-
-        public string UsbDevicePath { get; set; }
 
         /// <summary>
         /// 

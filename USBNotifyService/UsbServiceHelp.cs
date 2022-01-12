@@ -9,20 +9,20 @@ namespace USBNotifyService
 {
     public partial class UsbService
     {
-        private bool IsRebootUsbAgent = true;
-        private bool IsRebootUsbAgentTray = true;
+        private bool _autoBootUsbAgent = true;
+        private bool _autoBootUsbAgentTray = true;
 
         #region ServiceStart()
         private void Start_Service()
         {
-            IsRebootUsbAgent = true;
+            _autoBootUsbAgent = true;
             StartProcess_USBNotifyAgent();
 
             // 判斷當前 windows session 是否 user session
             var sessionid = ProcessApiHelp.GetCurrentUserSessionID();
             if (sessionid > 0)
             {
-                IsRebootUsbAgentTray = true;
+                _autoBootUsbAgentTray = true;
                 StartProcess_USBNotifyAgentTray();
             }
         }
@@ -31,10 +31,10 @@ namespace USBNotifyService
         #region ServiceStop()
         private void Stop_Service()
         {
-            IsRebootUsbAgent = false;
+            _autoBootUsbAgent = false;
             CloseProcess_USBNotifyAgent();
 
-            IsRebootUsbAgentTray = false;
+            _autoBootUsbAgentTray = false;
             CloseProcess_USBNotifyAgentTray();
         }
         #endregion
@@ -60,7 +60,7 @@ namespace USBNotifyService
                 // Exited Event 委託, 如果意外結束process, 可以自己啟動
                 _usbNotifyAppProcess.Exited += (s, e) =>
                 {
-                    if (IsRebootUsbAgent)
+                    if (_autoBootUsbAgent)
                     {
                         StartProcess_USBNotifyAgent();
                     }
@@ -113,7 +113,7 @@ namespace USBNotifyService
                 // Exited Event 委託, 如果意外結束process, 可以自己啟動
                 _usbNotifyDesktopProcess.Exited += (s, e) =>
                 {
-                    if (IsRebootUsbAgentTray)
+                    if (_autoBootUsbAgentTray)
                     {
                         StartProcess_USBNotifyAgentTray();
                     }
@@ -151,18 +151,18 @@ namespace USBNotifyService
         protected override void OnSessionChange(SessionChangeDescription changeDescription)
         {
             // user logon windows
-            // startup Agent Desktop
+            // startup Agent tray
             if (changeDescription.Reason == SessionChangeReason.SessionLogon)
             {
-                IsRebootUsbAgentTray = true;
+                _autoBootUsbAgentTray = true;
                 StartProcess_USBNotifyAgentTray();
             }
 
             // user logoff windows
-            // close Agent Desktop
+            // close Agent tray
             if (changeDescription.Reason == SessionChangeReason.SessionLogoff)
             {
-                IsRebootUsbAgentTray = false;
+                _autoBootUsbAgentTray = false;
                 CloseProcess_USBNotifyAgentTray();
             }
 

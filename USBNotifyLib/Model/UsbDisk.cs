@@ -4,6 +4,10 @@ namespace USBNotifyLib
 {
     public class UsbDisk : UsbBase
     {
+        public string UsbDeviceId { get; set; }
+
+        public string UsbDevicePath { get; set; }
+
         public string DiskDeviceId { get; set; }
 
         public string DiskPath { get; set; }

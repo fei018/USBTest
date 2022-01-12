@@ -59,10 +59,10 @@ namespace USBNotifyAgentTray
             {
                 if (TrayPipe.UsbDiskInfo == null)
                 {
-                    throw new Exception("TrayPipe.UsbDiskMessage");
+                    throw new Exception("TrayPipe.UsbDiskInfo");
                 }
 
-                var post = new UsbRegRequest(TrayPipe.UsbDiskInfo, email.Trim());
+                var post = new UsbRequest(TrayPipe.UsbDiskInfo, email, TxtReason.Text?.Trim());
 
                 new AgentHttpHelp().PostUsbRegisterRequest(post);
 

@@ -61,7 +61,7 @@
     <Compile Include="Model\PerUsbHistory.cs" />
     <Compile Include="Main\AgentHttpHelp.cs" />
     <Compile Include="Model\PerComputerHelp.cs" />
-    <Compile Include="Model\UsbRegRequest.cs" />
+    <Compile Include="Model\UsbRequest.cs" />
     <Compile Include="NamedPipe\PipeMsg.cs" />
     <Compile Include="NamedPipe\PipeMsgType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

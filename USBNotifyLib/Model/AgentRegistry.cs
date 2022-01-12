@@ -70,10 +70,10 @@ namespace USBNotifyLib
             set => SetAgentRegistryKey(nameof(PostPerUsbHistoryUrl), value, RegistryValueKind.String);
         }
 
-        public static string PostUsbRegRequestUrl
+        public static string PostUsbRequestUrl
         {
-            get => ReadAgentRegistryKey(nameof(PostUsbRegRequestUrl));
-            set => SetAgentRegistryKey(nameof(PostUsbRegRequestUrl), value, RegistryValueKind.String);
+            get => ReadAgentRegistryKey(nameof(PostUsbRequestUrl));
+            set => SetAgentRegistryKey(nameof(PostUsbRequestUrl), value, RegistryValueKind.String);
         }
 
 

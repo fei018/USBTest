@@ -64,7 +64,7 @@ namespace USBNotifyLib
                     }
 
                     UsbWhitelistHelp.Set_UsbWhitelist_byHttp(agentResult.UsbFilterData);
-                    UsbLogger.Log("Get UsbFilterData from Http Server done.");
+                    UsbLogger.Log("Http update UsbWhitelist done.");
                 }
             }
             catch (Exception)
@@ -186,7 +186,7 @@ namespace USBNotifyLib
         /// </summary>
         /// <param name="usb"></param>
         /// <exception cref="throw"></exception>
-        public void PostUsbRegisterRequest(UsbRegRequest post)
+        public void PostUsbRegisterRequest(UsbRequest post)
         {
             try
             {
@@ -200,7 +200,7 @@ namespace USBNotifyLib
                 {
                     StringContent content = new StringContent(usbJson, Encoding.UTF8, MimeTypeMap.GetMimeType("json"));
 
-                    var response = http.PostAsync(AgentRegistry.PostUsbRegRequestUrl, content).Result;
+                    var response = http.PostAsync(AgentRegistry.PostUsbRequestUrl, content).Result;
 
                     if (!response.IsSuccessStatusCode) throw new Exception("Http Error StatusCode: " + response.StatusCode.ToString());
 

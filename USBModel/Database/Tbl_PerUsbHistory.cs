@@ -31,10 +31,10 @@ namespace USBModel
 
         // not mapping
         [SugarColumn(IsIgnore = true)]
-        public string Pid_Hex => "PID_" + Pid.ToString("X").PadLeft(4, '0');
+        public string Pid_Hex => "0x_" + Pid.ToString("X").PadLeft(4, '0');
 
         [SugarColumn(IsIgnore = true)]
-        public string Vid_Hex => "VID_" + Vid.ToString("X").PadLeft(4, '0');
+        public string Vid_Hex => "0x_" + Vid.ToString("X").PadLeft(4, '0');
 
         [SugarColumn(IsIgnore = true)]
         public string PluginTimeString => PluginTime.ToString("yyyy-MM-dd HH:mm:ss");

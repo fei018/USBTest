@@ -32,6 +32,12 @@ namespace USBModel
 
         public bool UsbHistoryEnabled { get; set; }
 
+
+        // IsIgnore
+
+        [SugarColumn(IsIgnore = true)]
+        public string LastSeenString => LastSeen.ToString("G");
+
         public override string ToString()
         {
             return "HostName: " + HostName + "\r\n" +

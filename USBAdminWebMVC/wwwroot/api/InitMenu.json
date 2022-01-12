@@ -1,11 +1,11 @@
 ﻿{
   "homeInfo": {
     "title": "Home",
-    "href": "usbadmin/home/welcome"
+    "href": "USBadmin/home/welcome"
   },
   "logoInfo": {
     "title": "USB Admin",
-    "image": "usbadmin/images/logo.png",
+    "image": "USBadmin/images/logo.png",
     "href": ""
   },
   "menuInfo": [
@@ -29,25 +29,31 @@
           "child": [
             {
               "title": "History",
-              "href": "usbadmin/USB/History",
+              "href": "USBadmin/USB/History",
               "icon": "fa fa-list-alt",
               "target": "_self"
             },
             {
-              "title": "Request",
-              "href": "usbadmin/USB/UsbRequest",
+              "title": "Review",
+              "href": "USBadmin/USB/RequestReview",
               "icon": "fa fa-list-alt",
               "target": "_self"
             },
             {
-              "title": "Registered",
-              "href": "usbadmin/USB/Registered",
+              "title": "Approve",
+              "href": "USBadmin/USB/RequestApprove",
+              "icon": "fa fa-list-alt",
+              "target": "_self"
+            },
+            {
+              "title": "Reject",
+              "href": "USBadmin/USB/RequestReject",
               "icon": "fa fa-list-alt",
               "target": "_self"
             },
             {
               "title": "Register",
-              "href": "usbadmin/USB/Register",
+              "href": "USBadmin/USB/Register",
               "icon": "fa fa-floppy-o",
               "target": "_self"
             }
@@ -61,7 +67,7 @@
           "child": [
             {
               "title": "Index",
-              "href": "usbadmin/Computer/Index",
+              "href": "USBadmin/Computer/Index",
               "icon": "fa fa-list-alt",
               "target": "_self"
             }

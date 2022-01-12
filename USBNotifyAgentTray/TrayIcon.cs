@@ -29,14 +29,15 @@ namespace USBNotifyAgentTray
             _trayIcon = new NotifyIcon
             {
                 Icon = USBNotifyAgentTray.Properties.Resources.USB,
-                Text = "USB Notify",
+                Text = "USB Control",
                 Visible = true
             };
 
             _trayIcon.ContextMenuStrip = new ContextMenuStrip();
-            _trayIcon.ContextMenuStrip.Items.Add("Update Agent Setting", null, UpdateAgentSettingItem_Click);
-            _trayIcon.ContextMenuStrip.Items.Add("Update USB Whitelist", null, UpdateUsbWhitelistItem_Click);
+            _trayIcon.ContextMenuStrip.Items.Add("Update USB Whitelist", null, UpdateAgentSettingItem_Click);
+            _trayIcon.ContextMenuStrip.Items.Add("Update Setting", null, UpdateUsbWhitelistItem_Click);
             _trayIcon.ContextMenuStrip.Items.Add("Update Agent", null, UpdateAgentItem_Click);
+            _trayIcon.ContextMenuStrip.Items.Add("");
         }       
         #endregion
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,19 +11,22 @@ namespace SetupClient
     {
         static void Main(string[] args)
         {
+            var log = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "setup_log.txt");
             try
             {
-                Console.WriteLine("Install Start ...");
+                Console.WriteLine("Setup Start ...");
                 Console.WriteLine();
 
                 new SetupHelp().Install();
 
-                Console.WriteLine("Install Done !!!");
+                Console.WriteLine("Setup Done !!!");
+                File.WriteAllText(log, "Setup done.");
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                Console.ReadLine();
+              
+                File.WriteAllText(log, ex.Message);
             }
 
             Environment.Exit(0);

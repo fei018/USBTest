@@ -10,34 +10,18 @@ namespace USBAdminWebMVC.Controllers
     [Authorize]
     public class USBController : Controller
     {
-        private readonly UsbAdminDbHelp _usbDb;
+        private readonly USBAdminDatabaseHelp _usbDb;
         private readonly HttpContext _httpContext;
+        private readonly EmailHelp _email;
 
-        public USBController(IHttpContextAccessor httpContextAccessor, UsbAdminDbHelp usbDb)
+        public USBController(IHttpContextAccessor httpContextAccessor, USBAdminDatabaseHelp usbDb, EmailHelp emailHelp)
         {
-            _usbDb = usbDb;
             _httpContext = httpContextAccessor.HttpContext;
+
+            _usbDb = usbDb;          
+            _email = emailHelp;
         }
 
-        #region RegisteredIndex
-        public IActionResult Registered()
-        {
-            return View();
-        }
-
-        public async Task<IActionResult> RegisteredIndex(int page, int limit)
-        {
-            try
-            {
-                var (totalCount, list) = await _usbDb.Get_UsbRegisteredList(page, limit);
-                return JsonResultHelp.LayuiTableData(totalCount, list);
-            }
-            catch (Exception ex)
-            {
-                return JsonResultHelp.Error(ex.Message);
-            }
-        }
-        #endregion
 
         #region Register
         public IActionResult Register()
@@ -45,11 +29,11 @@ namespace USBAdminWebMVC.Controllers
             return View();
         }
 
-        public async Task<IActionResult> RegisterUsb(Tbl_UsbRegistered usb)
+        public async Task<IActionResult> RegisterUsb(Tbl_UsbRequest usb)
         {
             try
             {
-                await _usbDb.Insert_UsbRegistered(usb);
+                await _usbDb.UsbRequest_Insert(usb);
                 return JsonResultHelp.Ok("Register Success.");
             }
             catch (Exception ex)
@@ -59,13 +43,15 @@ namespace USBAdminWebMVC.Controllers
         }
         #endregion
 
-        #region HistoryIndex
+        // UsbHistory
+
+        #region History
         public IActionResult History()
         {
             return View();
         }
 
-        public async Task<IActionResult> HistoryIndex(int page, int limit)
+        public async Task<IActionResult> HistoryList(int page, int limit)
         {
             try
             {
@@ -79,30 +65,15 @@ namespace USBAdminWebMVC.Controllers
         }
         #endregion
 
-        #region RequestIndex
-        public IActionResult UsbRequest()
-        {
-            return View();
-        }
 
-        public async Task<IActionResult> UsbRequestIndex(int page, int limit)
+        // UsbRequest
+
+        #region RequestDetail(int id)
+        public async Task<IActionResult> RequestDetail(int id)
         {
             try
             {
-                var (total, list) = await _usbDb.Get_UsbRegRequestList(page, limit);
-                return JsonResultHelp.LayuiTableData(total, list);
-            }
-            catch (Exception ex)
-            {
-                return JsonResultHelp.LayuiTableData(ex.Message);
-            }
-        }
-
-        public async Task<IActionResult> UsbRequestReg(int id)
-        {
-            try
-            {
-                var query = await _usbDb.Get_UsbRegRequestById(id);
+                var query = await _usbDb.UsbRequestVM_Get_ById(id);
                 return View(query);
             }
             catch (Exception ex)
@@ -111,22 +82,123 @@ namespace USBAdminWebMVC.Controllers
                 return View("Error");
             }
         }
+        #endregion
 
-        [HttpPost]
-        public async Task<IActionResult> UsbRequestToReg(int usbRegRequestId)
+        #region RequestReview
+        public IActionResult RequestReview()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> RequestReviewList(int page, int limit)
         {
             try
             {
-                var query = await _usbDb.Get_UsbRegRequestById(usbRegRequestId);
-                await _usbDb.UsbRegRequestToRegistered(query);
-
-                ViewBag.OK = "Register Succeed: " + query.ToString();
-                return View("OK");
+                var (total, list) = await _usbDb.UsbRequestVM_Get_ByStateType(page, limit, UsbRequestStateType.UnderReview);
+                return JsonResultHelp.LayuiTableData(total, list);
             }
             catch (Exception ex)
             {
-                ViewBag.Error = ex.Message;
-                return View("Error");
+                return JsonResultHelp.LayuiTableData(ex.Message);
+            }
+        }
+        #endregion
+
+        #region RequestApprove
+        public IActionResult RequestApprove()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> RequestApproveList(int page, int limit)
+        {
+            try
+            {
+                var (total, list) = await _usbDb.UsbRequestVM_Get_ByStateType(page, limit, UsbRequestStateType.Approve);
+                return JsonResultHelp.LayuiTableData(total, list);
+            }
+            catch (Exception ex)
+            {
+                return JsonResultHelp.LayuiTableData(ex.Message);
+            }
+        }
+        #endregion
+
+        #region RequestReject
+        public IActionResult RequestReject()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> RequestRejectList(int page, int limit)
+        {
+            try
+            {
+                var (total, list) = await _usbDb.UsbRequestVM_Get_ByStateType(page, limit, UsbRequestStateType.Reject);
+                return JsonResultHelp.LayuiTableData(total, list);
+            }
+            catch (Exception ex)
+            {
+                return JsonResultHelp.LayuiTableData(ex.Message);
+            }
+        }
+        #endregion
+
+        #region RequestToApprove(int id)
+        [HttpPost]
+        public async Task<IActionResult> RequestToApprove(int id)
+        {
+            try
+            {
+                var usb = await _usbDb.UsbRequest_ToApprove_ById(id);
+
+                await _email.Send_UsbReuqest_Notify_Result_ToUser(usb);
+
+                //ViewBag.OK = "Approve Succeed: " + usb.ToString();
+                return Ok();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        #region RequestToReject(int id)
+        [HttpPost]
+        public async Task<IActionResult> RequestToReject(int id)
+        {
+            try
+            {
+                var usb = await _usbDb.UsbRequest_ToReject_ById(id);
+
+                await _email.Send_UsbReuqest_Notify_Result_ToUser(usb);
+
+                //ViewBag.OK = "Reject Succeed: " + usb.ToString();
+                return Ok();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        #region RequestToDelete(int id)
+        [HttpPost]
+        public async Task<IActionResult> RequestToDelete(int id)
+        {
+            try
+            {
+                await _usbDb.UsbRequest_Delete_ById(id);
+
+                //ViewBag.OK = "Delete Succeed.";
+
+                return Ok();
+            }
+            catch (Exception)
+            {
+                throw;
             }
         }
         #endregion

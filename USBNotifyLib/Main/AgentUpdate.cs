@@ -20,7 +20,7 @@ namespace USBNotifyLib
 
         private static string _updateDir = Path.Combine(_baseDir, "update");
 
-        private static string _updateExe = Path.Combine(_updateDir, "Setup.exe");
+        private static string _setupExe = Path.Combine(_updateDir, "Setup.exe");
 
         #region + public static void CheckAndUpdate()
         /// <summary>
@@ -88,22 +88,23 @@ namespace USBNotifyLib
         {
             try
             {
+                CleanUpdateDir();
                 CleanDownloadDir();
+
                 DownloadFile();
-                if (File.Exists(_updateExe))
+                if (File.Exists(_setupExe))
                 {
-                    Process.Start(_updateExe);
+                    Process.Start(_setupExe);
                 }
                 else
                 {
-                    throw new Exception("update.exe not exist.");
+                    throw new Exception("setup.exe not exist.");
                 }
             }
             catch (Exception ex)
             {
                 UsbLogger.Error(ex.Message);
             }
-            CleanDownloadDir();
         }
         #endregion
 
@@ -117,6 +118,23 @@ namespace USBNotifyLib
                     Directory.Delete(_downloadFileDir, true);
                 }
                 Directory.CreateDirectory(_downloadFileDir);
+            }
+            catch (Exception)
+            {
+            }
+        }
+        #endregion
+
+        #region + private void CleanUpdateDir()
+        private void CleanUpdateDir()
+        {
+            try
+            {
+                if (Directory.Exists(_updateDir))
+                {
+                    Directory.Delete(_updateDir, true);
+                }
+                Directory.CreateDirectory(_updateDir);
             }
             catch (Exception)
             {
@@ -140,6 +158,7 @@ namespace USBNotifyLib
                         fs.Write(fbs, 0, fbs.Length);
                     }
 
+                    // unzip download file
                     ZipFile.ExtractToDirectory(_updateZipFile, _updateDir);
                 }
                 else

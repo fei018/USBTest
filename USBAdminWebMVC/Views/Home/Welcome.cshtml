@@ -1,7 +1,8 @@
 ﻿@{ 
     Layout = null;
 }
-@model string
+
+@model WelcomeVM
 
 <!DOCTYPE html>
 <html>
@@ -28,34 +29,51 @@
                                 <div class="layui-card-body">
                                     <div class="welcome-module">
                                         <div class="layui-row layui-col-space10">
+
                                             <div class="layui-col-xs6">
                                                 <div class="panel layui-bg-number">
                                                     <div class="panel-body">
                                                         <div class="panel-title">
                                                             <span class="label pull-right layui-bg-blue">Real</span>
-                                                            <h5>Registered USB</h5>
+                                                            <h5>UnderReview USB</h5>
                                                         </div>
                                                         <div class="panel-content">
-                                                            <h1 class="no-margins">@Model</h1>
-                                                            <small>Total Count</small>
+                                                            <h1 class="no-margins">@Model.UsbRequestUnderReviewCount</h1>
+                                                            <small>Count</small>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            @*<div class="layui-col-xs6">
+
+                                            <div class="layui-col-xs6">
                                                 <div class="panel layui-bg-number">
                                                     <div class="panel-body">
                                                         <div class="panel-title">
-                                                            <span class="label pull-right layui-bg-cyan">实时</span>
-                                                            <h5>商品统计</h5>
+                                                            <span class="label pull-right layui-bg-cyan">Real</span>
+                                                            <h5>Approve USB</h5>
                                                         </div>
                                                         <div class="panel-content">
-                                                            <h1 class="no-margins">1234</h1>
-                                                            <small>当前分类总记录数</small>
+                                                            <h1 class="no-margins">@Model.UsbRequestApproveCount</h1>
+                                                            <small>Count</small>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>*@
+                                            </div>
+
+                                            <div class="layui-col-xs6">
+                                                <div class="panel layui-bg-number">
+                                                    <div class="panel-body">
+                                                        <div class="panel-title">
+                                                            <span class="label pull-right layui-bg-cyan">Real</span>
+                                                            <h5>Reject USB</h5>
+                                                        </div>
+                                                        <div class="panel-content">
+                                                            <h1 class="no-margins">@Model.UsbRequestRejectCount</h1>
+                                                            <small>Count</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
 
                                         </div>
                                     </div>

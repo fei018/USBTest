@@ -57,20 +57,69 @@ namespace USBAdminWebMVC
         #endregion
 
         #region + public async Task SendUsbRegisterRequestNotify(Tbl_UsbRegisterRequest usb, string userEmailAddress)
-        public async Task SendUsbRegisterRequestNotify(Tbl_UsbRegRequest usb)
+        public async Task Send_UsbRequest_Notify_Submit_ToUser(Tbl_UsbRequest usb, Tbl_PerComputer com)
         {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("Usb Detail:")
-                .AppendLine(usb.ToString())
-                .AppendLine("User Email: "+ usb.UserEmail)
-                .AppendLine();
+            try
+            {
+                var subject = "USB registration request notification";
 
-            // send to user
-            await SendEmail(usb.UserEmail, "Usb Register Request Notify", sb.ToString());
+                StringBuilder body = new StringBuilder();
+                body.AppendLine("USB Detail:")
+                    .AppendLine("Manufacturer: " + usb.Manufacturer)
+                    .AppendLine("Product: " + usb.Product)
+                    .AppendLine("SerialNumber: " + usb.SerialNumber)
+                    .AppendLine("IP: " + com.IPAddress)
+                    .AppendLine("ComputerName: " + com.HostName)
+                    .AppendLine()
+                    .AppendLine("Request reason:")
+                    .AppendLine(usb.RequestReason)
+                    .AppendLine();
 
-            // send to it
-            sb.AppendLine("Usb Register Request Url: " + _usbRegisterRequestUrl + "/" + usb.Id);
-            await SendEmail(_from, "Usb Register Request Notify", sb.ToString());            
+                // send to user
+                await SendEmail(usb.RequestUserEmail, subject, body.ToString());
+
+                // send to it
+                body.AppendLine("Approve or Reject Url: " + _usbRegisterRequestUrl + "/" + usb.Id);
+                await SendEmail(_from, subject, body.ToString());
+            }
+            catch (Exception)
+            {
+                throw;
+            }    
+        }
+        #endregion
+
+        #region + public async Task Send_UsbReuqest_Notify_Result_ToUser(Tbl_UsbRequest usb)
+        public async Task Send_UsbReuqest_Notify_Result_ToUser(Tbl_UsbRequest usb)
+        {
+            try
+            {
+                var subject = "USB registration request result";
+
+                StringBuilder body = new StringBuilder();
+                body.AppendLine("USB Detail:")
+                    .AppendLine("Manufacturer: " + usb.Manufacturer)
+                    .AppendLine("Product: " + usb.Product)
+                    .AppendLine("SerialNumber: " + usb.SerialNumber)
+                    .AppendLine()
+                    .AppendLine("Request reason:")
+                    .AppendLine(usb.RequestReason)
+                    .AppendLine()
+                    .AppendLine("-----------")
+                    .AppendLine("Request result:");
+
+                if (true)
+                {
+                    body.AppendLine("Your request is approved. This USB device can be used after 5 mins. You can also right click \"USB Control\" icon in system tray, select \"Update USB Whitelist\" to take immediate effect.");
+                }
+
+                // send to user
+                await SendEmail(usb.RequestUserEmail, subject, body.ToString());
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
         #endregion
     }

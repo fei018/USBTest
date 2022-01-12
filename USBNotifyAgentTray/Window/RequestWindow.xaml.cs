@@ -34,6 +34,7 @@ namespace USBNotifyAgentTray
             requestPage.USBRequestSubmittedEvent += RequestPage_USBRequestSubmittedEvent;
 
             CtlReuqestPage.Content = new Frame { Content = requestPage };
+            
         }
 
         private void RequestPage_USBRequestSubmittedEvent(object sender, string e)

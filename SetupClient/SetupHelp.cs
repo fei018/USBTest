@@ -6,8 +6,10 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Win32;
+using System.ServiceProcess;
 
 namespace SetupClient
 {
@@ -21,6 +23,8 @@ namespace SetupClient
         static string _installServiceBatch = Path.Combine(_InstallProgramDir, "Service_Install.bat");
 
         static string _uninstallServiceBatch = Path.Combine(_InstallProgramDir, "Service_Uninstall.bat");
+
+        static string _dllDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "dll");
 
         #region + private Setupini GetSetupini()
         private Dictionary<string, string> GetSetupini()
@@ -100,55 +104,124 @@ namespace SetupClient
         }
         #endregion
 
-        #region unsetup
-
-        #endregion
-
         #region setup
         public void Install()
         {          
             try
             {
-                InitialKey();
-
-                var updateDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"update");
+                UninstallService(out string error);
+                Console.WriteLine(error);
 
                 if (Directory.Exists(_InstallProgramDir))
                 {
                     Directory.Delete(_InstallProgramDir, true);
                 }
+                Directory.CreateDirectory(_InstallProgramDir);
 
-                var files = Directory.GetFiles(updateDir);
+                var files = Directory.GetFiles(_dllDir);
                 foreach (var f in files)
                 {
                     File.Copy(f, Path.Combine(_InstallProgramDir, Path.GetFileName(f)), true);
                 }
 
-                var installServiceBatch = WriteBatchFile();
-                Console.WriteLine(installServiceBatch);
-                Process.Start("cmd.exe", "/c call " + "\"" + installServiceBatch + "\"");
+                WriteBatchFile();
+
+                InitialKey();
+
+                InstallService(out error);
+                Console.WriteLine(error);
             }
             catch (Exception)
             {
                 throw;
             }
-        }
+        }       
+        #endregion
 
+        #region + private bool InstallService(out string error)
+        private bool InstallService(out string error)
+        {
+            var start = new ProcessStartInfo();
+            start.FileName = "cmd.exe";
+            start.UseShellExecute = false;
+            start.WorkingDirectory = Environment.CurrentDirectory;
+            start.CreateNoWindow = true;
+            start.RedirectStandardError = true;
+            start.RedirectStandardInput = true;
+            start.RedirectStandardOutput = true;
+
+            using (Process p = new Process())
+            {
+                p.StartInfo = start;
+
+                var run = p.Start();
+
+                p.StandardInput.WriteLine($"\"C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\InstallUtil.exe\" \"{_InstallProgramDir}\\usbnservice.exe\"");
+                p.StandardInput.WriteLine("net start usbnservice");
+
+                p.StandardInput.WriteLine("exit");
+
+                error = p.StandardError.ReadToEnd();
+ 
+                return run;
+            }
+
+        }
+        #endregion
+
+        #region + private bool UninstallService(out string error)
+        private bool UninstallService(out string error)
+        {
+            var serviceExist = ServiceController.GetServices().Any(s => s.ServiceName == "usbnservice");
+            if (!serviceExist)
+            {
+                error = null;
+                return true;
+            }
+
+            var start = new ProcessStartInfo();
+            start.FileName = "cmd.exe";
+            start.UseShellExecute = false;
+            start.WorkingDirectory = Environment.CurrentDirectory;
+            start.CreateNoWindow = true;
+            start.RedirectStandardError = true;
+            start.RedirectStandardInput = true;
+            start.RedirectStandardOutput = true;
+
+            using (Process p = new Process())
+            {
+                p.StartInfo = start;
+
+                var run = p.Start();
+
+                p.StandardInput.WriteLine("net stop usbnservice");
+                p.StandardInput.WriteLine($"\"C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\InstallUtil.exe\" /u \"{_InstallProgramDir}\\usbnservice.exe\"");
+
+                p.StandardInput.WriteLine("exit");
+
+                error = p.StandardError.ReadToEnd();
+
+                return run;
+            }
+
+        }
+        #endregion
+
+        #region WriteBatchFile
         private string WriteBatchFile()
         {
             var sb = new StringBuilder();
 
             // service_install.bat
             sb.AppendLine($"\"C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\InstallUtil.exe\" \"{_InstallProgramDir}\\usbnservice.exe\"");
-            sb.AppendLine("net start usbnsrv");
-            sb.AppendLine("popd");
+            sb.AppendLine("net start usbnservice");
+
             File.WriteAllText(_installServiceBatch, sb.ToString(), new UTF8Encoding(false));
 
             // service_uninstall.bat
             sb.Clear();
-            sb.AppendLine("net stop usbnsrv");
+            sb.AppendLine("net stop usbnservice");
             sb.AppendLine($"\"C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\InstallUtil.exe\" /u \"{_InstallProgramDir}\\usbnservice.exe\"");
-            sb.AppendLine("popd");
             File.WriteAllText(_uninstallServiceBatch, sb.ToString(), new UTF8Encoding(false));
 
             return _installServiceBatch;

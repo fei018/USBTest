@@ -4,7 +4,7 @@ using USBCommon;
 
 namespace USBModel
 {
-    public class Tbl_UsbRegRequest: IUsbRegRequest
+    public class Tbl_UsbRequest: IUsbRequest
     {
         [SugarColumn(IsIdentity =true,IsPrimaryKey =true)]
         public int Id { get; set; }
@@ -29,27 +29,43 @@ namespace USBModel
 
         public DateTime RequestTime { get; set; }
 
+
+        [SugarColumn(DefaultValue = "UnderReview")]
+        public string RequestState { get; set; }
+
+        public DateTime RequestStateChangeTime { get; set; }
+
+
         [SugarColumn(IsNullable = true)]
         public string RequestComputerIdentity { get; set; }
 
         [SugarColumn(IsNullable = true)]
-        public string UserEmail { get; set; }
+        public string RequestUserEmail { get; set; }
+
+        [SugarColumn(IsNullable = true, ColumnDataType = "nvarchar(255)")]
+        public string RequestReason { get; set; }
+
 
 
         // IsIgnore
 
         [SugarColumn(IsIgnore = true)]
-        public string Vid_Hex => "Vid_" + Vid.ToString("X").PadLeft(4, '0');
+        public string Vid_Hex => "0x_" + Vid.ToString("X").PadLeft(4, '0');
 
         [SugarColumn(IsIgnore = true)]
-        public string Pid_Hex => "Pid_" + Pid.ToString("X").PadLeft(4, '0');
+        public string Pid_Hex => "0x_" + Pid.ToString("X").PadLeft(4, '0');
 
         [SugarColumn(IsIgnore = true)]
         public string RequestTimeString => RequestTime.ToString("G");
+
+        [SugarColumn(IsIgnore = true)]
+        public string RequestStateChangeTimeString => RequestStateChangeTime.ToString("G");
 
         public override string ToString()
         {
             return $"\r\nManufacturer: {Manufacturer}\r\nProduct: { Product}\r\nVid: {Vid_Hex}\r\nPid: {Pid_Hex}\r\nSerialNumber: {SerialNumber}\r\n";
         }
+
+        
     }
 }

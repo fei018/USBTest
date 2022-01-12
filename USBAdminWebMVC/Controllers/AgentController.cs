@@ -16,11 +16,11 @@ namespace USBAdminWebMVC.Controllers
     [AgentKeyFilter]
     public class AgentController : Controller
     {
-        private readonly UsbAdminDbHelp _usbDb;
+        private readonly USBAdminDatabaseHelp _usbDb;
         private readonly HttpContext _httpContext;
         private readonly EmailHelp _email;
 
-        public AgentController(IHttpContextAccessor httpContextAccessor, UsbAdminDbHelp usbDb, EmailHelp emailHelp)
+        public AgentController(IHttpContextAccessor httpContextAccessor, USBAdminDatabaseHelp usbDb, EmailHelp emailHelp)
         {
             _usbDb = usbDb;
             _httpContext = httpContextAccessor.HttpContext;
@@ -32,7 +32,7 @@ namespace USBAdminWebMVC.Controllers
         {
             try
             {
-                var query = await _usbDb.Get_UsbWhitelist();
+                var query = await _usbDb.UsbWhitelist_Get();
 
                 var agent = new AgentHttpResponseResult { Succeed = true, UsbFilterData = query };
 
@@ -72,7 +72,7 @@ namespace USBAdminWebMVC.Controllers
                 var comjosn = await body.ReadToEndAsync();
 
                 var com = JsonHttpConvert.Deserialize_PerComputer(comjosn);
-                await _usbDb.Update_PerComputer(com);
+                await _usbDb.PerComputer_InsertOrUpdate(com);
 
                 return Json(new AgentHttpResponseResult());
             }
@@ -105,9 +105,9 @@ namespace USBAdminWebMVC.Controllers
         }
         #endregion
 
-        #region UsbRegRequest()
+        #region PostUsbRequest()
         [HttpPost]      
-        public async Task<IActionResult> UsbRegRequest()
+        public async Task<IActionResult> PostUsbRequest()
         {
             try
             {
@@ -116,10 +116,13 @@ namespace USBAdminWebMVC.Controllers
                 StreamReader body = new StreamReader(_httpContext.Request.Body, Encoding.UTF8);
                 var post = await body.ReadToEndAsync();
 
-                Tbl_UsbRegRequest usbRequest = JsonHttpConvert.Deserialize_UsbRegisterRequest(post);
+                Tbl_UsbRequest usbRequest = JsonHttpConvert.Deserialize_UsbRequest(post);
 
-                await _usbDb.Insert_UsbRegRequest(usbRequest);
-                await _email.SendUsbRegisterRequestNotify(usbRequest);
+                await _usbDb.UsbRequest_Insert(usbRequest);
+
+                var com = await _usbDb.PerComputer_Get_ByIdentity(usbRequest.RequestComputerIdentity);
+
+                await _email.Send_UsbRequest_Notify_Submit_ToUser(usbRequest, com);
 
                 return Json(new AgentHttpResponseResult());
             }
@@ -132,17 +135,17 @@ namespace USBAdminWebMVC.Controllers
 
 
         #region AgentUpdate()
-        public Task<IActionResult> AgentUpdate()
+        public IActionResult AgentUpdate()
         {
             try
             {
-                var install = Path.Combine(Directory.GetCurrentDirectory(), "Update",);
+                var file = Path.Combine(Directory.GetCurrentDirectory(), "Update", "update.zip");
 
+                return PhysicalFile(file, "application/zip");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                return NotFound(ex.Message);
             }
         }
         #endregion

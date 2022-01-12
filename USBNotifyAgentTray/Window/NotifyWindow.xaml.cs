@@ -24,8 +24,8 @@ namespace USBNotifyAgentTray
         {
             InitializeComponent();
 
-            this.Top = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Bottom - this.Height;
-            this.Left = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Right - this.Width;
+            this.Top = SystemParameters.WorkArea.Bottom - this.Height;
+            this.Left = SystemParameters.WorkArea.Right - this.Width;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

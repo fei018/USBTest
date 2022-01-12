@@ -4,15 +4,16 @@ using System;
 using System.Threading.Tasks;
 using USBModel;
 using USBCommon;
+using USBAdminWebMVC;
 
 namespace USBAdminWebMVC.Controllers
 {
     [Authorize]
     public class HomeController : Controller
     {
-        private readonly UsbAdminDbHelp _usbDb;
+        private readonly USBAdminDatabaseHelp _usbDb;
 
-        public HomeController(UsbAdminDbHelp usbDb)
+        public HomeController(USBAdminDatabaseHelp usbDb)
         {
             _usbDb = usbDb;
         }
@@ -32,8 +33,12 @@ namespace USBAdminWebMVC.Controllers
         {
             try
             {
-                var query = await _usbDb.Get_RegisteredUsbCount();
-                return View("Welcome", query.ToString());
+                var welcomeVM = new WelcomeVM();
+                welcomeVM.UsbRequestApproveCount = await _usbDb.UsbRequest_TotalCount_ByState(UsbRequestStateType.Approve);
+                welcomeVM.UsbRequestRejectCount = await _usbDb.UsbRequest_TotalCount_ByState(UsbRequestStateType.Reject);
+                welcomeVM.UsbRequestUnderReviewCount = await _usbDb.UsbRequest_TotalCount_ByState(UsbRequestStateType.UnderReview);
+
+                return View(welcomeVM);
             }
             catch (Exception ex)
             {

@@ -45,34 +45,34 @@ namespace USBModel
         #endregion
 
         #region + public static Tbl_UsbRegistered Deserialize_UsbRegistered(string usbJson)
-        public static Tbl_UsbRegistered Deserialize_IUsbInfo(string usbJson)
-        {
-            try
-            {
-                var usb = JsonConvert.DeserializeObject<Tbl_UsbRegistered>(usbJson);
-                return usb;
-            }
-            catch (Exception)
-            {
+        //public static Tbl_UsbRegistered Deserialize_IUsbInfo(string usbJson)
+        //{
+        //    try
+        //    {
+        //        var usb = JsonConvert.DeserializeObject<Tbl_UsbRegistered>(usbJson);
+        //        return usb;
+        //    }
+        //    catch (Exception)
+        //    {
 
-                throw;
-            }
-        }
+        //        throw;
+        //    }
+        //}
         #endregion
 
-        #region + public static Tbl_UsbRegisterRequest Deserialize_UsbRegisterRequest(string postJson)
-        public static Tbl_UsbRegRequest Deserialize_UsbRegisterRequest(string postJson)
+        #region + public static Tbl_UsbRegisterRequest Deserialize_UsbRequest(string postJson)
+        public static Tbl_UsbRequest Deserialize_UsbRequest(string postJson)
         {
             try
             {
                 var settings = new JsonSerializerSettings
                 {
                     Converters = {
-                        new AbstractJsonConverter<Tbl_UsbRegRequest, IUsbRegRequest>()
+                        new AbstractJsonConverter<Tbl_UsbRequest, IUsbRequest>()
                     }
                 };
 
-                var post = JsonConvert.DeserializeObject<Tbl_UsbRegRequest>(postJson, settings);
+                var post = JsonConvert.DeserializeObject<Tbl_UsbRequest>(postJson, settings);
                 return post;
             }
             catch (Exception)

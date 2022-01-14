@@ -133,6 +133,7 @@ namespace USBNotifyAgent
             {
                 new AgentHttpHelp().GetUsbWhitelist_Http();
                 PushMessageToTray("Update USB Whitelist done.");
+                Handler_UsbFullScan();
             }
             catch (Exception ex)
             {

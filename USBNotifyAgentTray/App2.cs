@@ -33,7 +33,7 @@ namespace USBNotifyAgentTray
         private void _trayPipe_CloseTrayEvent(object sender, EventArgs e)
         {
             RemoveTrayIcon();
-            _trayPipe.PushMsg_ToService_TrayClosed();
+
             App.Current.Shutdown();
         }
         #endregion

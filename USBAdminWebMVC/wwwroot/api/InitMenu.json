@@ -17,7 +17,7 @@
       "child": [
         {
           "title": "Home",
-          "href": "usbadmin/home/welcome",
+          "href": "USBAdmin/home/welcome",
           "icon": "fa fa-home",
           "target": "_self"
         },
@@ -79,7 +79,15 @@
       "title": "Admin",
       "icon": "fa fa-gear",
       "href": "",
-      "target": "_self"
+      "target": "_self",
+      "child": [
+        {
+          "title": "EmailSetting",
+          "href": "USBAdmin/EmailSetting/Index",
+          "icon": "fa fa-wrench",
+          "target": "_self"
+        }
+      ]
     }
   ]
 }

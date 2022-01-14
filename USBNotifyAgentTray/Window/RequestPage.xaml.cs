@@ -64,7 +64,7 @@ namespace USBNotifyAgentTray
 
                 var post = new UsbRequest(TrayPipe.UsbDiskInfo, email, TxtReason.Text?.Trim());
 
-                new AgentHttpHelp().PostUsbRegisterRequest(post);
+                new AgentHttpHelp().PostUsbRequest(post);
 
                 USBRequestSubmittedEvent?.Invoke(this, "Your request was submitted successfully.");
             }

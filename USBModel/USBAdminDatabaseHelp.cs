@@ -45,6 +45,7 @@ namespace USBModel
                     _db.CodeFirst.SetStringDefaultLength(100).InitTables<Tbl_PerComputer>();
                     _db.CodeFirst.SetStringDefaultLength(100).InitTables<Tbl_AgentSetting>();
                     _db.CodeFirst.SetStringDefaultLength(100).InitTables<Tbl_UsbRequest>();
+                    _db.CodeFirst.SetStringDefaultLength(100).InitTables<Tbl_EmailSetting>();
 
                     _db.CodeFirst.InitTables<LoginUser>();
                     _db.CodeFirst.InitTables<LoginErrorCountLimit>();
@@ -615,5 +616,49 @@ namespace USBModel
         }
         #endregion
 
+
+        // EmailSetting
+
+        #region + public async Task<Tbl_EmailSetting> EmailSetting_Get()
+        public async Task<Tbl_EmailSetting> EmailSetting_Get()
+        {
+            try
+            {
+                var query = await _db.Queryable<Tbl_EmailSetting>().FirstAsync();
+
+                if (query == null)
+                {
+                    throw new Exception("Cannot find Tbl_EmailSetting.");
+                }
+
+                return query;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        #region + public async Task<Tbl_EmailSetting> EmailSetting_Update(Tbl_EmailSetting email)
+        public async Task<Tbl_EmailSetting> EmailSetting_Update(Tbl_EmailSetting email)
+        {
+            try
+            {
+                var isUpdate = await _db.Updateable(email).ExecuteCommandHasChangeAsync();
+
+                if (!isUpdate)
+                {
+                    throw new Exception("Tbl_EmailSetting update fail.");
+                }
+
+                return email;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
     }
 }

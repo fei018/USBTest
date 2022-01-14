@@ -1,5 +1,4 @@
 ﻿using MailKit.Net.Smtp;
-using Microsoft.Extensions.Configuration;
 using MimeKit;
 using System;
 using System.Collections.Generic;
@@ -14,29 +13,44 @@ namespace USBAdminWebMVC
     {
         private readonly string _smtp;
         private readonly int _port;
-        private readonly string _from;
-        private readonly string _usbRegisterRequestUrl;
+        private readonly List<string> _fromAdminAdress;
+        private readonly string _notifyUrl;
+        private readonly string _adminName;
+        private readonly Tbl_EmailSetting _emailDb;
 
-        public EmailHelp(IConfiguration configuration)
+        public EmailHelp(USBAdminDatabaseHelp databaseHelp)
         {
-            _smtp = configuration.GetSection("Email").GetSection("Smtp").Value;
-            _port= Convert.ToInt32(configuration.GetSection("Email").GetSection("Port").Value);
-            _from = configuration.GetSection("Email").GetSection("From").Value;
-            _usbRegisterRequestUrl = configuration.GetSection("Email").GetSection("UsbRequestRegUrl").Value;
+            _emailDb = databaseHelp.EmailSetting_Get().Result;
+
+            _smtp = _emailDb.Smtp;
+            _port = _emailDb.Port;
+            _fromAdminAdress = _emailDb.GetFromAddressList();
+            _notifyUrl = _emailDb.NotifyUrl;
+            _adminName = _emailDb.FromName;
         }
 
-        #region public async Task SendEmail(string subject, string content)
-        public async Task SendEmail(string toAddress,string subject, string content)
+        #region public async Task SendEmail(string subject, string content, string toAddress = null, List<string> toAddressList = null)
+        private async Task SendEmail(string subject, string content, string toAddress = null, List<string> toAddressList = null)
         {
             try
             {
                 MimeMessage message = new MimeMessage();
 
-                MailboxAddress from = new MailboxAddress("USBAdmin", _from);
+                MailboxAddress from = new MailboxAddress(_adminName, _fromAdminAdress.First());
                 message.From.Add(from);
 
-                MailboxAddress to = new MailboxAddress(toAddress, toAddress);
-                message.To.Add(to);
+                if (!string.IsNullOrWhiteSpace(toAddress))
+                {
+                    message.To.Add(new MailboxAddress(toAddress, toAddress));
+                }
+
+                if (toAddressList != null && toAddressList.Count > 0)
+                {
+                    foreach (var to in toAddressList)
+                    {
+                        message.To.Add(new MailboxAddress(to, to));
+                    }
+                }
 
                 message.Subject = subject;
                 BodyBuilder bodyBuilder = new BodyBuilder { TextBody = content };
@@ -56,7 +70,7 @@ namespace USBAdminWebMVC
         }
         #endregion
 
-        #region + public async Task SendUsbRegisterRequestNotify(Tbl_UsbRegisterRequest usb, string userEmailAddress)
+        #region + public async Task Send_UsbRequest_Notify_Submit_ToUser(Tbl_UsbRequest usb, Tbl_PerComputer com)
         public async Task Send_UsbRequest_Notify_Submit_ToUser(Tbl_UsbRequest usb, Tbl_PerComputer com)
         {
             try
@@ -76,15 +90,16 @@ namespace USBAdminWebMVC
                     .AppendLine();
 
                 // send to user
-                await SendEmail(usb.RequestUserEmail, subject, body.ToString());
+                await SendEmail(subject, body.ToString(), usb.RequestUserEmail);
 
-                // send to it
-                body.AppendLine("Approve or Reject Url: " + _usbRegisterRequestUrl + "/" + usb.Id);
-                await SendEmail(_from, subject, body.ToString());
+                // send to admin
+                body.AppendLine("Approve or Reject Url: " + _notifyUrl + "/" + usb.Id);
+
+                await SendEmail(subject, body.ToString(), null, _fromAdminAdress);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new EmailException(ex.Message);
             }    
         }
         #endregion
@@ -108,17 +123,22 @@ namespace USBAdminWebMVC
                     .AppendLine("-----------")
                     .AppendLine("Request result:");
 
-                if (true)
+                if (usb.RequestState == UsbRequestStateType.Approve)
                 {
-                    body.AppendLine("Your request is approved. This USB device can be used after 5 mins. You can also right click \"USB Control\" icon in system tray, select \"Update USB Whitelist\" to take immediate effect.");
+                    body.AppendLine(_emailDb.ApproveText);
+                }
+
+                if (usb.RequestState == UsbRequestStateType.Reject)
+                {
+                    body.AppendLine(usb.RejectReason);
                 }
 
                 // send to user
-                await SendEmail(usb.RequestUserEmail, subject, body.ToString());
+                await SendEmail(subject, body.ToString(), usb.RequestUserEmail);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new EmailException(ex.Message);
             }
         }
         #endregion

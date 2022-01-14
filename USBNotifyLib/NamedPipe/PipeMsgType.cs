@@ -27,6 +27,7 @@ namespace USBNotifyLib
         UpdateAgent,
         UpdateUsbWhitelist,
         UpdateAgentSetting,
-        CloseAgentTray
+        CloseAgentTray,
+        UsbFullScan
     }
 }

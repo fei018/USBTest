@@ -25,24 +25,29 @@ namespace USBNotifyAgentTray
         {
             InitializeComponent();
 
-            ShowPage();
+            ShowRequestPage();
         }
 
-        private void ShowPage()
+        private void ShowRequestPage()
         {
             var requestPage = new RequestPage();
-            requestPage.USBRequestSubmittedEvent += RequestPage_USBRequestSubmittedEvent;
+            requestPage.RequestPage_SubmittedEvent += RequestPage_USBRequestSubmittedEvent;
 
-            CtlReuqestPage.Content = new Frame { Content = requestPage };
+            ContentCtrl_ReuqestPage.Content = new Frame { Content = requestPage };
             
         }
 
+        /// <summary>
+        /// 按下 Submit 按鈕 事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void RequestPage_USBRequestSubmittedEvent(object sender, string e)
         {
             var result = new RequestResultPage();
             result.TxtResult.Text = e;
 
-            CtlReuqestPage.Content = new Frame { Content = result };
+            ContentCtrl_ReuqestPage.Content = new Frame { Content = result };
         }
 
         private void BtnExit_Click(object sender, RoutedEventArgs e)

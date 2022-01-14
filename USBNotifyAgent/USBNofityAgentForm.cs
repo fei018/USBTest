@@ -9,16 +9,31 @@ namespace USBNotifyAgent
 {
     public partial class USBNofityAgentForm : UsbMonitorForm
     {
+        private AgentPipe _agentPipe;
+
         public USBNofityAgentForm()
         {
             InitializeComponent();
 
-            AgentManager.Startup();
+            AgentPipeStart();
 
+            AgentManager.Startup();
+        }       
+
+        // AgentPipe
+        #region AgentPipe
+        private void AgentPipeStart()
+        {
+            _agentPipe = new AgentPipe();
+            _agentPipe.CloseAgentFormEvent += _agentPipe_CloseAgentFormEvent;
             _agentPipe.Start();
         }
 
-        private AgentPipe _agentPipe = new AgentPipe();
+        private void _agentPipe_CloseAgentFormEvent(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+        #endregion
 
         // form
         #region USBNofityForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -87,7 +102,7 @@ namespace USBNotifyAgent
                     var usb = new UsbFilter().Find_UsbDisk_By_DiskPath(diskPath);
                     if (!UsbWhitelistHelp.IsFind(usb))
                     {
-                        _agentPipe.PushUsbDiskToTray(usb);
+                        _agentPipe.PushMsg_ToTray_UsbDisk(usb);
                     }
                 }
                 catch (Exception)

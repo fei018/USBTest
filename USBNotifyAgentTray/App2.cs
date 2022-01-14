@@ -9,20 +9,33 @@ namespace USBNotifyAgentTray
 {
     public partial class App
     {
-        private TrayPipe _trayPipe = new TrayPipe();
+        private TrayPipe _trayPipe;
 
-        private void AppStartup(object sender, StartupEventArgs e)
+        private void AppStartupEvent(object sender, StartupEventArgs e)
         {
-            AddTrayIcon();
-
+            _trayPipe = new TrayPipe();
+            _trayPipe.CloseTrayEvent += _trayPipe_CloseTrayEvent;
             _trayPipe.Start();
+
+            AddTrayIcon();
         }
 
-        private void AppExit(object sender, ExitEventArgs e)
+        private void AppExitEvent(object sender, ExitEventArgs e)
         {
             RemoveTrayIcon();
 
             _trayPipe.Stop();
         }
+
+        // TrayPipe
+
+        #region + private void _trayPipe_CloseTrayEvent(object sender, EventArgs e)
+        private void _trayPipe_CloseTrayEvent(object sender, EventArgs e)
+        {
+            RemoveTrayIcon();
+            _trayPipe.PushMsg_ToService_TrayClosed();
+            App.Current.Shutdown();
+        }
+        #endregion
     }
 }

@@ -4,6 +4,7 @@ using System.IO;
 using System.ServiceProcess;
 using System.Threading;
 using USBNotifyService.Win32API;
+using USBNotifyLib;
 
 namespace USBNotifyService
 {
@@ -12,18 +13,23 @@ namespace USBNotifyService
         private bool _autoBootUsbAgent = true;
         private bool _autoBootUsbAgentTray = true;
 
+        private ServicePipe _servicePipe;
+
         #region ServiceStart()
         private void Start_Service()
         {
             _autoBootUsbAgent = true;
-            StartProcess_USBNotifyAgent();
+            StartProcess_Agent();
+
+            _servicePipe = new ServicePipe();
+            _servicePipe.Start();
 
             // 判斷當前 windows session 是否 user session
             var sessionid = ProcessApiHelp.GetCurrentUserSessionID();
             if (sessionid > 0)
             {
                 _autoBootUsbAgentTray = true;
-                StartProcess_USBNotifyAgentTray();
+                StartProcess_AgentTray();
             }
         }
         #endregion
@@ -31,63 +37,72 @@ namespace USBNotifyService
         #region ServiceStop()
         private void Stop_Service()
         {
-            _autoBootUsbAgent = false;
-            CloseProcess_USBNotifyAgent();
-
             _autoBootUsbAgentTray = false;
-            CloseProcess_USBNotifyAgentTray();
+            _autoBootUsbAgent = false;
+
+            _servicePipe.PushMsg_ToAgent_CloseTray();
+            Thread.Sleep(new TimeSpan(0,0,1));
+
+            _servicePipe.PushMsg_ToAgent_CloseAgent();
+            Thread.Sleep(new TimeSpan(0, 0, 1));
+
+            CloseProcess_AgentTray();
+            
+            CloseProcess_Agent();
+
+            _servicePipe?.Stop();
         }
         #endregion
 
-        #region USBNotifyAgent Process
+        #region Agent Process
 
         private string _agentPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "usbnagent.exe");
 
-        private Process _usbNotifyAppProcess;
+        private Process _AgentProcess;
 
-        private void StartProcess_USBNotifyAgent()
+        private void StartProcess_Agent()
         {
-            CloseProcess_USBNotifyAgent();
+            CloseProcess_Agent();
             try
             {
                 ProcessStartInfo startInfo = new ProcessStartInfo(_agentPath);
-                _usbNotifyAppProcess = new Process
+                _AgentProcess = new Process
                 {
                     EnableRaisingEvents = true,
                     StartInfo = startInfo
                 };
 
                 // Exited Event 委託, 如果意外結束process, 可以自己啟動
-                _usbNotifyAppProcess.Exited += (s, e) =>
+                _AgentProcess.Exited += (s, e) =>
                 {
                     if (_autoBootUsbAgent)
                     {
-                        StartProcess_USBNotifyAgent();
+                        StartProcess_Agent();
                     }
                 };
 
-                _usbNotifyAppProcess.Start();
+                _AgentProcess.Start();
             }
             catch (Exception)
             {
             }
         }
 
-        private void CloseProcess_USBNotifyAgent()
+        private void CloseProcess_Agent()
         {
             try
             {
-                if (_usbNotifyAppProcess != null && !_usbNotifyAppProcess.HasExited)
+                if (_AgentProcess != null && !_AgentProcess.HasExited)
                 {
-                    _usbNotifyAppProcess?.CloseMainWindow();
+                    _AgentProcess?.CloseMainWindow();
 
-                    if (_usbNotifyAppProcess != null && !_usbNotifyAppProcess.HasExited)
+                    if (_AgentProcess != null && !_AgentProcess.HasExited)
                     {
-                        Thread.Sleep(new TimeSpan(0, 0, 3));
-                        _usbNotifyAppProcess?.Kill();
+                        Thread.Sleep(new TimeSpan(0, 0, 2));
+                        _AgentProcess?.Kill();
                     }
 
-                    _usbNotifyAppProcess?.Close();
+                    _AgentProcess?.Close();
                 }
             }
             catch (Exception)
@@ -96,26 +111,26 @@ namespace USBNotifyService
         }
         #endregion
 
-        #region USBNotityAgentTray Process
-        private string _desktopPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "usbntray.exe");
+        #region AgentTray Process
+        private string _agentTrayPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "usbntray.exe");
 
-        private Process _usbNotifyDesktopProcess;
+        private Process _agentTrayProcess;
 
-        private void StartProcess_USBNotifyAgentTray()
+        private void StartProcess_AgentTray()
         {
-            CloseProcess_USBNotifyAgentTray();
+            CloseProcess_AgentTray();
 
             try
             {
-                _usbNotifyDesktopProcess = ProcessApiHelp.CreateProcessAsUser(_desktopPath, null);
-                _usbNotifyDesktopProcess.EnableRaisingEvents = true;
+                _agentTrayProcess = ProcessApiHelp.CreateProcessAsUser(_agentTrayPath, null);
+                _agentTrayProcess.EnableRaisingEvents = true;
 
                 // Exited Event 委託, 如果意外結束process, 可以自己啟動
-                _usbNotifyDesktopProcess.Exited += (s, e) =>
+                _agentTrayProcess.Exited += (s, e) =>
                 {
                     if (_autoBootUsbAgentTray)
                     {
-                        StartProcess_USBNotifyAgentTray();
+                        StartProcess_AgentTray();
                     }
                 };
             }
@@ -124,21 +139,21 @@ namespace USBNotifyService
             }
         }
 
-        private void CloseProcess_USBNotifyAgentTray()
+        private void CloseProcess_AgentTray()
         {
             try
             {
-                if (_usbNotifyDesktopProcess != null && !_usbNotifyDesktopProcess.HasExited)
+                if (_agentTrayProcess != null && !_agentTrayProcess.HasExited)
                 {
-                    _usbNotifyDesktopProcess?.CloseMainWindow();
+                    _agentTrayProcess?.CloseMainWindow();
 
-                    if (_usbNotifyDesktopProcess != null && !_usbNotifyDesktopProcess.HasExited)
+                    if (_agentTrayProcess != null && !_agentTrayProcess.HasExited)
                     {
-                        Thread.Sleep(new TimeSpan(0, 0, 3));
-                        _usbNotifyDesktopProcess?.Kill();
+                        Thread.Sleep(new TimeSpan(0, 0, 2));
+                        _agentTrayProcess?.Kill();
                     }
 
-                    _usbNotifyDesktopProcess?.Close();
+                    _agentTrayProcess?.Close();
                 }
             }
             catch (Exception)
@@ -150,12 +165,14 @@ namespace USBNotifyService
         #region + protected override void OnSessionChange(SessionChangeDescription changeDescription)
         protected override void OnSessionChange(SessionChangeDescription changeDescription)
         {
+            base.OnSessionChange(changeDescription);
+
             // user logon windows
             // startup Agent tray
             if (changeDescription.Reason == SessionChangeReason.SessionLogon)
             {
                 _autoBootUsbAgentTray = true;
-                StartProcess_USBNotifyAgentTray();
+                StartProcess_AgentTray();
             }
 
             // user logoff windows
@@ -163,10 +180,8 @@ namespace USBNotifyService
             if (changeDescription.Reason == SessionChangeReason.SessionLogoff)
             {
                 _autoBootUsbAgentTray = false;
-                CloseProcess_USBNotifyAgentTray();
-            }
-
-            base.OnSessionChange(changeDescription);
+                CloseProcess_AgentTray();
+            }          
         }
         #endregion
     }

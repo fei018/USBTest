@@ -180,7 +180,7 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + public void PostUsbRegisterRequest(UsbRegisterRequest usb)
+        #region + public void PostUsbRequest(UsbRequest usb)
         /// <summary>
         /// 
         /// </summary>

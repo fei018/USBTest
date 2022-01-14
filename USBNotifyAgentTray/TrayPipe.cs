@@ -20,6 +20,8 @@ namespace USBNotifyAgentTray
 
         public static UsbDisk UsbDiskInfo { get; set; }
 
+        public event EventHandler CloseTrayEvent;
+
         #region Start()
         public void Stop()
         {
@@ -65,9 +67,9 @@ namespace USBNotifyAgentTray
             }
         }
 
-        private void pipeConnection_Error(Exception exception)
+        private void pipeConnection_Error(Exception ex)
         {
-            MessageBox.Show(exception.Message,"TrapPipe Error");
+            MessageBox.Show(ex.Message,"TrapPipe Error");
         }
         #endregion
 
@@ -86,18 +88,19 @@ namespace USBNotifyAgentTray
                 switch (pipeMsg.PipeMsgType)
                 {
                     case PipeMsgType.Error:
-                        MessageFromAgentPipe(pipeMsg.Message);
+                        Handler_MessageFromAgentPipe(pipeMsg.Message);
                         break;
 
                     case PipeMsgType.Message:
-                        MessageFromAgentPipe(pipeMsg.Message);
+                        Handler_MessageFromAgentPipe(pipeMsg.Message);
                         break;
 
                     case PipeMsgType.UsbDisk:
-                        OpenTrayNotifyWindow(pipeMsg.UsbDisk);
+                        Handler_OpenTrayNotifyWindow(pipeMsg.UsbDisk);
                         break;
 
-                    case PipeMsgType.CloseAgentTray:
+                    case PipeMsgType.CloseTray:
+                        Handler_CloseTray();
                         break;
 
                     default:
@@ -113,15 +116,15 @@ namespace USBNotifyAgentTray
 
         // ReceiveMessageFromAgentPipe handler
 
-        #region + private void MessageFromAgentPipe(string message)
-        private void MessageFromAgentPipe(string message)
+        #region + private void Handler_MessageFromAgentPipe(string message)
+        private void Handler_MessageFromAgentPipe(string message)
         {
             MessageBox.Show(message, "USB Control");
         }
         #endregion
 
-        #region + private void OpenTrayNotifyWindow(UsbDisk usbDisk)
-        private void OpenTrayNotifyWindow(UsbDisk usbDisk)
+        #region + private void Handler_OpenTrayNotifyWindow(UsbDisk usbDisk)
+        private void Handler_OpenTrayNotifyWindow(UsbDisk usbDisk)
         {
             try
             {
@@ -141,10 +144,23 @@ namespace USBNotifyAgentTray
         }
         #endregion
 
-        // push message to agent pipe server
+        #region + private void Handler_CloseTray()
+        private void Handler_CloseTray()
+        {
+            try
+            {
+                CloseTrayEvent?.Invoke(this, null);
+            }
+            catch (Exception)
+            {
+            }
+        }
+        #endregion
 
-        #region + public void CheckAndUpdateAgent()
-        public void CheckAndUpdateAgent()
+        // push message
+
+        #region + public void PushMsg_ToAgent_CheckAndUpdateAgent()
+        public void  PushMsg_ToAgent_CheckAndUpdateAgent()
         {           
             try
             {
@@ -157,8 +173,8 @@ namespace USBNotifyAgentTray
         }
         #endregion
 
-        #region + public void UpdateUsbWhitelist()
-        public void UpdateUsbWhitelist()
+        #region + public void PushMsg_ToAgent_UpdateUsbWhitelist()
+        public void PushMsg_ToAgent_UpdateUsbWhitelist()
         {
             try
             {
@@ -171,8 +187,8 @@ namespace USBNotifyAgentTray
         }
         #endregion
 
-        #region + public void UpdateAgentSetting()
-        public void UpdateAgentSetting()
+        #region + public void PushMsg_ToAgent_UpdateAgentSetting()
+        public void PushMsg_ToAgent_UpdateAgentSetting()
         {
             try
             {
@@ -185,12 +201,26 @@ namespace USBNotifyAgentTray
         }
         #endregion
 
-        #region + public void UsbFullScan()
-        public void UsbFullScan()
+        #region + public void PushMsg_ToAgent_UsbFullScan UsbFullScan()
+        public void PushMsg_ToAgent_UsbFullScan()
         {
             try
             {
                 var json = JsonConvert.SerializeObject(new PipeMsg(PipeMsgType.UsbFullScan));
+                _client?.PushMessage(json);
+            }
+            catch (Exception)
+            {
+            }
+        }
+        #endregion
+
+        #region + public void PushMsg_ToService_TrayClosed()
+        public void PushMsg_ToService_TrayClosed()
+        {
+            try
+            {
+                var json = JsonConvert.SerializeObject(new PipeMsg(PipeMsgType.TrayClosed));
                 _client?.PushMessage(json);
             }
             catch (Exception)

@@ -50,7 +50,7 @@ namespace USBNotifyAgentTray
             {
                 try
                 {
-                    _trayPipe.UpdateAgentSetting();
+                    _trayPipe.PushMsg_ToAgent_UpdateAgentSetting();
                 }
                 catch (Exception ex)
                 {
@@ -67,7 +67,7 @@ namespace USBNotifyAgentTray
             {
                 try
                 {
-                    _trayPipe.UpdateUsbWhitelist();
+                    _trayPipe.PushMsg_ToAgent_UpdateUsbWhitelist();
                 }
                 catch (Exception ex)
                 {
@@ -84,7 +84,7 @@ namespace USBNotifyAgentTray
             {
                 try
                 {
-                    _trayPipe.CheckAndUpdateAgent();
+                    _trayPipe.PushMsg_ToAgent_CheckAndUpdateAgent();
                 }
                 catch (Exception ex)
                 {

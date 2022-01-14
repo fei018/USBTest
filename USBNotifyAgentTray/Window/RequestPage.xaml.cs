@@ -26,7 +26,10 @@ namespace USBNotifyAgentTray
             InitializeComponent();
         }
 
-        public event EventHandler<string> USBRequestSubmittedEvent;
+        /// <summary>
+        /// Request Page 的 Submit 按鈕事件
+        /// </summary>
+        public event EventHandler<string> RequestPage_SubmittedEvent;
 
         private void BtnSubmit_Click(object sender, RoutedEventArgs e)
         {           
@@ -66,7 +69,7 @@ namespace USBNotifyAgentTray
 
                 new AgentHttpHelp().PostUsbRequest(post);
 
-                USBRequestSubmittedEvent?.Invoke(this, "Your request was submitted successfully.");
+                RequestPage_SubmittedEvent?.Invoke(this, "Your request was submitted successfully.");
             }
             catch (Exception ex)
             {

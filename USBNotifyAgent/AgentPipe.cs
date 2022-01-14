@@ -13,6 +13,11 @@ namespace USBNotifyAgent
 
         private NamedPipeServer<string> _server;
 
+        /// <summary>
+        /// To Close Agent app event
+        /// </summary>
+        public event EventHandler CloseAgentFormEvent;
+
         #region + public void Start()
         public void Start()
         {
@@ -40,7 +45,7 @@ namespace USBNotifyAgent
 
                 _server = new NamedPipeServer<string>(PipeName, pipeSecurity);
 
-                _server.ClientMessage += ReceiveMessageFromTrayPipe;
+                _server.ClientMessage += ReceiveMsg_FromClientPipe;
 
                 _server.Error += pipeConnection_Error;
 
@@ -65,7 +70,7 @@ namespace USBNotifyAgent
                 if (_server != null)
                 {
                     _server.Error -= pipeConnection_Error;
-                    _server.ClientMessage -= ReceiveMessageFromTrayPipe;
+                    _server.ClientMessage -= ReceiveMsg_FromClientPipe;
                     _server.Stop();
                     _server = null;
                 }
@@ -79,8 +84,8 @@ namespace USBNotifyAgent
 
         // Receive message from client
 
-        #region + private void ReceiveMessageFromTrayPipe(NamedPipeConnection<string, string> connection, string message)
-        private void ReceiveMessageFromTrayPipe(NamedPipeConnection<string, string> connection, string message)
+        #region + private void ReceiveMsg_FromClientPipe(NamedPipeConnection<string, string> connection, string message)
+        private void ReceiveMsg_FromClientPipe(NamedPipeConnection<string, string> connection, string message)
         {
             try
             {
@@ -113,6 +118,16 @@ namespace USBNotifyAgent
                         Handler_UsbFullScan();
                         break;
 
+                    // To Close Agent
+                    case PipeMsgType.CloseAgent:
+                        Handler_CloseAgent();
+                        break;
+
+                    // To Close Tray
+                    case PipeMsgType.CloseTray:
+                        Handler_CloseTray();
+                        break;
+
                     default:
                         break;
                 }
@@ -124,7 +139,7 @@ namespace USBNotifyAgent
         }
         #endregion
 
-        // ReceiveMessageFromTrayPipe handler
+        // Receive Message  handler
 
         #region + private void Handler_UpdateUsbWhitelist()
         private void Handler_UpdateUsbWhitelist()
@@ -132,13 +147,14 @@ namespace USBNotifyAgent
             try
             {
                 new AgentHttpHelp().GetUsbWhitelist_Http();
-                PushMessageToTray("Update USB Whitelist done.");
-                Handler_UsbFullScan();
+                PushMsg_ToTray_Message("Update USB Whitelist done.");
+
+                new UsbFilter().Filter_Scan_All_USB_Disk();
             }
             catch (Exception ex)
             {
                 UsbLogger.Error(ex.Message);
-                PushErrorToTray(ex.Message);
+                PushMsg_ToTray_Error(ex.Message);
             }
         }
         #endregion
@@ -151,17 +167,17 @@ namespace USBNotifyAgent
                 if (new AgentUpdate().IsNeedToUpdate())
                 {
                     new AgentUpdate().Update();
-                    PushMessageToTray("Download Agent done, wait for installation.");
+                    PushMsg_ToTray_Message("Download Agent done, wait for installation.");
                 }
                 else
                 {
-                    PushErrorToTray("Agent is newest version.");
+                    PushMsg_ToTray_Error("Agent is newest version.");
                 }
             }
             catch (Exception ex)
             {
                 UsbLogger.Error(ex.Message);
-                PushErrorToTray(ex.Message);
+                PushMsg_ToTray_Error(ex.Message);
             }
         }
         #endregion
@@ -173,12 +189,12 @@ namespace USBNotifyAgent
             {
                 new AgentHttpHelp().GetAgentSetting_Http();
                 AgentTimer.ReloadTask();
-                PushMessageToTray("Update AgentSetting done.");
+                PushMsg_ToTray_Message("Update AgentSetting done.");
             }
             catch (Exception ex)
             {
                 UsbLogger.Error(ex.Message);
-                PushErrorToTray(ex.Message);
+                PushMsg_ToTray_Error(ex.Message);
             }
         }
         #endregion
@@ -197,10 +213,37 @@ namespace USBNotifyAgent
         }
         #endregion
 
-        // push message to tray pipe client
+        #region + private void Handler_CloseAgent()
+        private void Handler_CloseAgent()
+        {
+            try
+            {
+                CloseAgentFormEvent?.Invoke(this, null);
+            }
+            catch (Exception ex)
+            {
+                UsbLogger.Error("AgentPipe.Handler_CloseAgent(): " + ex.Message);
+            }
+        }
+        #endregion
 
-        #region + public void PushMessageToTray(string message)
-        public void PushMessageToTray(string message)
+        #region + private void Handler_CloseTray()
+        private void Handler_CloseTray()
+        {
+            try
+            {
+                PushMsg_ToTray_CloseTray();
+            }
+            catch (Exception)
+            {
+            }
+        }
+        #endregion
+
+        // push message
+
+        #region + public void PushMsg_ToTray_Message(string message)
+        public void PushMsg_ToTray_Message(string message)
         {
             try
             {
@@ -215,8 +258,8 @@ namespace USBNotifyAgent
         }
         #endregion
 
-        #region + public void PushUsbDiskToTray(UsbDisk usb)
-        public void PushUsbDiskToTray(UsbDisk usb)
+        #region + public void PushMsg_ToTray_UsbDisk(UsbDisk usb)
+        public void PushMsg_ToTray_UsbDisk(UsbDisk usb)
         {
             try
             {
@@ -236,8 +279,8 @@ namespace USBNotifyAgent
         }
         #endregion
 
-        #region + public void PushErrorToTray(string message)
-        public void PushErrorToTray(string message)
+        #region + public void PushMsg_ToTray_Error(string message)
+        public void PushMsg_ToTray_Error(string message)
         {
             try
             {
@@ -248,6 +291,22 @@ namespace USBNotifyAgent
             catch (Exception ex)
             {
                 UsbLogger.Error("PushErrorToTray : " + ex.Message);
+            }
+        }
+        #endregion
+
+        #region + public void PushMsg_ToTray_CloseTray()
+        public void PushMsg_ToTray_CloseTray()
+        {
+            try
+            {
+                var pipe = new PipeMsg(PipeMsgType.CloseTray);
+                var json = JsonConvert.SerializeObject(pipe);
+                _server.PushMessage(json);
+            }
+            catch (Exception ex)
+            {
+                UsbLogger.Error("PushMessageToCloseTray : " + ex.Message);
             }
         }
         #endregion

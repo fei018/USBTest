@@ -7,6 +7,6 @@
         mc:Ignorable="d" Height="400" Width="405" WindowStyle="ToolWindow" WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
         Title="USB Request">
     <Grid>
-        <ContentControl Grid.Row="0" x:Name="CtlReuqestPage"></ContentControl>
+        <ContentControl Grid.Row="0" x:Name="ContentCtrl_ReuqestPage"></ContentControl>
     </Grid>
 </Window>

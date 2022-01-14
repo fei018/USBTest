@@ -129,6 +129,10 @@
       <Project>{09f80c0b-bd6b-4f99-97ae-a02aed1e61ce}</Project>
       <Name>USBNotifyAgent</Name>
     </ProjectReference>
+    <ProjectReference Include="..\USBNotifyLib\USBNotifyLib.csproj">
+      <Project>{bbdb4699-103a-4cd5-92db-6a9cf675161f}</Project>
+      <Name>USBNotifyLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

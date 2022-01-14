@@ -26,6 +26,13 @@
                 <div>Request Time: @Model.RequestTimeString</div>
                 <div>Request Reason:</div>
                 <div>@Model.RequestReason</div>
+
+                @if (Model.RequestState == UsbRequestStateType.Reject)
+                {
+                    <div class="layui-input-block">
+                        <textarea readonly class="layui-textarea" style="width:400px;">@Model.RejectReason</textarea>
+                    </div>
+                }
             </div>
 
         </div>
@@ -34,23 +41,76 @@
 
     <hr>
     <div>
-        <form action="~/USB/RequestToApprove" method="post" class="layui-form" onsubmit="return confirm('Approve ?');">
+        @if (Model.RequestState == UsbRequestStateType.UnderReview)
+        {
+            <form id="approveForm" action="~/USB/RequestToApprove" method="post" class="layui-form">
+                <input type="hidden" name="id" value="@Model.Id" />
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button type="button" class="layui-btn layui-btn-primary" onclick="submitForm('#approveForm', 'Approve ?')">Approve</button>
+                    </div>
+                </div>
+            </form>
+
+            <br />
+            <hr />
+
+            <form id="rejectForm" action="~/USB/RequestToReject" method="post" class="layui-form">
+                <input type="hidden" name="id" value="@Model.Id" />
+
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">Reject</label>
+                    <div class="layui-input-block">
+                        <textarea name="RejectReason" placeholder="Reject reason" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button type="button" class="layui-btn layui-btn-primary" onclick="submitForm('#rejectForm', 'Reject ?')">Reject</button>
+                    </div>
+                </div>
+            </form>
+
+            <br />
+            <hr />
+        }
+
+        <form id="deleteForm" action="~/USB/RequestToDelete" method="post" class="layui-form">
             <input type="hidden" name="id" value="@Model.Id" />
-            <button type="submit" class="layui-btn layui-btn-primary">Approve</button>
-        </form>
-        <br />
-        <form action="~/USB/RequestToReject" method="post" class="layui-form" onsubmit="return confirm('Reject ?');">
-            <input type="hidden" name="id" value="@Model.Id" />
-            <button type="submit" class="layui-btn layui-btn-primary">Reject</button>
-        </form>
-        <br />
-        <hr />
-        <form action="~/USB/RequestToDelete" method="post" class="layui-form" onsubmit="return confirm('Delete ?');">
-            <input type="hidden" name="id" value="@Model.Id" />
-            <button type="submit" class="layui-btn layui-btn-danger">Delete</button>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button type="button" class="layui-btn layui-btn-danger" onclick="submitForm('#deleteForm', 'Delete ?')">Delete</button>
+                </div>
+            </div>
         </form>
 
     </div>
 </div>
 
+@section Script{
+    <script>
+        layui.use(['form', 'layer'], function () {
+            var form = layui.form,
+                layer = layui.layer;
+        });
+
+        function submitForm(id, msg) {
+
+            layer.confirm(msg, { icon: 3, title: 'Confirm' }, function (index) {
+
+                let url = $(id).attr('action');
+                let data = $(id).serializeArray();
+
+                $.post(url, data, function (json) {
+                    window.location.reload();
+                });
+
+                layer.close(index);
+            });
+        }
+    </script>
+}
 

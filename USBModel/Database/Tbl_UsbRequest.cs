@@ -42,10 +42,11 @@ namespace USBModel
         [SugarColumn(IsNullable = true)]
         public string RequestUserEmail { get; set; }
 
-        [SugarColumn(IsNullable = true, ColumnDataType = "nvarchar(255)")]
+        [SugarColumn(IsNullable = true, ColumnDataType = "nvarchar(max)")]
         public string RequestReason { get; set; }
 
-
+        [SugarColumn(IsNullable = true, ColumnDataType = "nvarchar(max)")]
+        public string RejectReason { get; set; }
 
         // IsIgnore
 

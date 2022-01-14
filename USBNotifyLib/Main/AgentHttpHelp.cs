@@ -186,13 +186,13 @@ namespace USBNotifyLib
         /// </summary>
         /// <param name="usb"></param>
         /// <exception cref="throw"></exception>
-        public void PostUsbRegisterRequest(UsbRequest post)
+        public void PostUsbRequest(UsbRequest post)
         {
             try
             {
                 if (post == null)
                 {
-                    throw new Exception("UsbRegisterRequest null reference.");
+                    throw new Exception("UsbRequest null reference.");
                 }
 
                 var usbJson = JsonConvert.SerializeObject(post);
@@ -208,7 +208,7 @@ namespace USBNotifyLib
                     var result = JsonConvert.DeserializeObject<AgentHttpResponseResult>(json);
                     if (!result.Succeed)
                     {
-                        throw new Exception(result.Msg);
+                        throw new Exception("Server Error: " + result.Msg);
                     }
                 }
             }

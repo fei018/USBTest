@@ -184,5 +184,19 @@ namespace USBNotifyAgentTray
             }
         }
         #endregion
+
+        #region + public void UsbFullScan()
+        public void UsbFullScan()
+        {
+            try
+            {
+                var json = JsonConvert.SerializeObject(new PipeMsg(PipeMsgType.UsbFullScan));
+                _client?.PushMessage(json);
+            }
+            catch (Exception)
+            {
+            }
+        }
+        #endregion
     }
 }

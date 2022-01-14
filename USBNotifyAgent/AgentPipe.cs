@@ -108,6 +108,11 @@ namespace USBNotifyAgent
                         Handler_UpdateAgentSetting();
                         break;
 
+                    // Usb Full Scan
+                    case PipeMsgType.UsbFullScan:
+                        Handler_UsbFullScan();
+                        break;
+
                     default:
                         break;
                 }
@@ -173,6 +178,20 @@ namespace USBNotifyAgent
             {
                 UsbLogger.Error(ex.Message);
                 PushErrorToTray(ex.Message);
+            }
+        }
+        #endregion
+
+        #region + private void Handler_UsbFullScan()
+        private void Handler_UsbFullScan()
+        {
+            try
+            {
+                new UsbFilter().Filter_Scan_All_USB_Disk();
+            }
+            catch (Exception ex)
+            {
+                UsbLogger.Error(ex.Message);
             }
         }
         #endregion

@@ -34,8 +34,8 @@ namespace USBNotifyAgentTray
             };
 
             _trayIcon.ContextMenuStrip = new ContextMenuStrip();
-            _trayIcon.ContextMenuStrip.Items.Add("Update USB Whitelist", null, UpdateAgentSettingItem_Click);
-            _trayIcon.ContextMenuStrip.Items.Add("Update Setting", null, UpdateUsbWhitelistItem_Click);
+            _trayIcon.ContextMenuStrip.Items.Add("Update USB Whitelist", null, UpdateUsbWhitelistItem_Click);
+            _trayIcon.ContextMenuStrip.Items.Add("Update Setting", null, UpdateAgentSettingItem_Click);
             _trayIcon.ContextMenuStrip.Items.Add("Update Agent", null, UpdateAgentItem_Click);
             _trayIcon.ContextMenuStrip.Items.Add("");
         }       
@@ -71,7 +71,7 @@ namespace USBNotifyAgentTray
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Update Usb Filter Data Error");
+                    MessageBox.Show(ex.Message, "Update Usb Whitelist Error");
                 }
             });
         }

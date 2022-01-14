@@ -126,6 +126,10 @@ namespace USBAdminWebMVC.Controllers
 
                 return Json(new AgentHttpResponseResult());
             }
+            catch(EmailException)
+            {
+                return Json(new AgentHttpResponseResult());
+            }
             catch (Exception ex)
             {
                 return Json(new AgentHttpResponseResult(false,ex.Message));

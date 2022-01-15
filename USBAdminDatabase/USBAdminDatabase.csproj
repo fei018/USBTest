@@ -9,4 +9,13 @@
     <ProjectReference Include="..\USBModel\USBModel.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="SqlDebug.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sql.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

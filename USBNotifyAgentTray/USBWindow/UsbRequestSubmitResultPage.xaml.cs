@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace USBNotifyAgentTray
+namespace USBNotifyAgentTray.USBWindow
 {
     /// <summary>
-    /// RequestResultPage.xaml 的互動邏輯
+    /// UsbRequestSubmitResultPage.xaml 的互動邏輯
     /// </summary>
-    public partial class RequestResultPage : Page
+    public partial class UsbRequestSubmitResultPage : Page
     {
-        public RequestResultPage()
+        public UsbRequestSubmitResultPage()
         {
             InitializeComponent();
         }

@@ -12,5 +12,7 @@ namespace USBAdminWebMVC
         public int UsbRequestApproveCount { get; set; }
 
         public int UsbRequestRejectCount { get; set; }
+
+        public int ComputerCount { get; set; }
     }
 }

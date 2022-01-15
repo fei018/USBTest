@@ -13,7 +13,7 @@ namespace USBNotifyService
         private bool _autoBootUsbAgent = true;
         private bool _autoBootUsbAgentTray = true;
 
-        private ServicePipe _servicePipe;
+        private PipeClientService _servicePipe;
 
         #region ServiceStart()
         private void Start_Service()
@@ -21,7 +21,7 @@ namespace USBNotifyService
             _autoBootUsbAgent = true;
             StartProcess_Agent();
 
-            _servicePipe = new ServicePipe();
+            _servicePipe = new PipeClientService();
             _servicePipe.Start();
 
             // 判斷當前 windows session 是否 user session

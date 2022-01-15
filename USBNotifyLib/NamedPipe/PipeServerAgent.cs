@@ -3,11 +3,10 @@ using Newtonsoft.Json;
 using System;
 using System.IO.Pipes;
 using System.Security.AccessControl;
-using USBNotifyLib;
 
-namespace USBNotifyAgent
+namespace USBNotifyLib
 {
-    public class AgentPipe
+    public class PipeServerAgent
     {
         private static string PipeName = AgentRegistry.AgentKey;
 
@@ -103,19 +102,9 @@ namespace USBNotifyAgent
                         Handler_UpdateAgent();
                         break;
 
-                    // update usb whitelist
-                    case PipeMsgType.UpdateUsbWhitelist:
-                        Handler_UpdateUsbWhitelist();
-                        break;
-
-                    // Update Agent Setting
-                    case PipeMsgType.UpdateAgentSetting:
-                        Handler_UpdateAgentSetting();
-                        break;
-
-                    // Usb Full Scan
-                    case PipeMsgType.UsbFullScan:
-                        Handler_UsbFullScan();
+                    // Update Setting and USB Whitelist
+                    case PipeMsgType.UpdateSetting:
+                        Handler_UpdateSetting();
                         break;
 
                     // To Close Agent
@@ -141,24 +130,6 @@ namespace USBNotifyAgent
 
         // Receive Message  handler
 
-        #region + private void Handler_UpdateUsbWhitelist()
-        private void Handler_UpdateUsbWhitelist()
-        {
-            try
-            {
-                new AgentHttpHelp().GetUsbWhitelist_Http();
-                PushMsg_ToTray_Message("Update USB Whitelist done.");
-
-                new UsbFilter().Filter_Scan_All_USB_Disk();
-            }
-            catch (Exception ex)
-            {
-                UsbLogger.Error(ex.Message);
-                PushMsg_ToTray_Error(ex.Message);
-            }
-        }
-        #endregion
-
         #region + private void Handler_UpdateAgent()
         private void Handler_UpdateAgent()
         {
@@ -182,14 +153,18 @@ namespace USBNotifyAgent
         }
         #endregion
 
-        #region + private void Handler_UpdateAgentSetting()
-        private void Handler_UpdateAgentSetting()
+        #region + private void Handler_UpdateSetting()
+        private void Handler_UpdateSetting()
         {
             try
             {
                 new AgentHttpHelp().GetAgentSetting_Http();
                 AgentTimer.ReloadTask();
-                PushMsg_ToTray_Message("Update AgentSetting done.");
+
+                new AgentHttpHelp().GetUsbWhitelist_Http();
+                new UsbFilter().Filter_Scan_All_USB_Disk();
+
+                PushMsg_ToTray_Message("Update Setting done.");
             }
             catch (Exception ex)
             {
@@ -258,8 +233,8 @@ namespace USBNotifyAgent
         }
         #endregion
 
-        #region + public void PushMsg_ToTray_UsbDisk(UsbDisk usb)
-        public void PushMsg_ToTray_UsbDisk(UsbDisk usb)
+        #region + public void PushMsg_ToTray_UsbDiskNotInWhitelist(UsbDisk usb)
+        public void PushMsg_ToTray_UsbDiskNotInWhitelist(UsbDisk usb)
         {
             try
             {
@@ -274,7 +249,7 @@ namespace USBNotifyAgent
             }
             catch (Exception ex)
             {
-                UsbLogger.Error("PushUsbDiskToTray: " + ex.Message);
+                UsbLogger.Error("PushMsg_ToTray_UsbDiskNotInWhitelist(UsbDisk usb) : " + ex.Message);
             }
         }
         #endregion

@@ -367,7 +367,7 @@ namespace USBModel
         }
         #endregion
 
-        #region MyRegion
+        #region + public async Task UsbRequest_Delete_ById(int id)
         public async Task UsbRequest_Delete_ById(int id)
         {
             try
@@ -523,6 +523,20 @@ namespace USBModel
 
 
         // PerComputer
+
+        #region public async Task<int> PerComputer_Get_TotalCount()
+        public async Task<int> PerComputer_Get_TotalCount()
+        {
+            try
+            {
+                return await _db.Queryable<Tbl_PerComputer>().CountAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
 
         #region +  public async Task<Tbl_PerComputer> PerComputer_Get_ById(int id)
         public async Task<Tbl_PerComputer> PerComputer_Get_ById(int id)

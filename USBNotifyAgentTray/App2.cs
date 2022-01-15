@@ -1,24 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
+using USBNotifyAgentTray.USBWindow;
+using USBNotifyLib;
 
 namespace USBNotifyAgentTray
 {
     public partial class App
     {
-        private TrayPipe _trayPipe;
-
-        private void AppStartupEvent(object sender, StartupEventArgs e)
-        {
-            _trayPipe = new TrayPipe();
-            _trayPipe.CloseTrayEvent += _trayPipe_CloseTrayEvent;
-            _trayPipe.Start();
-
-            AddTrayIcon();
-        }
+        private PipeClientTray _trayPipe;
 
         private void AppExitEvent(object sender, ExitEventArgs e)
         {
@@ -27,7 +16,47 @@ namespace USBNotifyAgentTray
             _trayPipe.Stop();
         }
 
-        // TrayPipe
+        private void AppStartupEvent(object sender, StartupEventArgs e)
+        {
+            _trayPipe = new PipeClientTray();
+            _trayPipe.Start();
+
+            _trayPipe.CloseTrayEvent += _trayPipe_CloseTrayEvent;
+            _trayPipe.TrayMessageBoxShowEvent += _trayPipe_TrayMessageBoxShowEvent;
+            _trayPipe.TrayShowUsbRequestWindowEvent += _trayPipe_TrayShowUsbRequestWindowEvent;
+
+            AddTrayIcon();
+        }
+
+        #region + private void _trayPipe_TrayShowUsbRequestWindowEvent(object sender, UsbDisk e)
+        /// <summary>
+        /// 顯示 UsbRequestWin
+        /// </summary>
+        private void _trayPipe_TrayShowUsbRequestWindowEvent(object sender, UsbDisk e)
+        {
+            App.Current.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                try
+                {
+                    //Debugger.Break();
+                    var usbWin = new UsbRequestWin();
+                    usbWin.ShowPageUsbRequestNotify(e);
+                    usbWin.Show();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "USB Control");
+                }
+            }));
+        }
+        #endregion
+
+        #region + private void _trayPipe_TrayMessageBoxShowEvent(object sender, string e)
+        private void _trayPipe_TrayMessageBoxShowEvent(object sender, string e)
+        {
+            MessageBox.Show(e, "USB Control");
+        }
+        #endregion
 
         #region + private void _trayPipe_CloseTrayEvent(object sender, EventArgs e)
         private void _trayPipe_CloseTrayEvent(object sender, EventArgs e)

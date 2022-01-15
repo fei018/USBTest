@@ -12,14 +12,19 @@ namespace USBAdminDatabase
             Console.WriteLine();
             try
             {
-                var txt = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "sql.txt");
-
-                if (!File.Exists(txt))
+                string sql = null;
+#if DEBUG
+                sql = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SqlDebug.txt");
+#else
+                sql = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Sql.txt");
+#endif
+                if (!File.Exists(sql))
                 {
                     throw new Exception("connectionString file: \"sql.txt\" not exist.");
                 }
                
-                string conn = File.ReadAllText(txt)?.Trim();
+                string conn = File.ReadAllText(sql)?.Trim();
+                Console.WriteLine(conn);
                 new USBAdminDatabaseHelp(conn).TryCreateDatabase();
             }
             catch (Exception ex)

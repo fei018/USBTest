@@ -35,7 +35,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>USB.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -60,11 +61,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Window\RequestPage.xaml.cs">
-      <DependentUpon>RequestPage.xaml</DependentUpon>
+    <Compile Include="USBWindow\UsbRequestNotifyPage.xaml.cs">
+      <DependentUpon>UsbRequestNotifyPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Window\RequestResultPage.xaml.cs">
-      <DependentUpon>RequestResultPage.xaml</DependentUpon>
+    <Compile Include="USBWindow\UsbRequestRFormPage.xaml.cs">
+      <DependentUpon>UsbRequestRFormPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="USBWindow\UsbRequestSubmitEventArgs.cs" />
+    <Compile Include="USBWindow\UsbRequestSubmitResultPage.xaml.cs">
+      <DependentUpon>UsbRequestSubmitResultPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="USBWindow\UsbRequestWin.xaml.cs">
+      <DependentUpon>UsbRequestWin.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -75,31 +83,24 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="App2.cs" />
-    <Compile Include="Window\RequestWindow.xaml.cs">
-      <DependentUpon>RequestWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="TrayPipe.cs" />
-    <Compile Include="Window\NotifyWindow.xaml.cs">
-      <DependentUpon>NotifyWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="TrayIcon.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Window\RequestWindow.xaml">
+    <Page Include="USBWindow\UsbRequestNotifyPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Window\NotifyWindow.xaml">
+    <Page Include="USBWindow\UsbRequestRFormPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Window\RequestPage.xaml">
+    <Page Include="USBWindow\UsbRequestSubmitResultPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Window\RequestResultPage.xaml">
+    <Page Include="USBWindow\UsbRequestWin.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -139,14 +140,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon\USB.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Window\USB.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="NamedPipeWrapper">
-      <Version>1.5.0</Version>
-    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="USB.ico" />

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace USBNotifyLib
 {
-    public class ServicePipe
+    public class PipeClientService
     {
         private static string PipeName = AgentRegistry.AgentKey;
 

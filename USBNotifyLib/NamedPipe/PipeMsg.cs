@@ -30,7 +30,7 @@ namespace USBNotifyLib
 
         public PipeMsg(UsbDisk usbDisk)
         {
-            PipeMsgType = PipeMsgType.UsbDisk;
+            PipeMsgType = PipeMsgType.UsbDiskNotInWhitelist;
             UsbDisk = usbDisk;
         }
     }

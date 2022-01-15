@@ -21,9 +21,9 @@
     <div class="layuimini-container">
         <div class="layuimini-main">
             <div class="layui-row layui-col-space15">
-                <div class="layui-col-md8">
+                <div class="layui-col-md12">
                     <div class="layui-row layui-col-space15">
-                        <div class="layui-col-md6">
+                        <div class="layui-col-md12">
                             <div class="layui-card">
                                 <div class="layui-card-header"><i class="fa fa-warning icon"></i>Statistical Data</div>
                                 <div class="layui-card-body">
@@ -35,7 +35,7 @@
                                                     <div class="panel-body">
                                                         <div class="panel-title">
                                                             <span class="label pull-right layui-bg-blue">Real</span>
-                                                            <h5>UnderReview USB</h5>
+                                                            <h5>Review USB</h5>
                                                         </div>
                                                         <div class="panel-content">
                                                             <h1 class="no-margins">@Model.UsbRequestUnderReviewCount</h1>
@@ -64,11 +64,26 @@
                                                 <div class="panel layui-bg-number">
                                                     <div class="panel-body">
                                                         <div class="panel-title">
-                                                            <span class="label pull-right layui-bg-cyan">Real</span>
+                                                            <span class="label pull-right layui-bg-green">Real</span>
                                                             <h5>Reject USB</h5>
                                                         </div>
                                                         <div class="panel-content">
                                                             <h1 class="no-margins">@Model.UsbRequestRejectCount</h1>
+                                                            <small>Count</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="layui-col-xs6">
+                                                <div class="panel layui-bg-number">
+                                                    <div class="panel-body">
+                                                        <div class="panel-title">
+                                                            <span class="label pull-right layui-bg-orange">Real</span>
+                                                            <h5>Computer</h5>
+                                                        </div>
+                                                        <div class="panel-content">
+                                                            <h1 class="no-margins">@Model.ComputerCount</h1>
                                                             <small>Count</small>
                                                         </div>
                                                     </div>

@@ -31,15 +31,16 @@ namespace USBNotifyAgent
         {
             this.SuspendLayout();
             // 
-            // USBNofityFilterForm
+            // USBNofityAgentForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(277, 51);
+            this.ClientSize = new System.Drawing.Size(369, 64);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "USBNofityAgentForm";
+            this.ShowInTaskbar = false;
             this.Text = "USBNotifyAgent";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.USBNofityForm_FormClosed);
-            this.Shown += new System.EventHandler(this.USBNofityForm_Shown);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.USBNofityAgentForm_FormClosed);
             this.ResumeLayout(false);
 
         }

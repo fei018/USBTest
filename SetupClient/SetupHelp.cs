@@ -31,6 +31,11 @@ namespace SetupClient
         {
             try
             {
+#if DEBUG
+                _setupiniPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "setupDebug.ini");
+                Console.WriteLine(_setupiniPath);
+#endif
+
                 Dictionary<string, string> registry = new Dictionary<string, string>();
 
                 if (File.Exists(_setupiniPath))
@@ -73,8 +78,8 @@ namespace SetupClient
         }
         #endregion
 
-        #region + private void InitialKey()
-        public void InitialKey()
+        #region + private void InitialRegistryKey()
+        public void InitialRegistryKey()
         {
             try
             {
@@ -126,7 +131,7 @@ namespace SetupClient
 
                 WriteBatchFile();
 
-                InitialKey();
+                InitialRegistryKey();
 
                 InstallService(out error);
                 Console.WriteLine(error);
@@ -157,7 +162,10 @@ namespace SetupClient
                 var run = p.Start();
 
                 p.StandardInput.WriteLine($"\"C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\InstallUtil.exe\" \"{_InstallProgramDir}\\usbnservice.exe\"");
+                p.StandardOutput.ReadToEnd();
+                
                 p.StandardInput.WriteLine("net start usbnservice");
+                p.StandardOutput.ReadToEnd();
 
                 p.StandardInput.WriteLine("exit");
 
@@ -195,7 +203,10 @@ namespace SetupClient
                 var run = p.Start();
 
                 p.StandardInput.WriteLine("net stop usbnservice");
+                p.StandardOutput.ReadToEnd();
+
                 p.StandardInput.WriteLine($"\"C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\InstallUtil.exe\" /u \"{_InstallProgramDir}\\usbnservice.exe\"");
+                p.StandardOutput.ReadToEnd();
 
                 p.StandardInput.WriteLine("exit");
 

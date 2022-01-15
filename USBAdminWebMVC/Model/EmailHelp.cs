@@ -29,7 +29,7 @@ namespace USBAdminWebMVC
             _adminName = _emailDb.FromName;
         }
 
-        #region public async Task SendEmail(string subject, string content, string toAddress = null, List<string> toAddressList = null)
+        #region private async Task SendEmail(string subject, string content, string toAddress = null, List<string> toAddressList = null)
         private async Task SendEmail(string subject, string content, string toAddress = null, List<string> toAddressList = null)
         {
             try

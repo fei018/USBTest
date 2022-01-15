@@ -34,44 +34,29 @@ namespace USBNotifyAgentTray
             };
 
             _trayIcon.ContextMenuStrip = new ContextMenuStrip();
-            _trayIcon.ContextMenuStrip.Items.Add("Update USB Whitelist", null, UpdateUsbWhitelistItem_Click);
-            _trayIcon.ContextMenuStrip.Items.Add("Update Setting", null, UpdateAgentSettingItem_Click);
+
+            _trayIcon.ContextMenuStrip.Items.Add("Update Setting", null, UpdateSettingItem_Click);
             _trayIcon.ContextMenuStrip.Items.Add("Update Agent", null, UpdateAgentItem_Click);
             _trayIcon.ContextMenuStrip.Items.Add("");
+
+            _trayIcon.Visible = true;
         }       
         #endregion
 
         // Tray Item Click
 
         #region + private void UpdateAgentSettingItem_Click(object sender, EventArgs e)
-        private void UpdateAgentSettingItem_Click(object sender, EventArgs e)
+        private void UpdateSettingItem_Click(object sender, EventArgs e)
         {
             Task.Run(() =>
             {
                 try
                 {
-                    _trayPipe.PushMsg_ToAgent_UpdateAgentSetting();
+                    _trayPipe.PushMsg_ToAgent_UpdateSetting();
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message);
-                }
-            });
-        }
-        #endregion
-
-        #region + private void UpdateUsbWhitelistItem_Click(object sender, EventArgs e)
-        private void UpdateUsbWhitelistItem_Click(object sender, EventArgs e)
-        {
-            Task.Run(() =>
-            {
-                try
-                {
-                    _trayPipe.PushMsg_ToAgent_UpdateUsbWhitelist();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Update Usb Whitelist Error");
                 }
             });
         }

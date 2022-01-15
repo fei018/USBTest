@@ -1,12 +1,12 @@
-﻿<Page x:Class="USBNotifyAgentTray.RequestPage"
+﻿<Page x:Class="USBNotifyAgentTray.USBWindow.UsbRequestRFormPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:USBNotifyAgentTray"
+      xmlns:local="clr-namespace:USBNotifyAgentTray.USBWindow"
       mc:Ignorable="d" 
       d:DesignHeight="350" d:DesignWidth="400"
-      Title="RequestPage" Background="White">
+      Title="UsbRequestRFormPage" Background="White">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -27,20 +27,20 @@
             <Grid Grid.Row="1" ShowGridLines="True">
                 <Canvas>
                     <TextBlock Text="Your email address:" Canvas.Left="40" Canvas.Top="12" FontSize="14"/>
-                    <TextBox x:Name="TxtUserEmail" Width="150" Height="30" Canvas.Left="40" Canvas.Top="37" FontSize="14" MaxLength="100"/>
-                    <ComboBox Name="ComboBoxEmail" Canvas.Left="199" Canvas.Top="37" FontSize="14" Width="150" Height="30">
+                    <TextBox x:Name="txtUserEmail" Width="150" Height="30" Canvas.Left="40" Canvas.Top="37" FontSize="14" MaxLength="100"/>
+                    <ComboBox Name="comboBoxEmail" Canvas.Left="199" Canvas.Top="37" FontSize="14" Width="150" Height="30">
                         <ComboBoxItem Content="@hiphing.com.hk" IsSelected="True"></ComboBoxItem>
                         <ComboBoxItem Content="@vibro.com.hk"></ComboBoxItem>
                     </ComboBox>
 
                     <TextBlock Text="Request reason:" Canvas.Left="40" Canvas.Top="80" FontSize="14"/>
-                    <TextBox x:Name="TxtReason" Width="310" Height="92" FontSize="14" Canvas.Left="40" Canvas.Top="103" MaxLength="1000" AcceptsTab="True" AcceptsReturn="True" TextWrapping="Wrap" MaxLines="10"/>
+                    <TextBox x:Name="txtReason" Width="310" Height="92" FontSize="14" Canvas.Left="40" Canvas.Top="103" MaxLength="1000" AcceptsTab="True" AcceptsReturn="True" TextWrapping="Wrap" MaxLines="10"/>
                 </Canvas>
             </Grid>
         </Grid>
 
         <Grid Grid.Row="1">
-            <Button Click="BtnSubmit_Click" x:Name="BtnSubmit" Content="Submit" Height="40" Width="120"></Button>
+            <Button x:Name="btnSubmit" Click="btnSubmit_Click" Content="Submit" Height="40" Width="120"></Button>
         </Grid>
     </Grid>
 </Page>

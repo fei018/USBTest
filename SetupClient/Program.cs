@@ -11,6 +11,12 @@ namespace SetupClient
     {
         static void Main(string[] args)
         {
+            //Setup();
+            InitKey();
+        }
+
+        static void Setup()
+        {
             var log = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "setup_log.txt");
             try
             {
@@ -25,11 +31,26 @@ namespace SetupClient
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-              
+
                 File.WriteAllText(log, ex.Message);
             }
 
             Environment.Exit(0);
+        }
+
+        static void InitKey()
+        {
+            try
+            {
+                new SetupHelp().InitialRegistryKey();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            Console.WriteLine("Done.");
+            Console.ReadLine();
         }
     }
 }

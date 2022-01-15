@@ -88,6 +88,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.manifest" />
+    <None Include="setupDebug.ini">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="setup.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

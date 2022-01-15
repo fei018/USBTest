@@ -23,14 +23,10 @@ namespace USBNotifyLib
     {
         Error = 1,
         Message,
-        UsbDisk,
+        UsbDiskNotInWhitelist,
         UpdateAgent,
-        UpdateUsbWhitelist,
-        UpdateAgentSetting,
+        UpdateSetting,
         CloseAgent,
-        AgentClosed,
-        CloseTray,
-        TrayClosed,
-        UsbFullScan
+        CloseTray
     }
 }

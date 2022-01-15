@@ -9,8 +9,6 @@ namespace USBNotifyAgent
 {
     public partial class USBNofityAgentForm : UsbMonitorForm
     {
-        private AgentPipe _agentPipe;
-
         public USBNofityAgentForm()
         {
             InitializeComponent();
@@ -18,36 +16,27 @@ namespace USBNotifyAgent
             AgentPipeStart();
 
             AgentManager.Startup();
-        }       
+        }
 
         // AgentPipe
         #region AgentPipe
+
+        private PipeServerAgent _agentPipe;
+
         private void AgentPipeStart()
         {
-            _agentPipe = new AgentPipe();
-            _agentPipe.CloseAgentFormEvent += _agentPipe_CloseAgentFormEvent;
+            _agentPipe = new PipeServerAgent();
+            _agentPipe.CloseAgentFormEvent += (s, e) => { this.Close(); };
             _agentPipe.Start();
-        }
-
-        private void _agentPipe_CloseAgentFormEvent(object sender, EventArgs e)
-        {
-            this.Close();
         }
         #endregion
 
         // form
-        #region USBNofityForm_FormClosed(object sender, FormClosedEventArgs e)
-        private void USBNofityForm_FormClosed(object sender, FormClosedEventArgs e)
+        #region USBNofityAgentForm_FormClosed(object sender, FormClosedEventArgs e)
+        private void USBNofityAgentForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             base.Stop();
             _agentPipe.Stop();
-        }
-        #endregion
-
-        #region USBNofityForm_Shown(object sender, EventArgs e)
-        private void USBNofityForm_Shown(object sender, EventArgs e)
-        {
-            // this.Hide();
         }
         #endregion
 
@@ -62,11 +51,11 @@ namespace USBNotifyAgent
                 {
                     FilterUsbDisk(args.Name);
 
-                    CheckUsbWhetherNeedRegister(args.Name);
+                    CheckUsbWhitelist_PluginUSB(args.Name);
 
                     PostUsbHistoryToHttpServer(args.Name);
                 }
-            }          
+            }
         }
         #endregion
 
@@ -89,8 +78,8 @@ namespace USBNotifyAgent
         }
         #endregion
 
-        #region + private void CheckUsbWhetherNeedRegister()
-        private void CheckUsbWhetherNeedRegister(string diskPath)
+        #region + private void CheckUsbWhitelist_PluginUSB()
+        private void CheckUsbWhitelist_PluginUSB(string diskPath)
         {
             Task.Run(() =>
             {
@@ -102,7 +91,7 @@ namespace USBNotifyAgent
                     var usb = new UsbFilter().Find_UsbDisk_By_DiskPath(diskPath);
                     if (!UsbWhitelistHelp.IsFind(usb))
                     {
-                        _agentPipe.PushMsg_ToTray_UsbDisk(usb);
+                        _agentPipe.PushMsg_ToTray_UsbDiskNotInWhitelist(usb);
                     }
                 }
                 catch (Exception)
@@ -166,5 +155,6 @@ namespace USBNotifyAgent
         //    });
         //}
         #endregion
+
     }
 }

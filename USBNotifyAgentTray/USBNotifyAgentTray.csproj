@@ -35,8 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -129,6 +128,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -146,10 +146,16 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Icon\USB.ico" />
+    <Resource Include="USB.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="USB.ico" />
+    <Resource Include="logo.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="USBWindow\logo.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

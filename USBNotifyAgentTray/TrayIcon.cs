@@ -29,7 +29,7 @@ namespace USBNotifyAgentTray
 
             _trayIcon = new NotifyIcon
             {
-                Icon = USBNotifyAgentTray.Properties.Resources.USB,
+                Icon = USBNotifyAgentTray.Properties.Resources.icon,
                 Text = "USB Control",
                 Visible = true
             };

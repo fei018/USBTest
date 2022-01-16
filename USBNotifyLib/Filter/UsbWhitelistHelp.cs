@@ -60,7 +60,7 @@ namespace USBNotifyLib
             }
             catch (Exception ex)
             {
-                UsbLogger.Error(ex.Message);
+                AgentLogger.Error(ex.Message);
             }
         }
         #endregion
@@ -95,7 +95,7 @@ namespace USBNotifyLib
             }
             catch (Exception ex)
             {
-                UsbLogger.Error(ex.Message);
+                AgentLogger.Error(ex.Message);
             }
         }
         #endregion

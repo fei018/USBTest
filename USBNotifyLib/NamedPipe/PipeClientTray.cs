@@ -43,7 +43,7 @@ namespace USBNotifyLib
             {
                 if (string.IsNullOrWhiteSpace(PipeName))
                 {
-                    UsbLogger.Error("PipeName is empty");
+                    AgentLogger.Error("PipeName is empty");
                     return;
                 }
 

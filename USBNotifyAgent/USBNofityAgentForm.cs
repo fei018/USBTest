@@ -36,6 +36,8 @@ namespace USBNotifyAgent
         private void USBNofityAgentForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             base.Stop();
+
+            AgentManager.Stop();
             _agentPipe.Stop();
         }
         #endregion

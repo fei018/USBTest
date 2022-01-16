@@ -37,7 +37,7 @@ namespace USBNotifyLib
             {
                 if (string.IsNullOrWhiteSpace(PipeName))
                 {
-                    UsbLogger.Error("usbnservice: PipeName is empty");
+                    AgentLogger.Error("usbnservice: PipeName is empty");
                     return;
                 }
 
@@ -52,13 +52,13 @@ namespace USBNotifyLib
             }
             catch (Exception ex)
             {
-                UsbLogger.Error("usbnservice: " + ex.Message);
+                AgentLogger.Error("usbnservice: " + ex.Message);
             }
         }
 
         private void pipeConnection_Error(Exception ex)
         {
-            UsbLogger.Error("usbnservice: " + ex.Message);
+            AgentLogger.Error("usbnservice: " + ex.Message);
         }
         #endregion
 
@@ -74,7 +74,7 @@ namespace USBNotifyLib
             }
             catch (Exception ex)
             {
-                UsbLogger.Error("PushMessage_ToClose_Agent(): " + ex.Message);
+                AgentLogger.Error("PushMessage_ToClose_Agent(): " + ex.Message);
             }
         }
         #endregion
@@ -89,7 +89,7 @@ namespace USBNotifyLib
             }
             catch (Exception ex)
             {
-                UsbLogger.Error("PushMessage_ToClose_Tray(): " + ex.Message);
+                AgentLogger.Error("PushMessage_ToClose_Tray(): " + ex.Message);
             }
         }
         #endregion

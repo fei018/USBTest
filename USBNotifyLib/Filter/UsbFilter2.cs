@@ -109,7 +109,7 @@ namespace USBNotifyLib
                                 var result = disk.InvokeMethod("SetAttributes", inParams, null)["ReturnValue"].ToString();
                                 if (!string.IsNullOrWhiteSpace(result))
                                 {
-                                    UsbLogger.Log("DiskNumber: " + diskNumber + "\r\n" + "Set readOnly result: \r\n");
+                                    AgentLogger.Log("DiskNumber: " + diskNumber + "\r\n" + "Set readOnly result: \r\n");
                                 }
                             }
                         }
@@ -145,7 +145,7 @@ namespace USBNotifyLib
                             var result = Set_Disk_IsReadOnly_WMI(d, isReadOnly);
                             if (!string.IsNullOrWhiteSpace(result))
                             {
-                                UsbLogger.Log(diskPath + "\r\n" + "Set readOnly result: \r\n");
+                                AgentLogger.Log(diskPath + "\r\n" + "Set readOnly result: \r\n");
                             }
                         }
                     }

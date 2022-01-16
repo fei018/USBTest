@@ -10,12 +10,28 @@ namespace USBNotifyLib
 
         public static void ReloadTask()
         {
-            ClearTimerTask();
-            SetTimerTask();
+            try
+            {
+                // 上載 本機資訊
+                new AgentHttpHelp().PostPerComputer_Http();
+
+                // update agent setting
+                new AgentHttpHelp().GetAgentSetting_Http();
+
+                // update UsbWhitelist
+                new AgentHttpHelp().GetUsbWhitelist_Http();
+
+                ClearTimerTask();
+                SetTimerTask();
+            }
+            catch (Exception ex)
+            {
+                AgentLogger.Error(ex.Message);
+            }
         }
 
         #region + private static void ClearTimerTask()
-        private static void ClearTimerTask()
+        public static void ClearTimerTask()
         {
             try
             {
@@ -28,7 +44,7 @@ namespace USBNotifyLib
             }
             catch (Exception ex)
             {
-                UsbLogger.Error(ex.Message);
+                AgentLogger.Error(ex.Message);
             }
         }
         #endregion
@@ -47,7 +63,7 @@ namespace USBNotifyLib
             }
             catch (Exception ex)
             {
-                UsbLogger.Error(ex.Message);
+                AgentLogger.Error(ex.Message);
             }
         }
 
@@ -77,7 +93,7 @@ namespace USBNotifyLib
                 }
                 catch (Exception ex)
                 {
-                    UsbLogger.Error(ex.Message);
+                    AgentLogger.Error(ex.Message);
                 }
             });
         }
@@ -94,7 +110,7 @@ namespace USBNotifyLib
                 }
                 catch (Exception ex)
                 {
-                    UsbLogger.Error(ex.Message);
+                    AgentLogger.Error(ex.Message);
                 }
             });
         }

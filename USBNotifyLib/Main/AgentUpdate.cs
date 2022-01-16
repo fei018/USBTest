@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace USBNotifyLib
@@ -40,7 +36,7 @@ namespace USBNotifyLib
             }
             catch (Exception ex)
             {
-                UsbLogger.Error(ex.Message);
+                AgentLogger.Error(ex.Message);
             }
         }
         #endregion
@@ -77,7 +73,7 @@ namespace USBNotifyLib
             }
             catch (Exception ex)
             {
-                UsbLogger.Error(ex.Message);
+                AgentLogger.Error(ex.Message);
                 throw;
             }
         }
@@ -103,7 +99,7 @@ namespace USBNotifyLib
             }
             catch (Exception ex)
             {
-                UsbLogger.Error(ex.Message);
+                AgentLogger.Error(ex.Message);
             }
         }
         #endregion

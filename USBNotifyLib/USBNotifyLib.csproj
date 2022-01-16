@@ -24,7 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
@@ -57,7 +57,7 @@
     <Compile Include="Model\UsbBase.cs" />
     <Compile Include="Model\UsbDisk.cs" />
     <Compile Include="Model\AgentRegistry.cs" />
-    <Compile Include="Main\UsbLogger.cs" />
+    <Compile Include="Main\AgentLogger.cs" />
     <Compile Include="Model\PerUsbHistory.cs" />
     <Compile Include="Main\AgentHttpHelp.cs" />
     <Compile Include="Model\PerComputerHelp.cs" />

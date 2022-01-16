@@ -143,7 +143,7 @@ namespace USBAdminWebMVC.Controllers
         {
             try
             {
-                var file = Path.Combine(Directory.GetCurrentDirectory(), "Update", "update.zip");
+                var file = USBAdminHelp.AgentUpdateFilePath;
 
                 return PhysicalFile(file, "application/zip");
             }

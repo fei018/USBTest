@@ -24,7 +24,7 @@ namespace USBNotifyLib
             {
                 if (string.IsNullOrWhiteSpace(PipeName))
                 {
-                    UsbLogger.Error("PipeName is empty");
+                    AgentLogger.Error("PipeName is empty");
                     return;
                 }
 
@@ -57,7 +57,7 @@ namespace USBNotifyLib
 
         private void pipeConnection_Error(Exception exception)
         {
-            UsbLogger.Error("AgentPipe Error: " + exception.Message);
+            AgentLogger.Error("AgentPipe Error: " + exception.Message);
         }
         #endregion
 
@@ -123,7 +123,7 @@ namespace USBNotifyLib
             }
             catch (Exception ex)
             {
-                UsbLogger.Error(ex.Message);
+                AgentLogger.Error(ex.Message);
             }           
         }
         #endregion
@@ -147,7 +147,7 @@ namespace USBNotifyLib
             }
             catch (Exception ex)
             {
-                UsbLogger.Error(ex.Message);
+                AgentLogger.Error(ex.Message);
                 PushMsg_ToTray_Error(ex.Message);
             }
         }
@@ -168,7 +168,7 @@ namespace USBNotifyLib
             }
             catch (Exception ex)
             {
-                UsbLogger.Error(ex.Message);
+                AgentLogger.Error(ex.Message);
                 PushMsg_ToTray_Error(ex.Message);
             }
         }
@@ -183,7 +183,7 @@ namespace USBNotifyLib
             }
             catch (Exception ex)
             {
-                UsbLogger.Error(ex.Message);
+                AgentLogger.Error(ex.Message);
             }
         }
         #endregion
@@ -197,7 +197,7 @@ namespace USBNotifyLib
             }
             catch (Exception ex)
             {
-                UsbLogger.Error("AgentPipe.Handler_CloseAgent(): " + ex.Message);
+                AgentLogger.Error("AgentPipe.Handler_CloseAgent(): " + ex.Message);
             }
         }
         #endregion
@@ -228,7 +228,7 @@ namespace USBNotifyLib
             }
             catch (Exception ex)
             {
-                UsbLogger.Error("PushMessageToTray : " + ex.Message);
+                AgentLogger.Error("PushMessageToTray : " + ex.Message);
             }
         }
         #endregion
@@ -249,7 +249,7 @@ namespace USBNotifyLib
             }
             catch (Exception ex)
             {
-                UsbLogger.Error("PushMsg_ToTray_UsbDiskNotInWhitelist(UsbDisk usb) : " + ex.Message);
+                AgentLogger.Error("PushMsg_ToTray_UsbDiskNotInWhitelist(UsbDisk usb) : " + ex.Message);
             }
         }
         #endregion
@@ -265,7 +265,7 @@ namespace USBNotifyLib
             }
             catch (Exception ex)
             {
-                UsbLogger.Error("PushErrorToTray : " + ex.Message);
+                AgentLogger.Error("PushErrorToTray : " + ex.Message);
             }
         }
         #endregion
@@ -281,7 +281,7 @@ namespace USBNotifyLib
             }
             catch (Exception ex)
             {
-                UsbLogger.Error("PushMessageToCloseTray : " + ex.Message);
+                AgentLogger.Error("PushMessageToCloseTray : " + ex.Message);
             }
         }
         #endregion

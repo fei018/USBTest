@@ -1,11 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Diagnostics;
-using System.IO;
 using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
-using System.Timers;
 using USBCommon;
 
 namespace USBNotifyLib
@@ -52,7 +48,7 @@ namespace USBNotifyLib
                 using (var http = CreateHttpClient())
                 {
                     http.Timeout = TimeSpan.FromSeconds(20);
-                    
+
                     var response = http.GetAsync(AgentRegistry.UsbWhitelistUrl).Result;
                     if (!response.IsSuccessStatusCode) throw new Exception("Http Error StatusCode: " + response.StatusCode.ToString());
 
@@ -64,8 +60,11 @@ namespace USBNotifyLib
                     }
 
                     UsbWhitelistHelp.Set_UsbWhitelist_byHttp(agentResult.UsbFilterData);
-                    UsbLogger.Log("Http update UsbWhitelist done.");
                 }
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new Exception("AgentHttpHelp.GetUsbWhitelist_Http() Exception: " + ex.Message);
             }
             catch (Exception)
             {
@@ -99,6 +98,10 @@ namespace USBNotifyLib
                     AgentRegistry.UsbHistoryEnabled = agentSetting.UsbHistoryEnabled;
                 }
             }
+            catch (HttpRequestException ex)
+            {
+                throw new Exception("AgentHttpHelp.GetAgentSetting_Http() Exception: " + ex.Message);
+            }
             catch (Exception)
             {
                 throw;
@@ -118,7 +121,7 @@ namespace USBNotifyLib
                 {
                     StringContent content = new StringContent(comJson, Encoding.UTF8, MimeTypeMap.GetMimeType("json"));
 
-                    var response =  http.PostAsync(AgentRegistry.PostPerComputerUrl, content).Result;
+                    var response = http.PostAsync(AgentRegistry.PostPerComputerUrl, content).Result;
                     if (!response.IsSuccessStatusCode) throw new Exception("Http Error StatusCode: " + response.StatusCode.ToString());
 
                     var json = response.Content.ReadAsStringAsync().Result;
@@ -128,6 +131,10 @@ namespace USBNotifyLib
                         throw new Exception(result.Msg);
                     }
                 }
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new Exception("AgentHttpHelp.PostPerComputer_Http() Exception: " + ex.Message);
             }
             catch (Exception)
             {
@@ -141,7 +148,6 @@ namespace USBNotifyLib
         {
             try
             {
-                //Debugger.Break();
                 var comIdentity = PerComputerHelp.GetComputerIdentity();
                 var usb = new UsbFilter().Find_UsbDisk_By_DiskPath(diskPath);
 
@@ -156,7 +162,7 @@ namespace USBNotifyLib
                     Vid = usb.Vid,
                     PluginTime = DateTime.Now
                 };
-                
+
                 var usbHistoryJosn = JsonConvert.SerializeObject(usbHistory);
 
                 using (var http = CreateHttpClient())
@@ -173,6 +179,10 @@ namespace USBNotifyLib
                     }
                 }
             }
+            catch (HttpRequestException ex)
+            {
+                throw new Exception("AgentHttpHelp.PostPerUsbHistory_byDisk_Http() Exception: " + ex.Message);
+            }
             catch (Exception)
             {
                 throw;
@@ -180,13 +190,13 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + public void PostUsbRequest(UsbRequest usb)
+        #region + public void PostUsbRequest_Http(UsbRequest usb)
         /// <summary>
         /// 
         /// </summary>
         /// <param name="usb"></param>
         /// <exception cref="throw"></exception>
-        public void PostUsbRequest(UsbRequest post)
+        public void PostUsbRequest_Http(UsbRequest post)
         {
             try
             {
@@ -211,6 +221,10 @@ namespace USBNotifyLib
                         throw new Exception("Server Error: " + result.Msg);
                     }
                 }
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new Exception("AgentHttpHelp.PostUsbRequest_Http() Exception: " + ex.Message);
             }
             catch (Exception)
             {

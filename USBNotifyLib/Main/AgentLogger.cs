@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace USBNotifyLib
 {
-    public class UsbLogger
+    public class AgentLogger
     {
         private static readonly string _baseDir = Environment.ExpandEnvironmentVariables("%ProgramData%\\USBNotify");
 

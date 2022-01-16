@@ -69,7 +69,7 @@ namespace USBTestConsole
             }
             catch (Exception ex)
             {
-                UsbLogger.Error(ex.Message);
+                AgentLogger.Error(ex.Message);
             }
         }
 
@@ -88,7 +88,7 @@ namespace USBTestConsole
             }
             catch (Exception ex)
             {
-                UsbLogger.Error(ex.Message);
+                AgentLogger.Error(ex.Message);
             }
         }
 
@@ -99,7 +99,7 @@ namespace USBTestConsole
                 StartUsbFormProcess();
             }
 
-            UsbLogger.Log("USBFormApp Process Exied Event.");
+            AgentLogger.Log("USBFormApp Process Exied Event.");
         }
         #endregion
 

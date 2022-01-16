@@ -1,4 +1,6 @@
-﻿namespace USBNotifyLib
+﻿using System;
+
+namespace USBNotifyLib
 {
     public class AgentManager
     {
@@ -10,29 +12,27 @@
                 // registry 讀取 UsbFilterEnable 設定
                 if (AgentRegistry.UsbFilterEnabled)
                 {
-                    // 載入 UsbFilterDb cache
+                    // 載入 UsbWhitelist cache
                     UsbWhitelistHelp.Reload_UsbWhitelist();
 
-                    // 掃描所有 usb disk
+                    // 掃描過濾所有 usb disk
                     new UsbFilter().Filter_Scan_All_USB_Disk();
                 }
 
                 // 執行 agent 定時任務
-                AgentTimer.ReloadTask();
-
-                // 上載 本機資訊
-                new AgentHttpHelp().PostPerComputer_Http();
-
-                // update agent setting
-                new AgentHttpHelp().GetAgentSetting_Http();
-
-                // update filter data
-                new AgentHttpHelp().GetUsbWhitelist_Http();
+                AgentTimer.ReloadTask();              
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
-                UsbLogger.Error(ex.Message);
+                AgentLogger.Error(ex.Message);
             }
+        }
+        #endregion
+
+        #region Stop()
+        public static void Stop()
+        {
+            AgentTimer.ClearTimerTask();
         }
         #endregion
     }

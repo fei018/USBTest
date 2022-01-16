@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using USBNotifyLib;
+using USBNotifyAgentTray.USBWindow;
 
 namespace USBNotifyAgentTray
 {
@@ -37,6 +38,7 @@ namespace USBNotifyAgentTray
 
             _trayIcon.ContextMenuStrip.Items.Add("Update Setting", null, UpdateSettingItem_Click);
             _trayIcon.ContextMenuStrip.Items.Add("Update Agent", null, UpdateAgentItem_Click);
+            _trayIcon.ContextMenuStrip.Items.Add("About", null, AboutItem_Click);
             _trayIcon.ContextMenuStrip.Items.Add("");
 
             _trayIcon.Visible = true;
@@ -76,6 +78,25 @@ namespace USBNotifyAgentTray
                     MessageBox.Show(ex.Message, "Update Agent Error");
                 }
             });
+        }
+        #endregion
+
+        #region + private void AboutItem_Click(object sender, EventArgs e)
+        private void AboutItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                App.Current.Dispatcher.BeginInvoke(new Action(()=>
+                {
+                    var about = new AboutWin();
+                    about.txtAgentVersion.Text = AgentRegistry.AgentVersion;
+                    about.Show();
+                }));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         #endregion
     }

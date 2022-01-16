@@ -38,6 +38,7 @@ namespace USBNotifyAgent
             base.Stop();
 
             AgentManager.Stop();
+            _agentPipe.PushMsg_ToTray_CloseTray();
             _agentPipe.Stop();
         }
         #endregion

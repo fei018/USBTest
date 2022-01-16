@@ -174,20 +174,6 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + private void Handler_UsbFullScan()
-        private void Handler_UsbFullScan()
-        {
-            try
-            {
-                new UsbFilter().Filter_Scan_All_USB_Disk();
-            }
-            catch (Exception ex)
-            {
-                AgentLogger.Error(ex.Message);
-            }
-        }
-        #endregion
-
         #region + private void Handler_CloseAgent()
         private void Handler_CloseAgent()
         {

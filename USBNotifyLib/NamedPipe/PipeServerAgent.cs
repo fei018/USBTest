@@ -138,7 +138,7 @@ namespace USBNotifyLib
                 if (new AgentUpdate().IsNeedToUpdate())
                 {
                     new AgentUpdate().Update();
-                    PushMsg_ToTray_Message("Download Agent done, wait for installation.");
+                    PushMsg_ToTray_Message("Download Agent done, wait for installation...");
                 }
                 else
                 {

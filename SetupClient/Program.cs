@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace SetupClient
 {
@@ -11,8 +12,11 @@ namespace SetupClient
     {
         static void Main(string[] args)
         {
-            //Setup();
-            InitKey();
+#if DEBUG
+            InitKey();    
+#else
+            Setup();
+#endif
         }
 
         static void Setup()

@@ -19,7 +19,7 @@ namespace USBAdminWebMVC
         {
             services.AddControllersWithViews();
 
-            services.AddMoreCustom(Configuration);
+            services.AddCustomService(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

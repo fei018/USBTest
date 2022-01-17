@@ -162,10 +162,10 @@ namespace SetupClient
                 var run = p.Start();
 
                 p.StandardInput.WriteLine($"\"C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\InstallUtil.exe\" \"{_InstallProgramDir}\\usbnservice.exe\"");
-                p.StandardOutput.ReadToEnd();
+                p.StandardOutput.ReadLine();
                 
                 p.StandardInput.WriteLine("net start usbnservice");
-                p.StandardOutput.ReadToEnd();
+                p.StandardOutput.ReadLine();
 
                 p.StandardInput.WriteLine("exit");
 
@@ -203,10 +203,10 @@ namespace SetupClient
                 var run = p.Start();
 
                 p.StandardInput.WriteLine("net stop usbnservice");
-                p.StandardOutput.ReadToEnd();
+                p.StandardOutput.ReadLine();
 
                 p.StandardInput.WriteLine($"\"C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\InstallUtil.exe\" /u \"{_InstallProgramDir}\\usbnservice.exe\"");
-                p.StandardOutput.ReadToEnd();
+                p.StandardOutput.ReadLine();
 
                 p.StandardInput.WriteLine("exit");
 

@@ -77,7 +77,6 @@ namespace USBNotifyAgentTray.USBWindow
 
             this.Height = 350;
             this.Width = 400;
-            ShowWinLocationRightBottom();
 
             controlPage.Content = new Frame { Content = usbRFormPage };
         }

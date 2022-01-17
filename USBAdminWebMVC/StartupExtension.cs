@@ -7,17 +7,24 @@ using System.Text.Unicode;
 using Microsoft.Extensions.Configuration;
 using System.Text.Encodings.Web;
 using System.IO;
+using System;
 
 namespace USBAdminWebMVC
 {
     public static class StartupExtension
     {
-        public static void AddMoreCustom(this IServiceCollection services, IConfiguration configuration)
+        public static void AddCustomService(this IServiceCollection services, IConfiguration configuration)
         {
             #region USBAdminHelp
             USBAdminHelp.WebHttpUrlPrefix = configuration.GetSection("WebHttpUrlPrefix").Value;
             USBAdminHelp.InitMenuName = configuration.GetSection("InitMenuName").Value;
+
             USBAdminHelp.AgentKey = configuration.GetSection("AgentKey").Value;
+            if (string.IsNullOrWhiteSpace(USBAdminHelp.AgentKey))
+            {
+                throw new Exception("USBAdminHelp.AgentKey is empty.");
+            }
+
             USBAdminHelp.AgentUpdateFilePath = configuration.GetSection("Path").GetSection("AgentUpdateFile").Value;
             if (string.IsNullOrWhiteSpace(USBAdminHelp.AgentUpdateFilePath))
             {

@@ -50,7 +50,11 @@ namespace USBNotifyLib
                     http.Timeout = TimeSpan.FromSeconds(20);
 
                     var response = http.GetAsync(AgentRegistry.UsbWhitelistUrl).Result;
-                    if (!response.IsSuccessStatusCode) throw new Exception("Http Error StatusCode: " + response.StatusCode.ToString());
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        string error = response.Content.ReadAsStringAsync().Result;
+                        throw new Exception($"Http StatusCode: {response.StatusCode}, Content: {error}");
+                    }
 
                     string json = response.Content.ReadAsStringAsync().Result;
                     var agentResult = DeserialAgentResult(json);
@@ -81,7 +85,11 @@ namespace USBNotifyLib
                 using (var http = CreateHttpClient())
                 {
                     var response = http.GetAsync(AgentRegistry.AgentSettingUrl).Result;
-                    if (!response.IsSuccessStatusCode) throw new Exception("Http Error StatusCode: " + response.StatusCode.ToString());
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        string error = response.Content.ReadAsStringAsync().Result;
+                        throw new Exception($"Http StatusCode: {response.StatusCode}, Content: {error}");
+                    }
 
                     var json = response.Content.ReadAsStringAsync().Result;
                     var agentResult = DeserialAgentResult(json);
@@ -122,7 +130,11 @@ namespace USBNotifyLib
                     StringContent content = new StringContent(comJson, Encoding.UTF8, MimeTypeMap.GetMimeType("json"));
 
                     var response = http.PostAsync(AgentRegistry.PostPerComputerUrl, content).Result;
-                    if (!response.IsSuccessStatusCode) throw new Exception("Http Error StatusCode: " + response.StatusCode.ToString());
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        string error = response.Content.ReadAsStringAsync().Result;
+                        throw new Exception($"Http StatusCode: {response.StatusCode}, Content: {error}");
+                    }
 
                     var json = response.Content.ReadAsStringAsync().Result;
                     var result = JsonConvert.DeserializeObject<AgentHttpResponseResult>(json);
@@ -169,7 +181,11 @@ namespace USBNotifyLib
                 {
                     StringContent content = new StringContent(usbHistoryJosn, Encoding.UTF8, "application/json");
                     var response = http.PostAsync(AgentRegistry.PostPerUsbHistoryUrl, content).Result;
-                    if (!response.IsSuccessStatusCode) throw new Exception("Http Error StatusCode: " + response.StatusCode.ToString());
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        string error = response.Content.ReadAsStringAsync().Result;
+                        throw new Exception($"Http StatusCode: {response.StatusCode}, Content: {error}");
+                    }
 
                     var json = response.Content.ReadAsStringAsync().Result;
                     var result = JsonConvert.DeserializeObject<AgentHttpResponseResult>(json);
@@ -212,7 +228,11 @@ namespace USBNotifyLib
 
                     var response = http.PostAsync(AgentRegistry.PostUsbRequestUrl, content).Result;
 
-                    if (!response.IsSuccessStatusCode) throw new Exception("Http Error StatusCode: " + response.StatusCode.ToString());
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        string error = response.Content.ReadAsStringAsync().Result;
+                        throw new Exception($"Http StatusCode: {response.StatusCode}, Content: {error}");
+                    }
 
                     var json = response.Content.ReadAsStringAsync().Result;
                     var result = JsonConvert.DeserializeObject<AgentHttpResponseResult>(json);

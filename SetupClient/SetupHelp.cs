@@ -109,7 +109,7 @@ namespace SetupClient
         }
         #endregion
 
-        #region setup
+        #region + public void Install()
         public void Install()
         {          
             try
@@ -162,10 +162,10 @@ namespace SetupClient
                 var run = p.Start();
 
                 p.StandardInput.WriteLine($"\"C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\InstallUtil.exe\" \"{_InstallProgramDir}\\usbnservice.exe\"");
-                p.StandardOutput.ReadLine();
+                Thread.Sleep(new TimeSpan(0, 0, 5));
                 
                 p.StandardInput.WriteLine("net start usbnservice");
-                p.StandardOutput.ReadLine();
+                Thread.Sleep(new TimeSpan(0, 0, 2));
 
                 p.StandardInput.WriteLine("exit");
 
@@ -203,10 +203,10 @@ namespace SetupClient
                 var run = p.Start();
 
                 p.StandardInput.WriteLine("net stop usbnservice");
-                p.StandardOutput.ReadLine();
+                Thread.Sleep(new TimeSpan(0, 0, 2));
 
                 p.StandardInput.WriteLine($"\"C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\InstallUtil.exe\" /u \"{_InstallProgramDir}\\usbnservice.exe\"");
-                p.StandardOutput.ReadLine();
+                Thread.Sleep(new TimeSpan(0, 0, 5));
 
                 p.StandardInput.WriteLine("exit");
 

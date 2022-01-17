@@ -62,13 +62,27 @@
         {
           "title": "Computer",
           "href": "",
-          "icon": "fa fa-hdd-o",
+          "icon": "fa fa-desktop",
           "target": "_self",
           "child": [
             {
               "title": "Index",
               "href": "USBadmin/Computer/Index",
               "icon": "fa fa-list-alt",
+              "target": "_self"
+            }
+          ]
+        },
+        {
+          "title": "Printer",
+          "href": "",
+          "icon": "fa fa-print",
+          "target": "_self",
+          "child": [
+            {
+              "title": "Template",
+              "href": "USBadmin/Printer/Template",
+              "icon": "fa fa-list",
               "target": "_self"
             }
           ]

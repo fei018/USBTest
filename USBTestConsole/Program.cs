@@ -12,6 +12,7 @@ using USBNotifyLib.Win32API;
 using USBNotifyLib;
 using MailKit.Net.Smtp;
 using MimeKit;
+using USBNotifyLib.PrintMon;
 
 namespace USBTestConsole
 {
@@ -22,7 +23,7 @@ namespace USBTestConsole
             try
             {
                 Console.WriteLine("Start...");
-                Email();
+                Print();
                
             }
             catch (Exception ex)
@@ -185,6 +186,37 @@ namespace USBTestConsole
                 throw;
             }
                
+        }
+        #endregion
+
+        #region print
+        static void Print()
+        {
+            var printMon = new PrintQueueMonitor("ADMColorTest (10.13.8.61)");
+            printMon.OnJobStatusChange += PrintMon_OnJobStatusChange;
+
+            Console.ReadLine();
+            printMon.Stop();
+        }
+
+        private static void PrintMon_OnJobStatusChange(object Sender, PrintJobChangeEventArgs e)
+        {
+            if (e.JobInfo != null && e.JobInfo.JobStatus == (System.Printing.PrintJobStatus.Printing| System.Printing.PrintJobStatus.Retained))
+            {
+                Console.WriteLine("JobStatus: " + e.JobInfo.JobStatus);
+                Console.WriteLine("JobName: " + e.JobInfo.JobName);
+                Console.WriteLine("Name: " + e.JobInfo.Name);
+                Console.WriteLine("NumberOfPages: " + e.JobInfo.NumberOfPages);
+                Console.WriteLine("Submitter: " + e.JobInfo.Submitter);
+                Console.WriteLine("TimeJobSubmitted: " + e.JobInfo.TimeJobSubmitted.ToString("G"));
+                Console.WriteLine("JobIdentifier: " + e.JobInfo.JobIdentifier);
+                Console.WriteLine("IsCompleted: " + e.JobInfo.IsCompleted);
+                Console.WriteLine("IsPrinted: " + e.JobInfo.IsPrinted);
+                Console.WriteLine("IsPrinting: " + e.JobInfo.IsPrinting);
+                Console.WriteLine("IsRetained: " + e.JobInfo.IsRetained);
+            }
+            Console.WriteLine("-----------------");
+            Console.WriteLine();
         }
         #endregion
     }

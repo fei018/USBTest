@@ -19,6 +19,8 @@ namespace USBNotifyLib
 
         public string MacAddress { get; set; }
 
+        public string NetwordAddress { get; set; }
+
         public string ComputerIdentity => (BiosSerial + MacAddress)?.ToLower();
 
         public bool UsbFilterEnabled { get; set; }

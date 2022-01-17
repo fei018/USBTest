@@ -28,7 +28,7 @@ namespace USBAdminWebMVC
             USBAdminHelp.AgentUpdateFilePath = configuration.GetSection("Path").GetSection("AgentUpdateFile").Value;
             if (string.IsNullOrWhiteSpace(USBAdminHelp.AgentUpdateFilePath))
             {
-                USBAdminHelp.AgentUpdateFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Update", "Release.zip");
+                USBAdminHelp.AgentUpdateFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Update\\Agent", "Release.zip");
             }
             #endregion
 

@@ -19,8 +19,9 @@ namespace USBModel
 
         public string BiosSerial { get; set; }
 
-        [SugarColumn(IsNullable = true)]
         public string IPAddress { get; set; }
+
+        public string NetwordAddress { get; set; }
 
         public string MacAddress { get; set; }      
 

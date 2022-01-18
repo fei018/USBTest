@@ -1,0 +1,41 @@
+﻿@{
+    var templateUrl = USBAdminHelp.WebHttpUrlPrefix + "/printer/template";
+    var templateDetailUrl = USBAdminHelp.WebHttpUrlPrefix + "/printer/templateDetail";
+}
+
+<div>
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>Template</legend>
+    </fieldset>
+
+    <table id="index" lay-filter="index" class="layui-hide">
+    </table>
+</div>
+
+<script type="text/html" id="template">
+    <a class="layui-btn" href="javascript:;" layuimini-content-href="@templateDetailUrl?id={{d.id}}" data-title="Template Detail">Edit</a>
+</script>
+
+@section Script{
+    <script>
+        layui.use(['form', 'table', 'miniTab'], function () {
+            let form = layui.form,
+                table = layui.table;
+            let miniTab = layui.miniTab;
+
+            table.render({
+                elem: '#index'
+                , url: '@templateUrl'
+                , page: true
+                , cols: [[
+                    { field: 'id', title: 'Id', toolbar: '#template', width: 60, sort: true },
+                    { field: 'siteName', title: 'SiteName', width: 200, sort: true },
+                    { field: 'subnetAddr', title: 'Subnet', width: 200, sort: true },
+                    { fixed: 'right', title: 'Action', width: 200, toolbar: '#template'},
+                ]]
+            });
+
+            miniTab.listen();
+        });
+    </script>
+}

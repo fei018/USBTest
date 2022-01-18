@@ -67,13 +67,10 @@ namespace USBNotifyLib.PrintMon
 
         #region constructor
 
-        public PrintQueueMonitor(string strSpoolName)
+        public PrintQueueMonitor(string printerName)
         {
             // Let us open the printer and get the printer handle.
-            _spoolerName = strSpoolName;
-            //Start Monitoring
-            Start();
-
+            _spoolerName = printerName;
         }
         #endregion
 

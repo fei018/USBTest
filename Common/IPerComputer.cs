@@ -10,8 +10,6 @@
 
         string IPAddress { get; set; }
 
-        string NetwordAddress { get; set; }
-
         string MacAddress { get; set; }
 
         string ComputerIdentity { get; }

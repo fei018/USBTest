@@ -21,8 +21,6 @@ namespace USBModel
 
         public string IPAddress { get; set; }
 
-        public string NetwordAddress { get; set; }
-
         public string MacAddress { get; set; }      
 
         public DateTime LastSeen { get; set; }

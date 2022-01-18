@@ -1,7 +1,5 @@
 ﻿@model UsbRequestVM
-@{
 
-}
 
 <div class="layui-row layui-col-space15">
 
@@ -12,20 +10,20 @@
             <div style="padding: 30px;">
                 <div>USB Detial: ( current state: @Model.RequestState )</div>
                 <hr />
-                <div>Manufacturer: @Model.Manufacturer</div>
-                <div>Product: @Model.Product</div>
-                <div>Vid: @Model.Vid_Hex</div>
-                <div>Pid: @Model.Pid_Hex</div>
-                <div>SerialNumber: @Model.SerialNumber</div>
-                <div>Request State: @Model.RequestState</div>
-                <div>State Change Time: @Model.RequestStateChangeTimeString</div>
-                <div>Request Computer Name @Model.ComputerName</div>
-                <div>Request IP: @Model.IP</div>
-                <div>Request User Email: @Model.RequestUserEmail</div>
+                <div>Manufacturer: @Model.Manufacturer</div><br />
+                <div>Product: @Model.Product</div><br />
+                <div>Vid: @Model.Vid_Hex</div><br />
+                <div>Pid: @Model.Pid_Hex</div><br />
+                <div>SerialNumber: @Model.SerialNumber</div><br />
+                <div>Request State: @Model.RequestState</div><br />
+                <div>State Change Time: @Model.RequestStateChangeTimeString</div><br />
+                <div>Request Computer Name: @Model.ComputerName</div><br />
+                <div>Request IP: @Model.IP</div><br />
+                <div>Request User Email: @Model.RequestUserEmail</div><br />
                 <hr />
-                <div>Request Time: @Model.RequestTimeString</div>
-                <div>Request Reason:</div>
-                <div>@Model.RequestReason</div>
+                <div>Request Time: @Model.RequestTimeString</div><br />
+                <div>Request Reason:</div><br />
+                <div>@Model.RequestReason</div><br />
 
                 @if (Model.RequestState == UsbRequestStateType.Reject)
                 {

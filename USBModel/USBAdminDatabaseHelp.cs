@@ -674,5 +674,68 @@ namespace USBModel
             }
         }
         #endregion
+
+        // PrintTemplate
+
+        #region + public async Task<(int total, List<Tbl_PrintTemplate> list)> PrintTemplate_Get_All(int index, int size)
+        public async Task<(int total, List<Tbl_PrintTemplate> list)> PrintTemplate_Get_All(int index, int size)
+        {
+            try
+            {
+                RefAsync<int> total = new RefAsync<int>();
+                var list = await _db.Queryable<Tbl_PrintTemplate>().ToPageListAsync(index, size, total);
+                if (list == null || list.Count <= 0)
+                {
+                    throw new Exception("Tbl_PrintTemplate is empty.");
+                }
+
+                return (total.Value, list);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        #region + public async Task<Tbl_PrintTemplate> PrintTemplate_Get_BySubnetAddr(string subnetAddr)
+        public async Task<Tbl_PrintTemplate> PrintTemplate_Get_BySubnetAddr(string subnetAddr)
+        {
+            try
+            {
+                var query = await _db.Queryable<Tbl_PrintTemplate>().FirstAsync(p => p.SubnetAddr == subnetAddr);
+                if (query == null)
+                {
+                    throw new Exception("Cannot find the PrintTemplate, Subnet Address: " + subnetAddr);
+                }
+
+                return query;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        #region + public async Task<Tbl_PrintTemplate> PrintTemplate_Get_ById(int id)
+        public async Task<Tbl_PrintTemplate> PrintTemplate_Get_ById(int id)
+        {
+            try
+            {
+                var query = await _db.Queryable<Tbl_PrintTemplate>().InSingleAsync(id);
+                if (query == null)
+                {
+                    throw new Exception("Cannot find the PrintTemplate, Id: " + id);
+                }
+
+                return query;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
     }
 }

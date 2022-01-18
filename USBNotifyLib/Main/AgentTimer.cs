@@ -38,7 +38,7 @@ namespace USBNotifyLib
                 if (_Timer != null)
                 {
                     _Timer.Elapsed -= TimerTask_Elapsed;
-                    _Timer.Enabled = false;
+                    _Timer.Stop();
                     _Timer.Dispose();
                 }
             }
@@ -59,67 +59,41 @@ namespace USBNotifyLib
                 _Timer.AutoReset = true;
                 _Timer.Elapsed += TimerTask_Elapsed;
 
-                _Timer.Enabled = true;                            
+                _Timer.Start();                            
             }
             catch (Exception ex)
             {
                 AgentLogger.Error(ex.Message);
             }
         }
+        #endregion
 
+        #region + private static void TimerTask_Elapsed(object sender, ElapsedEventArgs e)
         private static void TimerTask_Elapsed(object sender, ElapsedEventArgs e)
         {
-            TimerTask_PostPerComputerTimer();
-            TimerTask_Get_AgentSetting();
-            TimerTask_CheckAndUpdateAgent();
-        }
-        #endregion
-
-        // Timer Task Handler
-
-        #region + private static void TimerTask_Get_AgentSetting()
-        private static void TimerTask_Get_AgentSetting()
-        {
-            Task.Run(() =>
+            try
             {
-                try
-                {
-                    new AgentHttpHelp().GetAgentSetting_Http();
+                _Timer.Stop();
 
-                    if (AgentRegistry.UsbFilterEnabled)
-                    {
-                        new AgentHttpHelp().GetUsbWhitelist_Http();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    AgentLogger.Error(ex.Message);
-                }
-            });
-        }
-        #endregion
+                new AgentHttpHelp().PostPerComputer_Http();
+                new AgentHttpHelp().GetAgentSetting_Http();
 
-        #region + private static void TimerTask_PostPerComputerTimer()
-        private static void TimerTask_PostPerComputerTimer()
-        {
-            Task.Run(() =>
+                if (AgentRegistry.UsbFilterEnabled)
+                {
+                    new AgentHttpHelp().GetUsbWhitelist_Http();
+                    new UsbFilter().Filter_Scan_All_USB_Disk();
+                }
+
+                AgentUpdate.CheckAndUpdate();
+            }
+            catch (Exception ex)
             {
-                try
-                {
-                    new AgentHttpHelp().PostPerComputer_Http();
-                }
-                catch (Exception ex)
-                {
-                    AgentLogger.Error(ex.Message);
-                }
-            });
-        }
-        #endregion
-
-        #region + private static void TimerTask_CheckAndUpdateAgent()
-        private static void TimerTask_CheckAndUpdateAgent()
-        {
-            AgentUpdate.CheckAndUpdate();
+                AgentLogger.Error(ex.Message);
+            }
+            finally
+            {
+                _Timer.Start();
+            }
         }
         #endregion
     }

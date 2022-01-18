@@ -11,7 +11,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
-            <RowDefinition Height="1.5*"/>
+            <RowDefinition Height="2*"/>
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
@@ -24,12 +24,12 @@
 
         <Grid Grid.Row="1">
             <Canvas>
-                <TextBlock Text="USB Brand :" Canvas.Top="10" Canvas.Left="31"/>
-                <TextBlock Text="USB Product :" Canvas.Left="31" Canvas.Top="45"/>
-                <TextBlock Text="USB Serial :" Canvas.Top="75" Canvas.Left="31"/>
-                <TextBlock x:Name="txtBrand" Canvas.Left="128" Canvas.Top="10"/>
-                <TextBlock x:Name="txtProduct" Canvas.Left="128" Canvas.Top="45"/>
-                <TextBlock x:Name="txtSerial" Canvas.Left="128" Canvas.Top="75"/>
+                <TextBlock Text="USB Brand :" Canvas.Top="10" Canvas.Left="19"/>
+                <TextBlock Text="USB Product :" Canvas.Left="19" Canvas.Top="42"/>
+                <TextBlock Text="USB Serial :" Canvas.Top="74" Canvas.Left="19"/>
+                <TextBlock x:Name="txtBrand" Canvas.Left="110" Canvas.Top="10"/>
+                <TextBlock x:Name="txtProduct" Canvas.Left="110" Canvas.Top="42"/>
+                <TextBlock x:Name="txtSerial" Canvas.Left="110" Canvas.Top="74"/>
             </Canvas>
         </Grid>
 

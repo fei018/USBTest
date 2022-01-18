@@ -19,19 +19,13 @@ namespace USBNotifyLib
         private static string _setupExe = Path.Combine(_updateDir, "Setup.exe");
 
         #region + public static void CheckAndUpdate()
-        /// <summary>
-        /// run on task
-        /// </summary>
         public static void CheckAndUpdate()
         {
             try
             {
-                if (new AgentUpdate().IsNeedToUpdate())
+                if (new AgentUpdate().CheckNeedUpdate())
                 {
-                    Task.Run(() =>
-                    {
-                        new AgentUpdate().Update();
-                    });
+                    new AgentUpdate().Update();
                 }
             }
             catch (Exception ex)
@@ -41,8 +35,8 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region public bool IsNeedToUpdate()
-        public bool IsNeedToUpdate()
+        #region public bool CheckNeedUpdate()
+        public bool CheckNeedUpdate()
         {
             try
             {

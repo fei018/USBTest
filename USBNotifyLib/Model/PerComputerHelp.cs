@@ -53,8 +53,8 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + public static string GetNetwordAddress()
-        public static string GetNetwordAddress()
+        #region + public static string GetSubnetAddr()
+        public static string GetSubnetAddr()
         {
             try
             {

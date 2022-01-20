@@ -13,7 +13,7 @@ using System.Diagnostics;
 
 namespace USBAdminWebMVC.Controllers
 {
-    [AgentKeyFilter]
+    [AgentHttpKeyFilter]
     public class AgentController : Controller
     {
         private readonly USBAdminDatabaseHelp _usbDb;
@@ -137,6 +137,21 @@ namespace USBAdminWebMVC.Controllers
         }
         #endregion
 
+        #region PrintTemplate(string SubnetAddr)
+        public async Task<IActionResult> PrintTemplate(string SubnetAddr)
+        {
+            try
+            {
+                var template = await _usbDb.PrintTemplate_Get_BySubnetAddr(SubnetAddr);
+                var result = new AgentHttpResponseResult { Succeed = true, PrintTemplate = template };
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AgentHttpResponseResult(false, ex.Message));
+            }
+        }
+        #endregion
 
         #region AgentUpdate()
         public IActionResult AgentUpdate()

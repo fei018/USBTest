@@ -19,10 +19,10 @@ namespace USBAdminWebMVC
             USBAdminHelp.WebHttpUrlPrefix = configuration.GetSection("WebHttpUrlPrefix").Value;
             USBAdminHelp.InitMenuName = configuration.GetSection("InitMenuName").Value;
 
-            USBAdminHelp.AgentKey = configuration.GetSection("AgentKey").Value;
-            if (string.IsNullOrWhiteSpace(USBAdminHelp.AgentKey))
+            USBAdminHelp.AgentHttpKey = configuration.GetSection("AgentHttpKey").Value;
+            if (string.IsNullOrWhiteSpace(USBAdminHelp.AgentHttpKey))
             {
-                throw new Exception("USBAdminHelp.AgentKey is empty.");
+                throw new Exception("USBAdminHelp.AgentHttpKey is empty.");
             }
 
             USBAdminHelp.AgentUpdateFilePath = configuration.GetSection("Path").GetSection("AgentUpdateFile").Value;

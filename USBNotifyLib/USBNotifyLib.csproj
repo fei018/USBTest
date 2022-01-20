@@ -52,9 +52,11 @@
     <Compile Include="Main\AgentUpdate.cs" />
     <Compile Include="Main\AgentManager.cs" />
     <Compile Include="Main\AgentTimer.cs" />
+    <Compile Include="Main\PrintTemplateHelp.cs" />
     <Compile Include="Model\AbstractJsonConverter.cs" />
     <Compile Include="Model\AgentSetting.cs" />
     <Compile Include="Model\PerComputer.cs" />
+    <Compile Include="Model\PrintTemplate.cs" />
     <Compile Include="Model\UsbBase.cs" />
     <Compile Include="Model\UsbDisk.cs" />
     <Compile Include="Model\AgentRegistry.cs" />

@@ -13,7 +13,7 @@ namespace USBNotifyLib
         {
             var http = new HttpClient();
             http.Timeout = TimeSpan.FromSeconds(10);
-            http.DefaultRequestHeaders.Add("AgentKey", AgentRegistry.AgentKey);
+            http.DefaultRequestHeaders.Add("AgentHttpKey", AgentRegistry.AgentHttpKey);
             return http;
         }
         #endregion
@@ -26,7 +26,8 @@ namespace USBNotifyLib
                 var settings = new JsonSerializerSettings
                 {
                     Converters = {
-                        new AbstractJsonConverter<AgentSetting, IAgentSetting>()
+                        new AbstractJsonConverter<AgentSetting, IAgentSetting>(),
+                        new AbstractJsonConverter<PrintTemplate, IPrintTemplate>()
                     }
                 };
 
@@ -68,7 +69,7 @@ namespace USBNotifyLib
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception("AgentHttpHelp.GetUsbWhitelist_Http() Exception: " + ex.Message);
+                throw new Exception("Http Server Error: " + ex.Message);
             }
             catch (Exception)
             {
@@ -108,7 +109,7 @@ namespace USBNotifyLib
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception("AgentHttpHelp.GetAgentSetting_Http() Exception: " + ex.Message);
+                throw new Exception("Http Server Error: " + ex.Message);
             }
             catch (Exception)
             {
@@ -146,7 +147,7 @@ namespace USBNotifyLib
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception("AgentHttpHelp.PostPerComputer_Http() Exception: " + ex.Message);
+                throw new Exception("Http Server Error: " + ex.Message);
             }
             catch (Exception)
             {
@@ -197,7 +198,7 @@ namespace USBNotifyLib
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception("AgentHttpHelp.PostPerUsbHistory_byDisk_Http() Exception: " + ex.Message);
+                throw new Exception("Http Server Error: " + ex.Message);
             }
             catch (Exception)
             {
@@ -253,5 +254,44 @@ namespace USBNotifyLib
         }
         #endregion
 
+        #region + public PrintTemplate GetPrintTemplate_Http()
+        public PrintTemplate GetPrintTemplate_Http()
+        {
+            try
+            {
+                using (var http = CreateHttpClient())
+                {
+                    var SubnetAddr = PerComputerHelp.GetSubnetAddr();
+                    string url = AgentRegistry.PrintTemplateUrl + "?SubnetAddr=" + SubnetAddr;
+                    var response = http.GetAsync(url).Result;
+
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        string error = response.Content.ReadAsStringAsync().Result;
+                        throw new Exception($"Http StatusCode: {response.StatusCode}, Content: {error}");
+                    }
+
+                    var json = response.Content.ReadAsStringAsync().Result;
+                    var agentResult = DeserialAgentResult(json);
+
+                    if (!agentResult.Succeed)
+                    {
+                        throw new Exception(agentResult.Msg);
+                    }
+
+                    var template = agentResult.PrintTemplate as PrintTemplate;
+                    return template;
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new Exception("Http Server Error: " + ex.Message);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
     }
 }

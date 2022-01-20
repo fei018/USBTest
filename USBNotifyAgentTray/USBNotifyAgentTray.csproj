@@ -157,5 +157,8 @@
   <ItemGroup>
     <None Include="icon.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="PrintWindow\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

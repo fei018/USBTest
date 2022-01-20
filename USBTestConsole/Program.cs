@@ -23,8 +23,9 @@ namespace USBTestConsole
             try
             {
                 Console.WriteLine("Start...");
-                Print();
-               
+                Template();
+
+
             }
             catch (Exception ex)
             {
@@ -217,6 +218,13 @@ namespace USBTestConsole
             }
             Console.WriteLine("-----------------");
             Console.WriteLine();
+        }
+        #endregion
+
+        #region Template()
+        static void Template()
+        {
+            new PrintTemplateHelp().InstallPrinters();
         }
         #endregion
     }

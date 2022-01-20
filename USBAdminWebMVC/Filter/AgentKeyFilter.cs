@@ -8,18 +8,18 @@ using USBCommon;
 namespace USBAdminWebMVC
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public class AgentKeyFilter : Attribute, IAsyncActionFilter
+    public class AgentHttpKeyFilter : Attribute, IAsyncActionFilter
     {
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             //Debugger.Break();
 
             var headers = context.HttpContext.Request.Headers;
-            var key = headers["AgentKey"][0];
-            if (key != USBAdminHelp.AgentKey)
+            var key = headers["AgentHttpKey"][0];
+            if (key != USBAdminHelp.AgentHttpKey)
             {
                 //context.Result = new JsonResult(new AgentHttpResponseResult(false, "Agent key no access right."));
-                context.Result = new BadRequestObjectResult("no access right.");
+                context.Result = new BadRequestObjectResult("no access right.") { StatusCode = 401 };
                 return;
             }
 

@@ -1,8 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System;
 using USBCommon;
+using USBModel;
 
-namespace USBModel
+namespace USBAdminWebMVC
 {
     public class JsonHttpConvert
     {
@@ -44,22 +45,6 @@ namespace USBModel
         }
         #endregion
 
-        #region + public static Tbl_UsbRegistered Deserialize_UsbRegistered(string usbJson)
-        //public static Tbl_UsbRegistered Deserialize_IUsbInfo(string usbJson)
-        //{
-        //    try
-        //    {
-        //        var usb = JsonConvert.DeserializeObject<Tbl_UsbRegistered>(usbJson);
-        //        return usb;
-        //    }
-        //    catch (Exception)
-        //    {
-
-        //        throw;
-        //    }
-        //}
-        #endregion
-
         #region + public static Tbl_UsbRegisterRequest Deserialize_UsbRequest(string postJson)
         public static Tbl_UsbRequest Deserialize_UsbRequest(string postJson)
         {
@@ -79,6 +64,21 @@ namespace USBModel
             {
                 throw;
             }
+        }
+        #endregion
+
+        #region + public static Tbl_PrintTemplate Deserialize_PrintTemplate(string json)
+        public static Tbl_PrintTemplate Deserialize_PrintTemplate(string json)
+        {
+            var settings = new JsonSerializerSettings
+            {
+                Converters = {
+                        new AbstractJsonConverter<Tbl_PrintTemplate, IPrintTemplate>()
+                    }
+            };
+
+            var temp = JsonConvert.DeserializeObject<Tbl_PrintTemplate>(json, settings);
+            return temp;
         }
         #endregion
     }

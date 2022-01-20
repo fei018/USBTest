@@ -48,6 +48,7 @@
     <Compile Include="AgentHttpResponseResult.cs" />
     <Compile Include="Base64CodeHelp.cs" />
     <Compile Include="IAgentSetting.cs" />
+    <Compile Include="IPrintTemplate.cs" />
     <Compile Include="IUsbRequest.cs" />
     <Compile Include="IPerComputer.cs" />
     <Compile Include="IPerUsbHistory.cs" />

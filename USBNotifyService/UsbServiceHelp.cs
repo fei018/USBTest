@@ -56,7 +56,7 @@ namespace USBNotifyService
 
         #region Agent Process
 
-        private string _agentPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "usbnagent.exe");
+        private string _agentPath = AgentRegistry.AgentExe;
 
         private Process _AgentProcess;
 
@@ -83,8 +83,9 @@ namespace USBNotifyService
 
                 _AgentProcess.Start();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                AgentLogger.Error(ex.Message);
             }
         }
 
@@ -112,7 +113,7 @@ namespace USBNotifyService
         #endregion
 
         #region AgentTray Process
-        private string _agentTrayPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "usbntray.exe");
+        private string _agentTrayPath = AgentRegistry.AgentTrayExe;
 
         private Process _agentTrayProcess;
 
@@ -134,8 +135,9 @@ namespace USBNotifyService
                     }
                 };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                AgentLogger.Error(ex.Message);
             }
         }
 

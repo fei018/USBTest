@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using USBNotifyLib;
 using USBNotifyAgentTray.USBWindow;
+using System.Diagnostics;
+using System.IO;
 
 namespace USBNotifyAgentTray
 {
@@ -38,16 +40,17 @@ namespace USBNotifyAgentTray
 
             _trayIcon.ContextMenuStrip.Items.Add("Update Setting", null, UpdateSettingItem_Click);
             _trayIcon.ContextMenuStrip.Items.Add("Update Agent", null, UpdateAgentItem_Click);
+            _trayIcon.ContextMenuStrip.Items.Add("RemoteSupport", null, RunRemoteSupportVNC);
             _trayIcon.ContextMenuStrip.Items.Add("About", null, AboutItem_Click);
             _trayIcon.ContextMenuStrip.Items.Add("");
 
             _trayIcon.Visible = true;
-        }       
+        }
         #endregion
 
         // Tray Item Click
 
-        #region + private void UpdateAgentSettingItem_Click(object sender, EventArgs e)
+        #region + private void UpdateSettingItem_Click(object sender, EventArgs e)
         private void UpdateSettingItem_Click(object sender, EventArgs e)
         {
             Task.Run(() =>
@@ -78,6 +81,21 @@ namespace USBNotifyAgentTray
                     MessageBox.Show(ex.Message, "Update Agent Error");
                 }
             });
+        }
+        #endregion
+
+        #region + private void RunRemoteSupportVNC(object sender, EventArgs e)
+        private void RunRemoteSupportVNC(object sender, EventArgs e)
+        {
+            try
+            {
+                var vnc = Path.Combine(AgentRegistry.RemoteSupportExe);
+                Process.Start(vnc);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         #endregion
 

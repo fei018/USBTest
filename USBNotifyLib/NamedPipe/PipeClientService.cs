@@ -10,7 +10,7 @@ namespace USBNotifyLib
 {
     public class PipeClientService
     {
-        private static string PipeName = AgentRegistry.AgentKey;
+        private static string PipeName = AgentRegistry.AgentHttpKey;
 
         private NamedPipeClient<string> _client;
 

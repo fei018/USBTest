@@ -8,7 +8,7 @@ namespace USBNotifyLib
 {
     public class PipeServerAgent
     {
-        private static string PipeName = AgentRegistry.AgentKey;
+        private static string PipeName = AgentRegistry.AgentHttpKey;
 
         private NamedPipeServer<string> _server;
 

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:USBNotifyAgentTray.USBWindow"
         mc:Ignorable="d"
-        Title="USB Control" Height="350" Width="300" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="IT Support Tools" Height="350" Width="300" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -13,7 +13,7 @@
         </Grid.RowDefinitions>
         <Image Source="logo.jpg" Width="250"/>
         <Canvas Grid.Row="1">
-            <TextBlock Text="About agent" FontSize="20" Canvas.Left="10" Canvas.Top="10"/>
+            <TextBlock Text="About tools" FontSize="20" Canvas.Left="10" Canvas.Top="10"/>
             <TextBlock Text="Version :" FontSize="18" Canvas.Left="10" Canvas.Top="59"/>
             <TextBlock x:Name="txtAgentVersion" Text="?" FontSize="18" Canvas.Left="90" Canvas.Top="59"/>
             <TextBlock Text="Build by IT Dept" FontSize="18" Canvas.Left="10" Canvas.Top="102"/>

@@ -2,12 +2,13 @@
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
-using System.Threading.Tasks;
+using System.Security.AccessControl;
 
 namespace USBNotifyLib
 {
     public class AgentUpdate
     {
+        // C:\ProgramData\USBNotify
         private static string _baseDir = Environment.ExpandEnvironmentVariables(@"%programdata%\USBNotify");
 
         private static string _downloadFileDir = Path.Combine(_baseDir, "download");
@@ -35,7 +36,7 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region public bool CheckNeedUpdate()
+        #region + public bool CheckNeedUpdate()
         public bool CheckNeedUpdate()
         {
             try
@@ -79,9 +80,9 @@ namespace USBNotifyLib
             try
             {
                 CleanUpdateDir();
-                CleanDownloadDir();
 
                 DownloadFile();
+
                 if (File.Exists(_setupExe))
                 {
                     Process.Start(_setupExe);
@@ -98,36 +99,38 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + private void CleanDownloadDir()
-        private void CleanDownloadDir()
-        {
-            try
-            {
-                if (Directory.Exists(_downloadFileDir))
-                {
-                    Directory.Delete(_downloadFileDir, true);
-                }
-                Directory.CreateDirectory(_downloadFileDir);
-            }
-            catch (Exception)
-            {
-            }
-        }
-        #endregion
-
         #region + private void CleanUpdateDir()
         private void CleanUpdateDir()
         {
             try
             {
+                var rule = new FileSystemAccessRule("Authenticated Users",
+                    FileSystemRights.Modify,
+                    InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit,
+                    PropagationFlags.None,
+                    AccessControlType.Allow);
+
                 if (Directory.Exists(_updateDir))
                 {
                     Directory.Delete(_updateDir, true);
                 }
-                Directory.CreateDirectory(_updateDir);
+                var upDir = Directory.CreateDirectory(_updateDir);
+                var upACL = upDir.GetAccessControl();
+                upACL.AddAccessRule(rule);
+                upDir.SetAccessControl(upACL);
+
+                if (Directory.Exists(_downloadFileDir))
+                {
+                    Directory.Delete(_downloadFileDir, true);
+                }
+                var downloadDir = Directory.CreateDirectory(_downloadFileDir);
+                var downloadACL = downloadDir.GetAccessControl();
+                downloadACL.AddAccessRule(rule);
+                downloadDir.SetAccessControl(downloadACL);
             }
             catch (Exception)
             {
+                throw;
             }
         }
         #endregion

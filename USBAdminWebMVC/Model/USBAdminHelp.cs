@@ -15,7 +15,7 @@ namespace USBAdminWebMVC
 
         public static string InitMenuName { get; set; }
 
-        public static string AgentKey { get; set; }
+        public static string AgentHttpKey { get; set; }
 
         public static string AgentUpdateFilePath { get; set; }
 

@@ -41,11 +41,11 @@ namespace USBModel
                 if (_db.DbMaintenance.CreateDatabase())
                 {
                     _db.CodeFirst.SetStringDefaultLength(100).InitTables<Tbl_PerUsbHistory>();
-                    //_db.CodeFirst.SetStringDefaultLength(100).InitTables<Tbl_UsbRegistered>();
                     _db.CodeFirst.SetStringDefaultLength(100).InitTables<Tbl_PerComputer>();
                     _db.CodeFirst.SetStringDefaultLength(100).InitTables<Tbl_AgentSetting>();
                     _db.CodeFirst.SetStringDefaultLength(100).InitTables<Tbl_UsbRequest>();
                     _db.CodeFirst.SetStringDefaultLength(100).InitTables<Tbl_EmailSetting>();
+                    _db.CodeFirst.SetStringDefaultLength(100).InitTables<Tbl_PrintTemplate>();
 
                     _db.CodeFirst.InitTables<LoginUser>();
                     _db.CodeFirst.InitTables<LoginErrorCountLimit>();
@@ -730,6 +730,59 @@ namespace USBModel
                 }
 
                 return query;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        #region + public async Task PrintTemplate_Insert(Tbl_PrintTemplate template)
+        public async Task PrintTemplate_Insert(Tbl_PrintTemplate template)
+        {
+            try
+            {
+                var exist = await _db.Queryable<Tbl_PrintTemplate>().AnyAsync(t => t.SubnetAddr == template.SubnetAddr);
+                if (exist)
+                {
+                    throw new Exception("PrintTemplate Subnet Address is existed. Subnet: " + template.SubnetAddr);
+                }
+
+                var isInsert = await _db.Insertable(template).ExecuteCommandIdentityIntoEntityAsync();
+                if (!isInsert)
+                {
+                    throw new Exception("PrintTemplate insert fail.");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        #region + public async Task PrintTemplate_Update(Tbl_PrintTemplate template)
+        public async Task PrintTemplate_Update(Tbl_PrintTemplate template)
+        {
+            try
+            {
+                await _db.Updateable(template).ExecuteCommandAsync();
+                return;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        #region public async Task PrinterTemplate_Delete_ById(int id)
+        public async Task PrinterTemplate_Delete_ById(int id)
+        {
+            try
+            {
+                await _db.Deleteable<Tbl_PrintTemplate>().In(t=> t.Id, id).ExecuteCommandAsync();
             }
             catch (Exception)
             {

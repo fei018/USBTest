@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace USBCommon
+﻿namespace USBCommon
 {
     public class AgentHttpResponseResult
     {
@@ -18,8 +12,10 @@ namespace USBCommon
 
         public string Msg { get; set; }
 
-        public IAgentSetting AgentSetting {get;set;}
+        public IAgentSetting AgentSetting { get; set; }
 
         public string UsbFilterData { get; set; }
+
+        public IPrintTemplate PrintTemplate { get; set; }
     }
 }

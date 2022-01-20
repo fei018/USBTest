@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.IO;
 
 namespace USBNotifyLib
 {
@@ -10,75 +11,111 @@ namespace USBNotifyLib
 
         // Registry
 
-        public static string AgentKey
+        public static string AgentHttpKey
         {
-            get => ReadAgentRegistryKey(nameof(AgentKey));
-            set => SetAgentRegistryKey(nameof(AgentKey), value, RegistryValueKind.String);
+            get => ReadRegKey(nameof(AgentHttpKey));
+            set => SetRegKey(nameof(AgentHttpKey), value, RegistryValueKind.String);
+        }
+
+        public static string AgentDir
+        {
+            get => Environment.ExpandEnvironmentVariables(ReadRegKey(nameof(AgentDir)));
+            set => SetRegKey(nameof(AgentDir), value, RegistryValueKind.String);
+        }
+
+        public static string AgentServiceExe
+        {
+            get => Path.Combine(AgentDir, ReadRegKey(nameof(AgentServiceExe)));
+            set => SetRegKey(nameof(AgentServiceExe), value, RegistryValueKind.String);
+        }
+
+        public static string AgentExe
+        {
+            get => Path.Combine(AgentDir, ReadRegKey(nameof(AgentExe)));
+            set => SetRegKey(nameof(AgentExe), value, RegistryValueKind.String);
+        }
+
+        public static string AgentTrayExe
+        {
+            get => Path.Combine(AgentDir, ReadRegKey(nameof(AgentTrayExe)));
+            set => SetRegKey(nameof(AgentTrayExe), value, RegistryValueKind.String);
+        }
+
+        public static string RemoteSupportExe
+        {
+            get => Path.Combine(AgentDir, ReadRegKey(nameof(RemoteSupportExe)));
+            set => SetRegKey(nameof(RemoteSupportExe), value, RegistryValueKind.String);
         }
 
         public static bool UsbFilterEnabled
         {
-            get => Convert.ToBoolean(ReadAgentRegistryKey(nameof(UsbFilterEnabled)));
-            set => SetAgentRegistryKey(nameof(UsbFilterEnabled), value, RegistryValueKind.String);
+            get => Convert.ToBoolean(ReadRegKey(nameof(UsbFilterEnabled)));
+            set => SetRegKey(nameof(UsbFilterEnabled), value, RegistryValueKind.String);
         }
 
         public static bool UsbHistoryEnabled
         {
-            get => Convert.ToBoolean(ReadAgentRegistryKey(nameof(UsbHistoryEnabled)));
-            set => SetAgentRegistryKey(nameof(UsbHistoryEnabled), value, RegistryValueKind.String);
+            get => Convert.ToBoolean(ReadRegKey(nameof(UsbHistoryEnabled)));
+            set => SetRegKey(nameof(UsbHistoryEnabled), value, RegistryValueKind.String);
         }
 
         public static string UsbWhitelistUrl
         {
-            get => ReadAgentRegistryKey(nameof(UsbWhitelistUrl));
-            set => SetAgentRegistryKey(nameof(UsbWhitelistUrl), value, RegistryValueKind.String);
+            get => ReadRegKey(nameof(UsbWhitelistUrl));
+            set => SetRegKey(nameof(UsbWhitelistUrl), value, RegistryValueKind.String);
         }
 
         public static string AgentSettingUrl
         {
-            get => ReadAgentRegistryKey(nameof(AgentSettingUrl));
-            set => SetAgentRegistryKey(nameof(AgentSettingUrl), value, RegistryValueKind.String);
+            get => ReadRegKey(nameof(AgentSettingUrl));
+            set => SetRegKey(nameof(AgentSettingUrl), value, RegistryValueKind.String);
         }
 
         public static int AgentTimerMinute
         {
-            get => Convert.ToInt32(ReadAgentRegistryKey(nameof(AgentTimerMinute)));
-            set => SetAgentRegistryKey(nameof(AgentTimerMinute), value, RegistryValueKind.String);
+            get => Convert.ToInt32(ReadRegKey(nameof(AgentTimerMinute)));
+            set => SetRegKey(nameof(AgentTimerMinute), value, RegistryValueKind.String);
         }
 
         public static string AgentVersion
         {
-            get => ReadAgentRegistryKey(nameof(AgentVersion));
-            set => SetAgentRegistryKey(nameof(AgentVersion), value, RegistryValueKind.String);
+            get => ReadRegKey(nameof(AgentVersion));
+            set => SetRegKey(nameof(AgentVersion), value, RegistryValueKind.String);
         }
 
         public static string AgentUpdateUrl
         {
-            get => ReadAgentRegistryKey(nameof(AgentUpdateUrl));
-            set => SetAgentRegistryKey(nameof(AgentUpdateUrl), value, RegistryValueKind.String);
+            get => ReadRegKey(nameof(AgentUpdateUrl));
+            set => SetRegKey(nameof(AgentUpdateUrl), value, RegistryValueKind.String);
         }
 
         public static string PostPerComputerUrl
         {
-            get => ReadAgentRegistryKey(nameof(PostPerComputerUrl));
-            set => SetAgentRegistryKey(nameof(PostPerComputerUrl), value, RegistryValueKind.String);
+            get => ReadRegKey(nameof(PostPerComputerUrl));
+            set => SetRegKey(nameof(PostPerComputerUrl), value, RegistryValueKind.String);
         }
 
         public static string PostPerUsbHistoryUrl
         {
-            get => ReadAgentRegistryKey(nameof(PostPerUsbHistoryUrl));
-            set => SetAgentRegistryKey(nameof(PostPerUsbHistoryUrl), value, RegistryValueKind.String);
+            get => ReadRegKey(nameof(PostPerUsbHistoryUrl));
+            set => SetRegKey(nameof(PostPerUsbHistoryUrl), value, RegistryValueKind.String);
         }
 
         public static string PostUsbRequestUrl
         {
-            get => ReadAgentRegistryKey(nameof(PostUsbRequestUrl));
-            set => SetAgentRegistryKey(nameof(PostUsbRequestUrl), value, RegistryValueKind.String);
+            get => ReadRegKey(nameof(PostUsbRequestUrl));
+            set => SetRegKey(nameof(PostUsbRequestUrl), value, RegistryValueKind.String);
+        }
+
+        public static string PrintTemplateUrl
+        {
+            get => ReadRegKey(nameof(PrintTemplateUrl));
+            set => SetRegKey(nameof(PrintTemplateUrl), value, RegistryValueKind.String);
         }
 
 
-        #region + private string ReadAgentRegistryKey(string name)
-        private static string ReadAgentRegistryKey(string name)
+        #region + private string ReadRegKey(string name)
+        private static string ReadRegKey(string name)
         {
             try
             {
@@ -98,8 +135,8 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + private static void SetAgentRegistryKey(string name, object value, RegistryValueKind kind)
-        private static void SetAgentRegistryKey(string name, object value, RegistryValueKind kind)
+        #region + private static void SetRegKey(string name, object value, RegistryValueKind kind)
+        private static void SetRegKey(string name, object value, RegistryValueKind kind)
         {
             try
             {

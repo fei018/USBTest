@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using UsbMonitor;
@@ -35,10 +36,16 @@ namespace USBNotifyAgent
         #region USBNofityAgentForm_FormClosed(object sender, FormClosedEventArgs e)
         private void USBNofityAgentForm_FormClosed(object sender, FormClosedEventArgs e)
         {
+#if DEBUG
+            Debugger.Break();
+#endif
+
             base.Stop();
 
             AgentManager.Stop();
+
             _agentPipe.PushMsg_ToTray_CloseTray();
+
             _agentPipe.Stop();
         }
         #endregion

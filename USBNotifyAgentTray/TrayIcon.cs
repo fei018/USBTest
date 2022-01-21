@@ -5,6 +5,7 @@ using USBNotifyLib;
 using USBNotifyAgentTray.USBWindow;
 using System.Diagnostics;
 using System.IO;
+using USBNotifyAgentTray.PrintWindow;
 
 namespace USBNotifyAgentTray
 {
@@ -32,7 +33,7 @@ namespace USBNotifyAgentTray
             _trayIcon = new NotifyIcon
             {
                 Icon = USBNotifyAgentTray.Properties.Resources.icon,
-                Text = "USB Control",
+                Text = "IT Support Tools",
                 Visible = true
             };
 
@@ -40,7 +41,8 @@ namespace USBNotifyAgentTray
 
             _trayIcon.ContextMenuStrip.Items.Add("Update Setting", null, UpdateSettingItem_Click);
             _trayIcon.ContextMenuStrip.Items.Add("Update Agent", null, UpdateAgentItem_Click);
-            _trayIcon.ContextMenuStrip.Items.Add("RemoteSupport", null, RunRemoteSupportVNC);
+            _trayIcon.ContextMenuStrip.Items.Add("Remote Support", null, RunRemoteSupportVNC_Click);
+            _trayIcon.ContextMenuStrip.Items.Add("Set Printer", null, SetPrinter_Click);
             _trayIcon.ContextMenuStrip.Items.Add("About", null, AboutItem_Click);
             _trayIcon.ContextMenuStrip.Items.Add("");
 
@@ -50,42 +52,36 @@ namespace USBNotifyAgentTray
 
         // Tray Item Click
 
-        #region + private void UpdateSettingItem_Click(object sender, EventArgs e)
+        #region UpdateSettingItem_Click
         private void UpdateSettingItem_Click(object sender, EventArgs e)
         {
-            Task.Run(() =>
+            try
             {
-                try
-                {
-                    _trayPipe.PushMsg_ToAgent_UpdateSetting();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-            });
+                TrayPipe.PushMsg_ToAgent_UpdateSetting();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         #endregion
 
-        #region + private void UpdateAgentItem_Click(object sender, EventArgs e)
+        #region UpdateAgentItem_Click
         private void UpdateAgentItem_Click(object sender, EventArgs e)
         {
-            Task.Run(() =>
+            try
             {
-                try
-                {
-                    _trayPipe.PushMsg_ToAgent_CheckAndUpdateAgent();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Update Agent Error");
-                }
-            });
+                TrayPipe.PushMsg_ToAgent_CheckAndUpdateAgent();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Update Agent Error");
+            }
         }
         #endregion
 
-        #region + private void RunRemoteSupportVNC(object sender, EventArgs e)
-        private void RunRemoteSupportVNC(object sender, EventArgs e)
+        #region RunRemoteSupportVNC_Click
+        private void RunRemoteSupportVNC_Click(object sender, EventArgs e)
         {
             try
             {
@@ -99,7 +95,33 @@ namespace USBNotifyAgentTray
         }
         #endregion
 
-        #region + private void AboutItem_Click(object sender, EventArgs e)
+        #region SetPrinter_Click
+        private void SetPrinter_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                App.Current.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    try
+                    {
+                        var prnWin = new PrintTemplateWin();
+                        prnWin.Show();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Set Printer");
+                    }
+                }));
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        #endregion
+
+        #region AboutItem_Click
         private void AboutItem_Click(object sender, EventArgs e)
         {
             try

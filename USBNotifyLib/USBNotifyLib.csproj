@@ -65,6 +65,7 @@
     <Compile Include="Main\AgentHttpHelp.cs" />
     <Compile Include="Model\PerComputerHelp.cs" />
     <Compile Include="Model\UsbRequest.cs" />
+    <Compile Include="NamedPipe\PipeEventArgs.cs" />
     <Compile Include="NamedPipe\PipeServerAgent.cs" />
     <Compile Include="NamedPipe\PipeMsg.cs" />
     <Compile Include="NamedPipe\PipeMsgType.cs" />

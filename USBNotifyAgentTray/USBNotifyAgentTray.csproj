@@ -60,6 +60,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="PrintWindow\PrintTemplateWin.xaml.cs">
+      <DependentUpon>PrintTemplateWin.xaml</DependentUpon>
+    </Compile>
     <Compile Include="USBWindow\AboutWin.xaml.cs">
       <DependentUpon>AboutWin.xaml</DependentUpon>
     </Compile>
@@ -90,6 +93,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="PrintWindow\PrintTemplateWin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="USBWindow\AboutWin.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -158,7 +165,7 @@
     <None Include="icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="PrintWindow\" />
+    <Folder Include="PipeTray\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

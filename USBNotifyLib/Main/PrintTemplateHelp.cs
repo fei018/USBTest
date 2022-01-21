@@ -10,10 +10,20 @@ namespace USBNotifyLib
 {
     public class PrintTemplateHelp
     {
-        private static string _printBrmExe = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "spool\\tools\\PrintBrm.exe");
+        private string _printBrmExe;
 
-        #region MyRegion
-        public void InstallPrinters()
+        public PrintTemplateHelp()
+        {
+            _printBrmExe = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "spool\\tools\\PrintBrm.exe");
+        }
+
+        #region + public void Start()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>StandardOutput</returns>
+        /// <exception cref="StandardError"></exception>
+        public string Start()
         {
             try
             {
@@ -23,19 +33,21 @@ namespace USBNotifyLib
                     throw new Exception("PrintBrm.exe not exist.");
                 }
 
-                // get template and check FilePath whether exist
+                // get template from http server 
                 var template = new AgentHttpHelp().GetPrintTemplate_Http();
-                //var tempFile = new FileInfo(template.FilePath.Trim());
-                //if (tempFile.Exists)
-                //{
-                //    throw new Exception("PrintTemplate file not exist.\r\nPath: " + template.FilePath);
-                //}
+
+                //check FilePath whether exist
+                var tempFile = new FileInfo(template.FilePath?.Trim());
+                if (!tempFile.Exists)
+                {
+                    throw new Exception("PrintTemplate file not exist.\r\nPath: " + template.FilePath);
+                }
 
                 // delete old network printers
                 DeleteOldNetPrinters();
 
                 // restore template printers
-                RestoreTemplatePrinters(template.FilePath);
+                return RestoreTemplatePrinters(template.FilePath);
             }
             catch (Exception)
             {
@@ -51,33 +63,60 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + private void RestoreTemplatePrinters()
-        private void RestoreTemplatePrinters(string file)
+        #region + private string RestoreTemplatePrinters(string file)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns>StandardOutput</returns>
+        /// <exception cref="StandardError"></exception>
+        private string RestoreTemplatePrinters(string file)
         {
             var command = $"{_printBrmExe} -R -NOACL -F {file}";
 
-            var start = new ProcessStartInfo();
-            start.FileName = "cmd.exe";
-            start.UseShellExecute = false;
-            start.WorkingDirectory = Environment.CurrentDirectory;
-            start.CreateNoWindow = true;
-            start.RedirectStandardError = true;
-            start.RedirectStandardInput = true;
-            start.RedirectStandardOutput = true;
-
             var ps = new Process();
-            ps.StartInfo = start;
+            ps.StartInfo.FileName = "cmd.exe";
+            ps.StartInfo.UseShellExecute = false;
+            ps.StartInfo.WorkingDirectory = Environment.CurrentDirectory;
+            ps.StartInfo.CreateNoWindow = true;
+            ps.StartInfo.RedirectStandardError = true;
+            ps.StartInfo.RedirectStandardInput = true;
+            ps.StartInfo.RedirectStandardOutput = true;
+
+            var output = new StringBuilder();
+            var error = new StringBuilder();
+
+            ps.OutputDataReceived += (s, e) =>
+            {
+                if (e.Data != null)
+                {
+                    output.AppendLine(e.Data);
+                }
+            };
+
+            ps.ErrorDataReceived += (s, e) =>
+            {
+                if (e.Data != null)
+                {
+                    error.AppendLine(e.Data);
+                }
+            };
+
             ps.Start();
+            ps.BeginOutputReadLine();
+            ps.BeginErrorReadLine();
 
             ps.StandardInput.WriteLine(command);
+           
             ps.StandardInput.WriteLine("exit");
-            ps.WaitForExit();
+            ps.WaitForExit((int)new TimeSpan(0,1,0).TotalMilliseconds);
 
-            string error = ps.StandardError.ReadToEnd();
-            if (string.IsNullOrWhiteSpace(error))
+            if (!string.IsNullOrWhiteSpace(error.ToString()))
             {
-                throw new Exception("RestoreTemplatePrinters Error: " + error);
+                throw new Exception("RestoreTemplatePrinters Error: " + error.ToString());
             }
+
+            return output.ToString();
         }
         #endregion
     }

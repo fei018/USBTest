@@ -2,37 +2,43 @@
 using System.Windows;
 using USBNotifyAgentTray.USBWindow;
 using USBNotifyLib;
+using USBNotifyAgentTray.PrintWindow;
+using System.Diagnostics;
 
 namespace USBNotifyAgentTray
 {
     public partial class App
     {
-        private PipeClientTray _trayPipe;
+        private const string WinTitle = "IT Support Tools";
+
+        public static PipeClientTray TrayPipe;
 
         private void AppExitEvent(object sender, ExitEventArgs e)
         {
+#if DEBUG
+            Debugger.Break();
+#endif
             RemoveTrayIcon();
-
-            _trayPipe.Stop();
+            TrayPipe.Stop();
         }
 
         private void AppStartupEvent(object sender, StartupEventArgs e)
         {
-            _trayPipe = new PipeClientTray();
-            _trayPipe.Start();
+            TrayPipe = new PipeClientTray();
+            TrayPipe.Start();
 
-            _trayPipe.CloseTrayEvent += _trayPipe_CloseTrayEvent;
-            _trayPipe.TrayMessageBoxShowEvent += _trayPipe_TrayMessageBoxShowEvent;
-            _trayPipe.TrayShowUsbRequestWindowEvent += _trayPipe_TrayShowUsbRequestWindowEvent;
+            TrayPipe.CloseTrayEvent += _trayPipe_CloseTrayEvent;
+            TrayPipe.TrayMessageBoxShowEvent += _trayPipe_TrayMessageBoxShowEvent;
+            TrayPipe.TrayShowUsbRequestWindowEvent += _trayPipe_TrayShowUsbRequestWindowEvent;
 
             AddTrayIcon();
         }
 
-        #region + private void _trayPipe_TrayShowUsbRequestWindowEvent(object sender, UsbDisk e)
+        #region + private void _trayPipe_TrayShowUsbRequestWindowEvent(object sender, PipeEventArgs e)
         /// <summary>
         /// 顯示 UsbRequestWin
         /// </summary>
-        private void _trayPipe_TrayShowUsbRequestWindowEvent(object sender, UsbDisk e)
+        private void _trayPipe_TrayShowUsbRequestWindowEvent(object sender, PipeEventArgs e)
         {
             App.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
@@ -40,7 +46,7 @@ namespace USBNotifyAgentTray
                 {
                     //Debugger.Break();
                     var usbWin = new UsbRequestWin();
-                    usbWin.ShowPageUsbRequestNotify(e);
+                    usbWin.ShowPageUsbRequestNotify(e.UsbDiskInfo);
                     usbWin.Show();
                 }
                 catch (Exception ex)
@@ -52,15 +58,19 @@ namespace USBNotifyAgentTray
         #endregion
 
         #region + private void _trayPipe_TrayMessageBoxShowEvent(object sender, string e)
-        private void _trayPipe_TrayMessageBoxShowEvent(object sender, string e)
+        private void _trayPipe_TrayMessageBoxShowEvent(object sender, PipeEventArgs e)
         {
-            MessageBox.Show(e, "USB Control");
+            MessageBox.Show(e.Msg, WinTitle);
         }
         #endregion
 
         #region + private void _trayPipe_CloseTrayEvent(object sender, EventArgs e)
         private void _trayPipe_CloseTrayEvent(object sender, EventArgs e)
         {
+#if DEBUG
+            Debugger.Break();
+#endif
+
             RemoveTrayIcon();
 
             App.Current.Shutdown();

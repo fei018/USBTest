@@ -6,27 +6,15 @@ using System.Threading.Tasks;
 
 namespace USBNotifyLib
 {
-    //public class PipeMsgType
-    //{
-    //    public const string UpdateAgent = "UpdateAgent ";
-
-    //    public const string UpdateUsbFilterData = "UpdateUsbFilterData";
-
-    //    public const string UpdateAgentSetting = "UpdateAgentSetting";
-
-    //    public const string CloseAgentTray = "CloseAgentTray";
-
-    //    public const string 
-    //}
-
     public enum PipeMsgType
     {
-        Error = 1,
-        Message,
+        Message = 10,
         UsbDiskNotInWhitelist,
         UpdateAgent,
         UpdateSetting,
         CloseAgent,
-        CloseTray
+        CloseTray,
+        AddPrintTemplate,
+        AddPrintTemplateCompleted
     }
 }

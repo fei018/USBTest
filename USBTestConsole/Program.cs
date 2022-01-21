@@ -30,10 +30,11 @@ namespace USBTestConsole
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                Console.WriteLine("!!!!!!!!!!!!!!!!!!$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
             }
 
-            Console.WriteLine("done...");
-            Console.ReadLine();
+            Console.WriteLine("##############################################");
+           Console.ReadLine();
         }
 
         #region UsbFormProcess
@@ -224,7 +225,7 @@ namespace USBTestConsole
         #region Template()
         static void Template()
         {
-            new PrintTemplateHelp().InstallPrinters();
+            new PrintTemplateHelp().Start();
         }
         #endregion
     }

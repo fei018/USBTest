@@ -1,8 +1,10 @@
 ﻿using NamedPipeWrapper;
 using Newtonsoft.Json;
 using System;
+using System.Diagnostics;
 using System.IO.Pipes;
 using System.Security.AccessControl;
+using System.Threading.Tasks;
 
 namespace USBNotifyLib
 {
@@ -88,6 +90,8 @@ namespace USBNotifyLib
         {
             try
             {
+                //Debugger.Break();
+
                 var pipeMsg = JsonConvert.DeserializeObject<PipeMsg>(message);
 
                 if (pipeMsg == null)
@@ -117,6 +121,11 @@ namespace USBNotifyLib
                         Handler_CloseTray();
                         break;
 
+                    // Add Print Template
+                    case PipeMsgType.AddPrintTemplate:
+                        Handler_AddPrintTemplate();
+                        break;
+
                     default:
                         break;
                 }
@@ -124,7 +133,7 @@ namespace USBNotifyLib
             catch (Exception ex)
             {
                 AgentLogger.Error(ex.Message);
-            }           
+            }
         }
         #endregion
 
@@ -133,44 +142,50 @@ namespace USBNotifyLib
         #region + private void Handler_UpdateAgent()
         private void Handler_UpdateAgent()
         {
-            try
+            Task.Run(() =>
             {
-                if (new AgentUpdate().CheckNeedUpdate())
+                try
                 {
-                    new AgentUpdate().Update();
-                    PushMsg_ToTray_Message("Download Agent done, wait for installation...");
+                    if (new AgentUpdate().CheckNeedUpdate())
+                    {
+                        new AgentUpdate().Update();
+                        PushMsg_ToTray_Message("Download Agent done, wait for installation...");
+                    }
+                    else
+                    {
+                        PushMsg_ToTray_Message("Agent is newest version.");
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    PushMsg_ToTray_Error("Agent is newest version.");
+                    AgentLogger.Error(ex.Message);
+                    PushMsg_ToTray_Message(ex.Message);
                 }
-            }
-            catch (Exception ex)
-            {
-                AgentLogger.Error(ex.Message);
-                PushMsg_ToTray_Error(ex.Message);
-            }
+            });
         }
         #endregion
 
         #region + private void Handler_UpdateSetting()
         private void Handler_UpdateSetting()
         {
-            try
+            Task.Run(() =>
             {
-                new AgentHttpHelp().GetAgentSetting_Http();
-                AgentTimer.ReloadTask();
+                try
+                {
+                    new AgentHttpHelp().GetAgentSetting_Http();
+                    AgentTimer.ReloadTask();
 
-                new AgentHttpHelp().GetUsbWhitelist_Http();
-                new UsbFilter().Filter_Scan_All_USB_Disk();
+                    new AgentHttpHelp().GetUsbWhitelist_Http();
+                    new UsbFilter().Filter_Scan_All_USB_Disk();
 
-                PushMsg_ToTray_Message("Update Setting done.");
-            }
-            catch (Exception ex)
-            {
-                AgentLogger.Error(ex.Message);
-                PushMsg_ToTray_Error(ex.Message);
-            }
+                    PushMsg_ToTray_Message("Update Setting done.");
+                }
+                catch (Exception ex)
+                {
+                    AgentLogger.Error(ex.Message);
+                    PushMsg_ToTray_Message(ex.Message);
+                }
+            });
         }
         #endregion
 
@@ -198,6 +213,26 @@ namespace USBNotifyLib
             catch (Exception)
             {
             }
+        }
+        #endregion
+
+        #region + private void Handler_AddPrintTemplate()
+        private void Handler_AddPrintTemplate()
+        {
+            Task.Run(() =>
+            {
+                //Debugger.Break();
+                try
+                {
+                    var output = new PrintTemplateHelp().Start();
+                    PushMsg_ToTray_AddPrintTemplateCompleted(output);
+                }
+                catch (Exception ex)
+                {
+                    PushMsg_ToTray_AddPrintTemplateCompleted(ex.Message);
+                    AgentLogger.Error(ex.Message);
+                }
+            });
         }
         #endregion
 
@@ -240,22 +275,6 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + public void PushMsg_ToTray_Error(string message)
-        public void PushMsg_ToTray_Error(string message)
-        {
-            try
-            {
-                var pipe = new PipeMsg(PipeMsgType.Error, message);
-                var json = JsonConvert.SerializeObject(pipe);
-                _server.PushMessage(json);
-            }
-            catch (Exception ex)
-            {
-                AgentLogger.Error("PushErrorToTray : " + ex.Message);
-            }
-        }
-        #endregion
-
         #region + public void PushMsg_ToTray_CloseTray()
         public void PushMsg_ToTray_CloseTray()
         {
@@ -272,5 +291,20 @@ namespace USBNotifyLib
         }
         #endregion
 
+        #region + public void PushMsg_ToTray_AddPrintTemplateCompleted()
+        public void PushMsg_ToTray_AddPrintTemplateCompleted(string msg)
+        {
+            try
+            {
+                var pipe = new PipeMsg(PipeMsgType.AddPrintTemplateCompleted, msg);
+                var json = JsonConvert.SerializeObject(pipe);
+                _server.PushMessage(json);
+            }
+            catch (Exception ex)
+            {
+                AgentLogger.Error("PushMsg_ToTray_AddPrintTemplateCompleted : " + ex.Message);
+            }
+        }
+        #endregion
     }
 }

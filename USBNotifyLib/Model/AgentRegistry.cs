@@ -17,33 +17,39 @@ namespace USBNotifyLib
             set => SetRegKey(nameof(AgentHttpKey), value, RegistryValueKind.String);
         }
 
-        public static string AgentDir
+        public static string AgentAppDir
         {
-            get => Environment.ExpandEnvironmentVariables(ReadRegKey(nameof(AgentDir)));
-            set => SetRegKey(nameof(AgentDir), value, RegistryValueKind.String);
+            get => Environment.ExpandEnvironmentVariables(ReadRegKey(nameof(AgentAppDir)));
+            set => SetRegKey(nameof(AgentAppDir), value, RegistryValueKind.String);
+        }
+
+        public static string AgentDataDir
+        {
+            get => Environment.ExpandEnvironmentVariables(ReadRegKey(nameof(AgentDataDir)));
+            set => SetRegKey(nameof(AgentDataDir), value, RegistryValueKind.String);
         }
 
         public static string AgentServiceExe
         {
-            get => Path.Combine(AgentDir, ReadRegKey(nameof(AgentServiceExe)));
+            get => Path.Combine(AgentAppDir, ReadRegKey(nameof(AgentServiceExe)));
             set => SetRegKey(nameof(AgentServiceExe), value, RegistryValueKind.String);
         }
 
         public static string AgentExe
         {
-            get => Path.Combine(AgentDir, ReadRegKey(nameof(AgentExe)));
+            get => Path.Combine(AgentAppDir, ReadRegKey(nameof(AgentExe)));
             set => SetRegKey(nameof(AgentExe), value, RegistryValueKind.String);
         }
 
         public static string AgentTrayExe
         {
-            get => Path.Combine(AgentDir, ReadRegKey(nameof(AgentTrayExe)));
+            get => Path.Combine(AgentAppDir, ReadRegKey(nameof(AgentTrayExe)));
             set => SetRegKey(nameof(AgentTrayExe), value, RegistryValueKind.String);
         }
 
         public static string RemoteSupportExe
         {
-            get => Path.Combine(AgentDir, ReadRegKey(nameof(RemoteSupportExe)));
+            get => Path.Combine(AgentAppDir, ReadRegKey(nameof(RemoteSupportExe)));
             set => SetRegKey(nameof(RemoteSupportExe), value, RegistryValueKind.String);
         }
 

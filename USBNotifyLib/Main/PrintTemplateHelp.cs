@@ -10,12 +10,10 @@ namespace USBNotifyLib
 {
     public class PrintTemplateHelp
     {
-        private string _printBrmExe;
+        private static string _printBrmExe = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "spool\\tools\\PrintBrm.exe");
 
-        public PrintTemplateHelp()
-        {
-            _printBrmExe = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "spool\\tools\\PrintBrm.exe");
-        }
+        private static string _localTemplateFile;
+
 
         #region + public void Start()
         /// <summary>
@@ -23,7 +21,7 @@ namespace USBNotifyLib
         /// </summary>
         /// <returns>StandardOutput</returns>
         /// <exception cref="StandardError"></exception>
-        public string Start()
+        public static string Start()
         {
             try
             {
@@ -33,21 +31,13 @@ namespace USBNotifyLib
                     throw new Exception("PrintBrm.exe not exist.");
                 }
 
-                // get template from http server 
-                var template = new AgentHttpHelp().GetPrintTemplate_Http();
-
-                //check FilePath whether exist
-                var tempFile = new FileInfo(template.FilePath?.Trim());
-                if (!tempFile.Exists)
-                {
-                    throw new Exception("PrintTemplate file not exist.\r\nPath: " + template.FilePath);
-                }
+                // restore template printers
+                var output = RestoreTemplatePrinters(_localTemplateFile);
 
                 // delete old network printers
                 DeleteOldNetPrinters();
 
-                // restore template printers
-                return RestoreTemplatePrinters(template.FilePath);
+                return output;
             }
             catch (Exception)
             {
@@ -57,7 +47,7 @@ namespace USBNotifyLib
         #endregion
 
         #region + private void DeleteOldNetPrinters()
-        private void DeleteOldNetPrinters()
+        private static void DeleteOldNetPrinters()
         {
 
         }
@@ -70,7 +60,7 @@ namespace USBNotifyLib
         /// <param name="file"></param>
         /// <returns>StandardOutput</returns>
         /// <exception cref="StandardError"></exception>
-        private string RestoreTemplatePrinters(string file)
+        private static string RestoreTemplatePrinters(string file)
         {
             var command = $"{_printBrmExe} -R -NOACL -F {file}";
 
@@ -117,6 +107,26 @@ namespace USBNotifyLib
             }
 
             return output.ToString();
+        }
+        #endregion
+
+        #region + public static void CopyTemplateFileToLocal(FileInfo sourceFileInfo)
+        public static void CopyTemplateFileToLocal(FileInfo sourceFileInfo)
+        {
+            try
+            {
+                _localTemplateFile = Path.Combine(AgentRegistry.AgentDataDir, sourceFileInfo.Name);
+                sourceFileInfo.CopyTo(_localTemplateFile, true);
+
+                if (!File.Exists(_localTemplateFile))
+                {
+                    throw new Exception("Print template file copy fail.");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
         #endregion
     }

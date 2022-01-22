@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,7 +24,45 @@ namespace USBNotifyAgentTray
     {
         public MainWindow()
         {
+            
             InitializeComponent();
+
+#if DEBUG
+            Visibility = Visibility.Visible;
+#endif
+
+            Startup();
         }
+
+
+        #region Startup()
+        private void Startup()
+        {
+            try
+            {
+                PipeClientTray.Entity = new PipeClientTray();
+                PipeClientTray.Entity.Start();
+
+                TrayIcon.Entity = new TrayIcon();
+                TrayIcon.Entity.AddTrayIcon();                
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        #endregion
+
+        #region This.Close()
+        private void Window_Closed(object sender, EventArgs e)
+        {
+#if DEBUG
+            //Debugger.Break();
+#endif
+            TrayIcon.Entity.RemoveTrayIcon();
+            PipeClientTray.Entity.Stop();
+        }
+        #endregion
+
     }
 }

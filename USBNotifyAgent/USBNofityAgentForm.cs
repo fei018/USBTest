@@ -12,12 +12,47 @@ namespace USBNotifyAgent
     {
         public USBNofityAgentForm()
         {
+            OpenAppOneOnly();
+
             InitializeComponent();
+
+#if DEBUG
+            this.ShowInTaskbar = true;
+#endif
 
             AgentPipeStart();
 
             AgentManager.Startup();
         }
+
+        #region OpenAppOneOnly()
+        private const string _mutexGuid = "32956814-4b61-4bd0-9571-cb6905995f23";
+        private void OpenAppOneOnly()
+        {
+            Mutex mutex = new Mutex(true, _mutexGuid, out bool flag);
+            if (!flag)
+            {
+                Environment.Exit(1);
+            }
+        }
+        #endregion
+
+        #region this.Closed()
+        private void USBNofityAgentForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+#if DEBUG
+            //Debugger.Break();
+#endif
+
+            base.Stop();
+
+            _agentPipe.PushMsg_ToTray_CloseTray();
+            
+            _agentPipe.Stop();
+
+            AgentManager.Stop();           
+        }
+        #endregion
 
         // AgentPipe
         #region AgentPipe
@@ -27,26 +62,8 @@ namespace USBNotifyAgent
         private void AgentPipeStart()
         {
             _agentPipe = new PipeServerAgent();
-            _agentPipe.CloseAgentFormEvent += (s, e) => { this.Close(); };
+            _agentPipe.CloseAgentAppEvent += (s, e) => { this.Close(); };
             _agentPipe.Start();
-        }
-        #endregion
-
-        // form
-        #region USBNofityAgentForm_FormClosed(object sender, FormClosedEventArgs e)
-        private void USBNofityAgentForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-#if DEBUG
-            Debugger.Break();
-#endif
-
-            base.Stop();
-
-            AgentManager.Stop();
-
-            _agentPipe.PushMsg_ToTray_CloseTray();
-
-            _agentPipe.Stop();
         }
         #endregion
 

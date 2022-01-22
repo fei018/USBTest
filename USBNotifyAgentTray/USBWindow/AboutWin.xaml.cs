@@ -23,5 +23,22 @@ namespace USBNotifyAgentTray.USBWindow
         {
             InitializeComponent();
         }
+
+        private void btnCheckUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                PipeClientTray.Entity?.PushMsg_ToAgent_CheckAndUpdateAgent();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
+            }
+        }
+
+        private void AboutWin_Closed(object sender, EventArgs e)
+        {
+            TrayIcon.Entity.Item_About_IsOpen = false;
+        }
     }
 }

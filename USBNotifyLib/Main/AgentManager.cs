@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Security.AccessControl;
 
 namespace USBNotifyLib
 {
@@ -33,6 +35,24 @@ namespace USBNotifyLib
         public static void Stop()
         {
             AgentTimer.ClearTimerTask();
+        }
+        #endregion
+
+        #region + public static void SetDirACL_AuthenticatedUsers_Modify(string dirPath)
+        public static void SetDirACL_AuthenticatedUsers_Modify(string dirPath)
+        {
+            var dirInfo = new DirectoryInfo(dirPath);
+            
+            var dirACL = dirInfo.GetAccessControl();
+
+            var rule = new FileSystemAccessRule("Authenticated Users",
+                    FileSystemRights.Modify,
+                    InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit,
+                    PropagationFlags.None,
+                    AccessControlType.Allow);
+
+            dirACL.AddAccessRule(rule);
+            dirInfo.SetAccessControl(dirACL);
         }
         #endregion
     }

@@ -9,15 +9,28 @@ namespace USBNotifyLib
     public class AgentUpdate
     {
         // C:\ProgramData\USBNotify
-        private static string _baseDir = Environment.ExpandEnvironmentVariables(@"%programdata%\USBNotify");
+        private string _baseDir;
 
-        private static string _downloadFileDir = Path.Combine(_baseDir, "download");
+        private string _downloadFileDir;
 
-        private static string _updateZipFile = Path.Combine(_downloadFileDir, "update.zip");
+        private string _updateZipFile;
 
-        private static string _updateDir = Path.Combine(_baseDir, "update");
+        private string _updateDir;
 
-        private static string _setupExe = Path.Combine(_updateDir, "Setup.exe");
+        private string _setupExe;
+
+        public AgentUpdate()
+        {
+            _baseDir = AgentRegistry.AgentDataDir;
+
+            _downloadFileDir = Path.Combine(_baseDir, "download");
+
+            _updateZipFile = Path.Combine(_downloadFileDir, "update.zip");
+
+            _updateDir = Path.Combine(_baseDir, "update");
+
+            _setupExe = Path.Combine(_updateDir, "Setup.exe");
+        }
 
         #region + public static void CheckAndUpdate()
         public static void CheckAndUpdate()
@@ -104,29 +117,20 @@ namespace USBNotifyLib
         {
             try
             {
-                var rule = new FileSystemAccessRule("Authenticated Users",
-                    FileSystemRights.Modify,
-                    InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit,
-                    PropagationFlags.None,
-                    AccessControlType.Allow);
 
                 if (Directory.Exists(_updateDir))
                 {
                     Directory.Delete(_updateDir, true);
                 }
-                var upDir = Directory.CreateDirectory(_updateDir);
-                var upACL = upDir.GetAccessControl();
-                upACL.AddAccessRule(rule);
-                upDir.SetAccessControl(upACL);
+                Directory.CreateDirectory(_updateDir);
+                AgentManager.SetDirACL_AuthenticatedUsers_Modify(_updateDir);
 
                 if (Directory.Exists(_downloadFileDir))
                 {
                     Directory.Delete(_downloadFileDir, true);
                 }
-                var downloadDir = Directory.CreateDirectory(_downloadFileDir);
-                var downloadACL = downloadDir.GetAccessControl();
-                downloadACL.AddAccessRule(rule);
-                downloadDir.SetAccessControl(downloadACL);
+                Directory.CreateDirectory(_downloadFileDir);
+                AgentManager.SetDirACL_AuthenticatedUsers_Modify(_downloadFileDir);
             }
             catch (Exception)
             {

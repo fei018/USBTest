@@ -4,27 +4,34 @@ using System;
 using System.Diagnostics;
 using System.IO.Pipes;
 using System.Security.AccessControl;
+using System.Threading;
 using System.Threading.Tasks;
+using USBCommon;
 
 namespace USBNotifyLib
 {
     public class PipeServerAgent
     {
-        private static string PipeName = AgentRegistry.AgentHttpKey;
+        private string _pipeName;
 
         private NamedPipeServer<string> _server;
 
         /// <summary>
         /// To Close Agent app event
         /// </summary>
-        public event EventHandler CloseAgentFormEvent;
+        public event EventHandler CloseAgentAppEvent;
+
+        public PipeServerAgent()
+        {
+            _pipeName = AgentRegistry.AgentHttpKey;
+        }
 
         #region + public void Start()
         public void Start()
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(PipeName))
+                if (string.IsNullOrWhiteSpace(_pipeName))
                 {
                     AgentLogger.Error("PipeName is empty");
                     return;
@@ -44,7 +51,7 @@ namespace USBNotifyLib
                             PipeAccessRights.ReadWrite | PipeAccessRights.CreateNewInstance,
                             AccessControlType.Allow));
 
-                _server = new NamedPipeServer<string>(PipeName, pipeSecurity);
+                _server = new NamedPipeServer<string>(_pipeName, pipeSecurity);
 
                 _server.ClientMessage += ReceiveMsg_FromClientPipe;
 
@@ -158,8 +165,8 @@ namespace USBNotifyLib
                 }
                 catch (Exception ex)
                 {
-                    AgentLogger.Error(ex.Message);
-                    PushMsg_ToTray_Message(ex.Message);
+                    AgentLogger.Error(ex.GetBaseException().Message);
+                    PushMsg_ToTray_Message(ex.GetBaseException().Message);
                 }
             });
         }
@@ -182,8 +189,8 @@ namespace USBNotifyLib
                 }
                 catch (Exception ex)
                 {
-                    AgentLogger.Error(ex.Message);
-                    PushMsg_ToTray_Message(ex.Message);
+                    AgentLogger.Error(ex.GetBaseException().Message);
+                    PushMsg_ToTray_Message(ex.GetBaseException().Message);
                 }
             });
         }
@@ -194,11 +201,11 @@ namespace USBNotifyLib
         {
             try
             {
-                CloseAgentFormEvent?.Invoke(this, null);
+                CloseAgentAppEvent?.Invoke(this, null);
             }
             catch (Exception ex)
             {
-                AgentLogger.Error("AgentPipe.Handler_CloseAgent(): " + ex.Message);
+                AgentLogger.Error("AgentPipe.Handler_CloseAgent(): " + ex.GetBaseException().Message);
             }
         }
         #endregion
@@ -224,13 +231,13 @@ namespace USBNotifyLib
                 //Debugger.Break();
                 try
                 {
-                    var output = new PrintTemplateHelp().Start();
+                    var output = PrintTemplateHelp.Start();
                     PushMsg_ToTray_AddPrintTemplateCompleted(output);
                 }
                 catch (Exception ex)
                 {
-                    PushMsg_ToTray_AddPrintTemplateCompleted(ex.Message);
-                    AgentLogger.Error(ex.Message);
+                    PushMsg_ToTray_AddPrintTemplateCompleted(ex.GetBaseException().Message);
+                    AgentLogger.Error(ex.GetBaseException().Message);
                 }
             });
         }
@@ -282,7 +289,8 @@ namespace USBNotifyLib
             {
                 var pipe = new PipeMsg(PipeMsgType.CloseTray);
                 var json = JsonConvert.SerializeObject(pipe);
-                _server.PushMessage(json);
+                _server?.PushMessage(json);
+                Thread.Sleep(new TimeSpan(0, 0, 1));
             }
             catch (Exception ex)
             {

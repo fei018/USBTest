@@ -62,14 +62,14 @@ namespace SetupClient
                 {
                     if (!string.IsNullOrWhiteSpace(ini[i]))
                     {
-                        if (ini[i].ToLower() == "[registry]")
+                        if (ini[i].Trim().ToLower() == "[registry]")
                         {
                             count = i;
                             continue;
                         }
                         if (count >= 0)
                         {
-                            if (Regex.IsMatch(ini[i].Trim().ToLower(), "\\[[a-z]\\]"))
+                            if (Regex.IsMatch(ini[i].Trim().ToLower(), "\\[[a-z]{1,}\\]"))
                             {
                                 break;
                             }

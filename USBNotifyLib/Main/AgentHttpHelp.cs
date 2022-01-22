@@ -67,10 +67,6 @@ namespace USBNotifyLib
                     UsbWhitelistHelp.Set_UsbWhitelist_byHttp(agentResult.UsbFilterData);
                 }
             }
-            catch (HttpRequestException ex)
-            {
-                throw new Exception("Http Server Error: " + ex.Message);
-            }
             catch (Exception)
             {
                 throw;
@@ -107,10 +103,6 @@ namespace USBNotifyLib
                     AgentRegistry.UsbHistoryEnabled = agentSetting.UsbHistoryEnabled;
                 }
             }
-            catch (HttpRequestException ex)
-            {
-                throw new Exception("Http Server Error: " + ex.Message);
-            }
             catch (Exception)
             {
                 throw;
@@ -144,10 +136,6 @@ namespace USBNotifyLib
                         throw new Exception(result.Msg);
                     }
                 }
-            }
-            catch (HttpRequestException ex)
-            {
-                throw new Exception("Http Server Error: " + ex.Message);
             }
             catch (Exception)
             {
@@ -196,10 +184,6 @@ namespace USBNotifyLib
                     }
                 }
             }
-            catch (HttpRequestException ex)
-            {
-                throw new Exception("Http Server Error: " + ex.Message);
-            }
             catch (Exception)
             {
                 throw;
@@ -243,10 +227,6 @@ namespace USBNotifyLib
                     }
                 }
             }
-            catch (HttpRequestException ex)
-            {
-                throw new Exception("AgentHttpHelp.PostUsbRequest_Http() Exception: " + ex.Message);
-            }
             catch (Exception)
             {
                 throw;
@@ -282,10 +262,6 @@ namespace USBNotifyLib
                     var template = agentResult.PrintTemplate as PrintTemplate;
                     return template;
                 }
-            }
-            catch (HttpRequestException ex)
-            {
-                throw new Exception("Http Server Error: " + ex.Message);
             }
             catch (Exception)
             {

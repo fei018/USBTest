@@ -1,4 +1,4 @@
-﻿<Window x:Name="shown" x:Class="USBNotifyAgentTray.MainWindow"
+﻿<Window x:Class="USBNotifyAgentTray.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,8 +6,4 @@
         xmlns:local="clr-namespace:USBNotifyAgentTray"
         mc:Ignorable="d"
         Title="USBNotifyAgentTray" Height="100" Width="300"
-        Visibility="Hidden" ResizeMode="NoResize" ShowInTaskbar="False">
-    <Grid>
-        
-    </Grid>
-</Window>
+        Visibility="Hidden" ResizeMode="NoResize" ShowInTaskbar="False" Closed="Window_Closed"/>

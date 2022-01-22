@@ -41,10 +41,8 @@ namespace USBNotifyService
             _autoBootUsbAgent = false;
 
             _servicePipe.PushMsg_ToAgent_CloseTray();
-            Thread.Sleep(new TimeSpan(0,0,1));
 
             _servicePipe.PushMsg_ToAgent_CloseAgent();
-            Thread.Sleep(new TimeSpan(0, 0, 1));
 
             CloseProcess_AgentTray();
             

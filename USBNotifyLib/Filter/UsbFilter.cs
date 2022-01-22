@@ -177,7 +177,6 @@ namespace USBNotifyLib
             {
                 // set ReadOnly false
                 Set_Disk_IsReadOnly_by_DiskPath_WMI(usb.DiskPath, false);
-                AgentLogger.Log("ReadWrite:\r\n" + usb.ToString());
             }
             catch (Exception)
             {
@@ -194,8 +193,6 @@ namespace USBNotifyLib
             {
                 // set readonly true
                 Set_Disk_IsReadOnly_by_DiskPath_WMI(usb.DiskPath, true);
-
-                AgentLogger.Log("ReadOnly:\r\n" + usb.ToString());
             }
             catch (Exception)
             {

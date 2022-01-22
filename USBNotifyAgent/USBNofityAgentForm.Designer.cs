@@ -36,8 +36,10 @@ namespace USBNotifyAgent
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(369, 64);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "USBNofityAgentForm";
+            this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "USBNotifyAgent";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.USBNofityAgentForm_FormClosed);

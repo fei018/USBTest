@@ -17,5 +17,7 @@
         public string UsbFilterData { get; set; }
 
         public IPrintTemplate PrintTemplate { get; set; }
+
+        public string DownloadFileBase64 { get; set; }
     }
 }

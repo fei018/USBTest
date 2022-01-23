@@ -1,6 +1,7 @@
 ﻿using NamedPipeWrapper;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO.Pipes;
 using System.Security.AccessControl;
@@ -16,15 +17,23 @@ namespace USBNotifyLib
 
         private NamedPipeServer<string> _server;
 
+        // public static Entity
+        public static PipeServerAgent Entity_Agent { get; set; }
+
+        #region Event
         /// <summary>
         /// To Close Agent app event
         /// </summary>
         public event EventHandler CloseAgentAppEvent;
+        #endregion
 
+        #region Construction
         public PipeServerAgent()
         {
             _pipeName = AgentRegistry.AgentHttpKey;
+            InitialPipeMsgHandler();
         }
+        #endregion
 
         #region + public void Start()
         public void Start()
@@ -92,7 +101,7 @@ namespace USBNotifyLib
 
         // Receive message from client
 
-        #region + private void ReceiveMsg_FromClientPipe(NamedPipeConnection<string, string> connection, string message)
+        #region ReceiveMsg_FromClientPipe(NamedPipeConnection<string, string> connection, string message)
         private void ReceiveMsg_FromClientPipe(NamedPipeConnection<string, string> connection, string message)
         {
             try
@@ -106,41 +115,66 @@ namespace USBNotifyLib
                     throw new Exception("AgentPipe : PipeMsg is Null");
                 }
 
-                switch (pipeMsg.PipeMsgType)
+                if (_pipeMsgHandler.ContainsKey(pipeMsg.PipeMsgType))
                 {
-                    // check and update agent
-                    case PipeMsgType.UpdateAgent:
-                        Handler_UpdateAgent();
-                        break;
-
-                    // Update Setting and USB Whitelist
-                    case PipeMsgType.UpdateSetting:
-                        Handler_UpdateSetting();
-                        break;
-
-                    // To Close Agent
-                    case PipeMsgType.CloseAgent:
-                        Handler_CloseAgent();
-                        break;
-
-                    // To Close Tray
-                    case PipeMsgType.CloseTray:
-                        Handler_CloseTray();
-                        break;
-
-                    // Add Print Template
-                    case PipeMsgType.AddPrintTemplate:
-                        Handler_AddPrintTemplate();
-                        break;
-
-                    default:
-                        break;
+                    _pipeMsgHandler[pipeMsg.PipeMsgType].Invoke();
                 }
+
+                return;
+
+                #region switch
+                //switch (pipeMsg.PipeMsgType)
+                //{
+                //    // check and update agent
+                //    case PipeMsgType.UpdateAgent:
+                //        Handler_UpdateAgent();
+                //        break;
+
+                //    // Update Setting and USB Whitelist
+                //    case PipeMsgType.UpdateSetting:
+                //        Handler_UpdateSetting();
+                //        break;
+
+                //    // To Close Agent
+                //    case PipeMsgType.CloseAgent:
+                //        Handler_CloseAgent();
+                //        break;
+
+                //    // To Close Tray
+                //    case PipeMsgType.CloseTray:
+                //        Handler_CloseTray();
+                //        break;
+
+                //    // Add Print Template
+                //    case PipeMsgType.AddPrintTemplate:
+                //        Handler_AddPrintTemplate();
+                //        break;
+
+                //    default:
+                //        break;
+                //}
+                #endregion
             }
             catch (Exception ex)
             {
                 AgentLogger.Error(ex.Message);
             }
+        }
+        #endregion
+
+        #region InitialPipeMsgHandler()
+        private Dictionary<PipeMsgType, Action> _pipeMsgHandler;
+
+        private void InitialPipeMsgHandler()
+        {
+            _pipeMsgHandler = new Dictionary<PipeMsgType, Action>()
+            {
+                { PipeMsgType.UpdateAgent, Handler_UpdateAgent },
+                { PipeMsgType.UpdateSetting, Handler_UpdateSetting},
+                { PipeMsgType.CloseAgent, Handler_CloseAgent },
+                { PipeMsgType.CloseTray, Handler_CloseTray },
+                { PipeMsgType.AddPrintTemplate, Handler_AddPrintTemplate }
+            };
         }
         #endregion
 
@@ -173,6 +207,9 @@ namespace USBNotifyLib
         #endregion
 
         #region + private void Handler_UpdateSetting()
+        /// <summary>
+        /// update AgentSetting and UsbWhitelist
+        /// </summary>
         private void Handler_UpdateSetting()
         {
             Task.Run(() =>

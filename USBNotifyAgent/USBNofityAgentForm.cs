@@ -20,7 +20,7 @@ namespace USBNotifyAgent
             this.ShowInTaskbar = true;
 #endif
 
-            AgentPipeStart();
+            PipeAgentStart();
 
             AgentManager.Startup();
         }
@@ -46,9 +46,9 @@ namespace USBNotifyAgent
 
             base.Stop();
 
-            _agentPipe.PushMsg_ToTray_CloseTray();
-            
-            _agentPipe.Stop();
+            PipeServerAgent.Entity_Agent.PushMsg_ToTray_CloseTray();
+
+            PipeServerAgent.Entity_Agent.Stop();
 
             AgentManager.Stop();           
         }
@@ -57,13 +57,11 @@ namespace USBNotifyAgent
         // AgentPipe
         #region AgentPipe
 
-        private PipeServerAgent _agentPipe;
-
-        private void AgentPipeStart()
+        private void PipeAgentStart()
         {
-            _agentPipe = new PipeServerAgent();
-            _agentPipe.CloseAgentAppEvent += (s, e) => { this.Close(); };
-            _agentPipe.Start();
+            PipeServerAgent.Entity_Agent = new PipeServerAgent();
+            PipeServerAgent.Entity_Agent.CloseAgentAppEvent += (s, e) => { this.Close(); };
+            PipeServerAgent.Entity_Agent.Start();
         }
         #endregion
 
@@ -118,7 +116,7 @@ namespace USBNotifyAgent
                     var usb = new UsbFilter().Find_UsbDisk_By_DiskPath(diskPath);
                     if (!UsbWhitelistHelp.IsFind(usb))
                     {
-                        _agentPipe.PushMsg_ToTray_UsbDiskNotInWhitelist(usb);
+                        PipeServerAgent.Entity_Agent.PushMsg_ToTray_UsbDiskNotInWhitelist(usb);
                     }
                 }
                 catch (Exception)

@@ -154,17 +154,36 @@ namespace USBAdminWebMVC.Controllers
         #endregion
 
         #region AgentUpdate()
-        public IActionResult AgentUpdate()
+        public async Task<IActionResult> AgentUpdate()
         {
             try
             {
-                var file = USBAdminHelp.AgentUpdateFilePath;
+                var fileInfo = new FileInfo(USBAdminHelp.AgentUpdateFilePath);
+                if (!fileInfo.Exists)
+                {
+                    throw new Exception("Update File not exist.");
+                }
 
-                return PhysicalFile(file, "application/zip");
+                using FileStream fs = fileInfo.OpenRead();
+                byte[] buff = new byte[fileInfo.Length];
+
+                if (await fs.ReadAsync(buff, 0, buff.Length) <= 0)
+                {
+                    throw new Exception("Update File read buff fail.");
+                }
+
+                var result = new AgentHttpResponseResult(true);
+
+                await Task.Run(() =>
+                {
+                    result.DownloadFileBase64 = Convert.ToBase64String(buff);
+                });
+
+                return Json(result);
             }
             catch (Exception ex)
             {
-                return NotFound(ex.Message);
+                return Json(new AgentHttpResponseResult(false, ex.Message));
             }
         }
         #endregion

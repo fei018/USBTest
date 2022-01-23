@@ -28,7 +28,7 @@ namespace USBNotifyAgentTray.USBWindow
         {
             try
             {
-                PipeClientTray.Entity?.PushMsg_ToAgent_CheckAndUpdateAgent();
+                PipeClientTray.Entity_Tray?.PushMsg_ToAgent_CheckAndUpdateAgent();
             }
             catch (Exception ex)
             {

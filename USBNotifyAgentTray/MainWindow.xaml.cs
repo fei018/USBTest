@@ -40,8 +40,8 @@ namespace USBNotifyAgentTray
         {
             try
             {
-                PipeClientTray.Entity = new PipeClientTray();
-                PipeClientTray.Entity.Start();
+                PipeClientTray.Entity_Tray = new PipeClientTray();
+                PipeClientTray.Entity_Tray.Start();
 
                 TrayIcon.Entity = new TrayIcon();
                 TrayIcon.Entity.AddTrayIcon();                
@@ -60,7 +60,7 @@ namespace USBNotifyAgentTray
             //Debugger.Break();
 #endif
             TrayIcon.Entity.RemoveTrayIcon();
-            PipeClientTray.Entity.Stop();
+            PipeClientTray.Entity_Tray.Stop();
         }
         #endregion
 

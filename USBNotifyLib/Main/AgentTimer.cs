@@ -26,7 +26,7 @@ namespace USBNotifyLib
             }
             catch (Exception ex)
             {
-                AgentLogger.Error(ex.Message);
+                AgentLogger.Error(ex.GetBaseException().Message);
             }
         }
 

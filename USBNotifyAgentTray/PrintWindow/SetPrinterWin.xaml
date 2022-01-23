@@ -26,9 +26,7 @@
         </Grid>
 
         <Grid Grid.Row="2">
-            <Border BorderBrush="Gray" BorderThickness="1" Margin="2">
-                <TextBox x:Name="txtResult" IsReadOnly="True" TextWrapping="Wrap" />
-            </Border>
+            <TextBox x:Name="txtResult" IsReadOnly="True" TextWrapping="Wrap" BorderBrush="Gray" BorderThickness="1" Margin="2"/>
         </Grid>
 
     </Grid>

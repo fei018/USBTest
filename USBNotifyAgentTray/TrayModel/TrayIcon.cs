@@ -71,7 +71,7 @@ namespace USBNotifyAgentTray
         {
             try
             {
-                PipeClientTray.Entity.PushMsg_ToAgent_UpdateSetting();
+                PipeClientTray.Entity_Tray.PushMsg_ToAgent_UpdateSetting();
             }
             catch (Exception ex)
             {
@@ -85,7 +85,7 @@ namespace USBNotifyAgentTray
         {
             try
             {
-                PipeClientTray.Entity.PushMsg_ToAgent_CheckAndUpdateAgent();
+                PipeClientTray.Entity_Tray.PushMsg_ToAgent_CheckAndUpdateAgent();
             }
             catch (Exception ex)
             {

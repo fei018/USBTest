@@ -23,8 +23,8 @@ namespace USBNotifyAgentTray.PrintWindow
         public SetPrinterWin()
         {
             InitializeComponent();
-
-            PipeClientTray.Entity.AddPrintTemplateCompletedEvent += TrayPipe_AddPrintTemplateCompletedEvent;
+          
+            PipeClientTray.Entity_Tray.AddPrintTemplateCompletedEvent += TrayPipe_AddPrintTemplateCompletedEvent;
         }
 
         private void TrayPipe_AddPrintTemplateCompletedEvent(object sender, USBNotifyLib.PipeEventArgs e)
@@ -46,7 +46,7 @@ namespace USBNotifyAgentTray.PrintWindow
                 {
                     try
                     {
-                        PipeClientTray.Entity?.PushMsg_ToAgent_AddPrintTemplate();
+                        PipeClientTray.Entity_Tray?.PushMsg_ToAgent_AddPrintTemplate();
                     }
                     catch (Exception ex)
                     {

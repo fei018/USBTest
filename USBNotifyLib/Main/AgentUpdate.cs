@@ -42,9 +42,9 @@ namespace USBNotifyLib
                     new AgentUpdate().Update();
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                AgentLogger.Error(ex.Message);
+                throw;
             }
         }
         #endregion
@@ -54,34 +54,22 @@ namespace USBNotifyLib
         {
             try
             {
-                using (var http = AgentHttpHelp.CreateHttpClient())
+                var agentResult =  AgentHttpHelp.HttpClient_Get(AgentRegistry.AgentSettingUrl);
+
+                string newVersion = agentResult.AgentSetting.AgentVersion;
+
+                if (AgentRegistry.AgentVersion.Equals(newVersion, StringComparison.OrdinalIgnoreCase))
                 {
-                    var response = http.GetAsync(AgentRegistry.AgentSettingUrl).Result;
-                    response.EnsureSuccessStatusCode();
-
-                    var json = response.Content.ReadAsStringAsync().Result;
-                    var agentResult = AgentHttpHelp.DeserialAgentResult(json);
-
-                    if (!agentResult.Succeed)
-                    {
-                        throw new Exception(agentResult.Msg);
-                    }
-
-                    string newVersion = agentResult.AgentSetting.AgentVersion;
-
-                    if (AgentRegistry.AgentVersion.Equals(newVersion, StringComparison.OrdinalIgnoreCase))
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        return true;
-                    }
+                    return false;
+                }
+                else
+                {
+                    return true;
                 }
             }
             catch (Exception ex)
             {
-                AgentLogger.Error(ex.Message);
+                AgentLogger.Error(ex.GetBaseException().Message);
                 throw;
             }
         }
@@ -108,6 +96,7 @@ namespace USBNotifyLib
             catch (Exception ex)
             {
                 AgentLogger.Error(ex.Message);
+                throw;
             }
         }
         #endregion
@@ -142,26 +131,45 @@ namespace USBNotifyLib
         #region + private void DownloadFile()
         private void DownloadFile()
         {
-            using (var http = AgentHttpHelp.CreateHttpClient())
+            //using (var http = AgentHttpHelp.CreateHttpClient())
+            //{
+            //    var response = http.GetAsync(AgentRegistry.AgentUpdateUrl).Result;
+
+            //    if (response.IsSuccessStatusCode)
+            //    {
+            //        var fbs = response.Content.ReadAsByteArrayAsync().Result;
+
+            //        using (FileStream fs = new FileStream(_updateZipFile, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+            //        {
+            //            fs.Write(fbs, 0, fbs.Length);
+            //        }
+
+            //        // unzip download file
+            //        ZipFile.ExtractToDirectory(_updateZipFile, _updateDir);
+            //    }
+            //    else
+            //    {
+            //        throw new Exception("download File fail.");
+            //    }
+            //}
+
+            try
             {
-                var response = http.GetAsync(AgentRegistry.AgentUpdateUrl).Result;
+                var agentResult = AgentHttpHelp.HttpClient_Get(AgentRegistry.AgentUpdateUrl);
 
-                if (response.IsSuccessStatusCode)
+                byte[] downloadFile = Convert.FromBase64String(agentResult.DownloadFileBase64); // convert base64String to byte[]
+
+                using (FileStream fs = new FileStream(_updateZipFile, FileMode.OpenOrCreate, FileAccess.ReadWrite))
                 {
-                    var fbs = response.Content.ReadAsByteArrayAsync().Result;
-
-                    using (FileStream fs = new FileStream(_updateZipFile, FileMode.OpenOrCreate, FileAccess.ReadWrite))
-                    {
-                        fs.Write(fbs, 0, fbs.Length);
-                    }
-
-                    // unzip download file
-                    ZipFile.ExtractToDirectory(_updateZipFile, _updateDir);
+                    fs.Write(downloadFile, 0, downloadFile.Length);
                 }
-                else
-                {
-                    throw new Exception("download File fail.");
-                }
+
+                // unzip download file
+                ZipFile.ExtractToDirectory(_updateZipFile, _updateDir);
+            }
+            catch (Exception)
+            {
+                throw;
             }
         }
         #endregion

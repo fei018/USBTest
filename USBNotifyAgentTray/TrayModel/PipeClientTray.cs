@@ -6,21 +6,31 @@ using USBNotifyLib;
 using System.Windows;
 using USBNotifyAgentTray.USBWindow;
 using System.IO;
+using System.Collections.Generic;
 
 namespace USBNotifyAgentTray
 {
     public class PipeClientTray
     {
         // private
-        private static string PipeName = AgentRegistry.AgentHttpKey;
+        private string _pipeName;
 
         private NamedPipeClient<string> _client;
 
         // public static
-        public static PipeClientTray Entity {get;set;}
+        public static PipeClientTray Entity_Tray {get;set;}
 
         #region Event
         public event EventHandler<PipeEventArgs> AddPrintTemplateCompletedEvent;
+        #endregion
+
+        #region Construction
+        public PipeClientTray()
+        {
+            _pipeName = AgentRegistry.AgentHttpKey;
+
+            InitialPipeMsgHandler();
+        }
         #endregion
 
         #region Start()
@@ -44,7 +54,7 @@ namespace USBNotifyAgentTray
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(PipeName))
+                if (string.IsNullOrWhiteSpace(_pipeName))
                 {
                     AgentLogger.Error("PipeName is empty");
                     return;
@@ -52,7 +62,7 @@ namespace USBNotifyAgentTray
 
                 Stop();
 
-                _client = new NamedPipeClient<string>(PipeName);
+                _client = new NamedPipeClient<string>(_pipeName);
                 _client.AutoReconnect = true;
 
                 _client.ServerMessage += ReceiveMsg_FromPipeServerAgent;
@@ -66,7 +76,7 @@ namespace USBNotifyAgentTray
         }
         #endregion
 
-        #region + private void ReceiveMsg_FromPipeServerAgent(NamedPipeConnection<string, string> connection, string usbJson)
+        #region ReceiveMsg_FromPipeServerAgent(NamedPipeConnection<string, string> connection, string usbJson)
         private void ReceiveMsg_FromPipeServerAgent(NamedPipeConnection<string, string> connection, string message)
         {
             try
@@ -79,27 +89,37 @@ namespace USBNotifyAgentTray
                     throw new Exception("TrayPipe: PipeMsg is Null.");
                 }
 
-                switch (pipeMsg.PipeMsgType)
+                if (_pipeMsgHandler.ContainsKey(pipeMsg.PipeMsgType))
                 {
-                    case PipeMsgType.Message:
-                        Handler_FromAgentMsg_MessageBox(pipeMsg.Message);
-                        break;
-
-                    case PipeMsgType.UsbDiskNotInWhitelist:
-                        Handler_FromAgentMsg_UsbNotifyWindow(pipeMsg.UsbDisk);
-                        break;
-
-                    case PipeMsgType.CloseTray:
-                        Handler_FromAgentMsg_ToCloseTray();
-                        break;
-
-                    case PipeMsgType.AddPrintTemplateCompleted:
-                        Handler_FromAgentMsg_AddPrintTemplateCompleted(pipeMsg.Message);
-                        break;
-
-                    default:
-                        break;
+                    _pipeMsgHandler[pipeMsg.PipeMsgType].Invoke(pipeMsg);
                 }
+
+                return;
+
+                #region switch
+                //switch (pipeMsg.PipeMsgType)
+                //{
+                //    case PipeMsgType.Message:
+                //        Handler_FromAgentMsg_MessageBox(pipeMsg.Message);
+                //        break;
+
+                //    case PipeMsgType.UsbDiskNotInWhitelist:
+                //        Handler_FromAgentMsg_UsbNotifyWindow(pipeMsg.UsbDisk);
+                //        break;
+
+                //    case PipeMsgType.CloseTray:
+                //        Handler_FromAgentMsg_ToCloseTray();
+                //        break;
+
+                //    case PipeMsgType.AddPrintTemplateCompleted:
+                //        Handler_FromAgentMsg_AddPrintTemplateCompleted(pipeMsg.Message);
+                //        break;
+
+                //    default:
+                //        break;
+                //}
+                #endregion
+
             }
             catch (Exception ex)
             {
@@ -108,17 +128,32 @@ namespace USBNotifyAgentTray
         }
         #endregion
 
-        // Receive Msg From PipeServerAgent Handler
+        #region InitialPipeMsgHandler()
+        private Dictionary<PipeMsgType, Action<PipeMsg>> _pipeMsgHandler;
 
-        #region + private void Handler_FromAgentMsg_MessageBox(string message)
-        private void Handler_FromAgentMsg_MessageBox(string message)
+        private void InitialPipeMsgHandler()
         {
-            MessageBox.Show(message);
+            _pipeMsgHandler = new Dictionary<PipeMsgType, Action<PipeMsg>>()
+            {
+                { PipeMsgType.Message, Handler_FromAgentMsg_MessageBox },
+                { PipeMsgType.UsbDiskNotInWhitelist, Handler_FromAgentMsg_UsbNotifyWindow},
+                { PipeMsgType.CloseTray, Handler_FromAgentMsg_ToCloseTray },
+                { PipeMsgType.AddPrintTemplateCompleted, Handler_FromAgentMsg_AddPrintTemplateCompleted }
+            };
         }
         #endregion
 
-        #region + private void Handler_FromAgentMsg_UsbNotifyWindow(UsbDisk usbDisk)
-        private void Handler_FromAgentMsg_UsbNotifyWindow(UsbDisk usbDisk)
+        // Receive Msg From PipeServerAgent Handler
+
+        #region Handler_FromAgentMsg_MessageBox(PipeMsg pipeMsg)
+        private void Handler_FromAgentMsg_MessageBox(PipeMsg pipeMsg)
+        {
+            MessageBox.Show(pipeMsg.Message);
+        }
+        #endregion
+
+        #region Handler_FromAgentMsg_UsbNotifyWindow(PipeMsg pipeMsg)
+        private void Handler_FromAgentMsg_UsbNotifyWindow(PipeMsg pipeMsg)
         {
             App.Current.Dispatcher.Invoke(new Action(() =>
             {
@@ -126,7 +161,7 @@ namespace USBNotifyAgentTray
                 {
                     //Debugger.Break();
                     var usbWin = new UsbRequestWin();
-                    usbWin.ShowPageUsbRequestNotify(usbDisk);
+                    usbWin.ShowPageUsbRequestNotify(pipeMsg.UsbDisk);
                     usbWin.Show();
                 }
                 catch (Exception ex)
@@ -137,8 +172,8 @@ namespace USBNotifyAgentTray
         }
         #endregion
 
-        #region + private void Handler_FromAgentMsg_ToCloseTray()
-        private void Handler_FromAgentMsg_ToCloseTray()
+        #region Handler_FromAgentMsg_ToCloseTray(PipeMsg pipeMsg)
+        private void Handler_FromAgentMsg_ToCloseTray(PipeMsg pipeMsg)
         {
             try
             {
@@ -156,12 +191,12 @@ namespace USBNotifyAgentTray
         }
         #endregion
 
-        #region Handler_FromAgentMsg_AddPrintTemplateCompleted(string msg)
-        private void Handler_FromAgentMsg_AddPrintTemplateCompleted(string msg)
+        #region Handler_FromAgentMsg_AddPrintTemplateCompleted(PipeMsg pipeMsg)
+        private void Handler_FromAgentMsg_AddPrintTemplateCompleted(PipeMsg pipeMsg)
         {
             try
             {
-                AddPrintTemplateCompletedEvent?.Invoke(null, new PipeEventArgs(msg));
+                AddPrintTemplateCompletedEvent?.Invoke(null, new PipeEventArgs(pipeMsg.Message));
             }
             catch (Exception ex)
             {

@@ -12,15 +12,6 @@ namespace USBNotifyLib
         {
             try
             {
-                // 上載 本機資訊
-                new AgentHttpHelp().PostPerComputer_Http();
-
-                // update agent setting
-                new AgentHttpHelp().GetAgentSetting_Http();
-
-                // update UsbWhitelist
-                new AgentHttpHelp().GetUsbWhitelist_Http();
-
                 ClearTimerTask();
                 SetTimerTask();
             }
@@ -61,9 +52,9 @@ namespace USBNotifyLib
 
                 _Timer.Start();                            
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                AgentLogger.Error(ex.Message);
+                throw;
             }
         }
         #endregion
@@ -88,7 +79,7 @@ namespace USBNotifyLib
             }
             catch (Exception ex)
             {
-                AgentLogger.Error(ex.Message);
+                AgentLogger.Error(ex.GetBaseException().Message);
             }
             finally
             {

@@ -96,8 +96,9 @@ namespace USBNotifyAgent
                     // post usb history to server
                     new AgentHttpHelp().PostPerUsbHistory_byDisk_Http(diskPath);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    AgentLogger.Error(ex.Message);
                 }
             });
         }
@@ -119,8 +120,9 @@ namespace USBNotifyAgent
                         PipeServerAgent.Entity_Agent.PushMsg_ToTray_UsbDiskNotInWhitelist(usb);
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    AgentLogger.Error(ex.ToString());
                 }
             });
         }
@@ -138,8 +140,9 @@ namespace USBNotifyAgent
                     var disk = new UsbDisk { DiskPath = diskPath };
                     new UsbFilter().Filter_UsbDisk_By_DiskPath(disk);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    AgentLogger.Error(ex.Message);
                 }
             });
         }

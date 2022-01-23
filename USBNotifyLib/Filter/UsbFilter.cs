@@ -68,7 +68,7 @@ namespace USBNotifyLib
             }
             catch (Exception ex)
             {
-                AgentLogger.Error(ex.Message + "\r\n" + usb.ToString());
+                AgentLogger.Error(ex.ToString());
             }
         }
         #endregion

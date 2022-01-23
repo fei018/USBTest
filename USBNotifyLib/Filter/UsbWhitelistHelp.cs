@@ -17,16 +17,6 @@ namespace USBNotifyLib
         private static readonly object _locker_CacheDb = new object();
 
 
-        #region + private void CheckCacheDb()
-        private static void CheckCacheDb()
-        {
-            if (CacheDb == null || CacheDb.Count <= 0)
-            {
-                Reload_UsbWhitelist();
-            }
-        }
-        #endregion
-
         #region + public void Reload_UsbFilterData()
         public static void Reload_UsbWhitelist()
         {
@@ -58,9 +48,9 @@ namespace USBNotifyLib
                     CacheDb = cache;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                AgentLogger.Error(ex.Message);
+                throw;
             }
         }
         #endregion
@@ -68,20 +58,31 @@ namespace USBNotifyLib
         #region + public bool IsFind(UsbDisk usb)
         public static bool IsFind(UsbDisk usb)
         {
-            CheckCacheDb();
-
-            if (CacheDb != null && CacheDb.Count > 0)
+            try
             {
-                foreach (var t in CacheDb)
+                if (CacheDb == null || CacheDb.Count <= 0)
                 {
-                    if (t.ToLower() == usb.UsbIdentity)
+                    Reload_UsbWhitelist();
+                }
+
+                if (CacheDb != null && CacheDb.Count > 0)
+                {
+                    foreach (var t in CacheDb)
                     {
-                        return true;
+                        if (t.ToLower() == usb.UsbIdentity)
+                        {
+                            return true;
+                        }
                     }
                 }
+
+                return false;
             }
-            
-            return false;
+            catch (Exception ex)
+            {
+                AgentLogger.Error(ex.GetBaseException().Message);
+                return false;
+            }
         }
         #endregion
 
@@ -93,9 +94,9 @@ namespace USBNotifyLib
                 WriteFile_UsbWhitelist(usbWhitelist);
                 Reload_UsbWhitelist();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                AgentLogger.Error(ex.Message);
+                throw;
             }
         }
         #endregion

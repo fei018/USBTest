@@ -46,6 +46,17 @@ namespace USBNotifyLib
 
                 return agentResult;
             }
+            catch (AggregateException aex)
+            {
+                var realException = aex as Exception;  // take first real exception
+
+                while (realException != null && realException.InnerException != null)
+                {
+                    realException = realException.InnerException;
+                }
+
+                throw realException;
+            }
             catch (Exception)
             {
                 throw;
@@ -85,6 +96,17 @@ namespace USBNotifyLib
                 {
                     throw new Exception("AgentHttpResponseResult Error:\r\n" + agentResult.Msg);
                 }
+            }
+            catch (AggregateException aex)
+            {
+                var realException = aex as Exception;  // take first real exception
+
+                while (realException != null && realException.InnerException != null)
+                {
+                    realException = realException.InnerException;
+                }
+
+                throw realException;
             }
             catch (Exception)
             {

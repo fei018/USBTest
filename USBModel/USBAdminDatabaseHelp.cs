@@ -631,6 +631,50 @@ namespace USBModel
         #endregion
 
 
+        // AgentSetting
+
+        #region + public async Task<Tbl_AgentSetting> AgentSetting_Get()
+        public async Task<Tbl_AgentSetting> AgentSetting_Get()
+        {
+            try
+            {
+                var query = await _db.Queryable<Tbl_AgentSetting>().FirstAsync();
+
+                if (query == null)
+                {
+                    throw new Exception("Cannot find Tbl_AgentSetting.");
+                }
+
+                return query;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        #region + public async Task<Tbl_AgentSetting> AgentSetting_Update(Tbl_AgentSetting setting)
+        public async Task<Tbl_AgentSetting> AgentSetting_Update(Tbl_AgentSetting setting)
+        {
+            try
+            {
+                var isUpdate = await _db.Updateable(setting).ExecuteCommandHasChangeAsync();
+
+                if (!isUpdate)
+                {
+                    throw new Exception("Tbl_AgentSetting update fail.");
+                }
+
+                return setting;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
         // EmailSetting
 
         #region + public async Task<Tbl_EmailSetting> EmailSetting_Get()

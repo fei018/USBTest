@@ -81,7 +81,21 @@
       "title": "Admin",
       "icon": "fa fa-gear",
       "href": "",
-      "target": "_self"
+      "target": "_self",
+      "child": [
+        {
+          "title": "EmailSetting",
+          "href": "/EmailSetting/Index",
+          "icon": "fa fa-wrench",
+          "target": "_self"
+        },
+        {
+          "title": "AgentSetting",
+          "href": "/AgentSetting/Index",
+          "icon": "fa fa-wrench",
+          "target": "_self"
+        }
+      ]
     }
   ]
 }

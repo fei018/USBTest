@@ -15,6 +15,8 @@ namespace USBNotifyLib
 
         public string Message { get; set; }
 
+        public string PrintTemplateFile { get; set; }
+
         public PipeMsg() { }
 
         public PipeMsg(PipeMsgType msgType)

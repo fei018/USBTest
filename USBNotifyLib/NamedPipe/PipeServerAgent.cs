@@ -117,7 +117,7 @@ namespace USBNotifyLib
 
                 if (_pipeMsgHandler.ContainsKey(pipeMsg.PipeMsgType))
                 {
-                    _pipeMsgHandler[pipeMsg.PipeMsgType].Invoke();
+                    _pipeMsgHandler[pipeMsg.PipeMsgType].Invoke(pipeMsg);
                 }
 
                 return;
@@ -163,11 +163,11 @@ namespace USBNotifyLib
         #endregion
 
         #region InitialPipeMsgHandler()
-        private Dictionary<PipeMsgType, Action> _pipeMsgHandler;
+        private Dictionary<PipeMsgType, Action<PipeMsg>> _pipeMsgHandler;
 
         private void InitialPipeMsgHandler()
         {
-            _pipeMsgHandler = new Dictionary<PipeMsgType, Action>()
+            _pipeMsgHandler = new Dictionary<PipeMsgType, Action<PipeMsg>>()
             {
                 { PipeMsgType.UpdateAgent, Handler_UpdateAgent },
                 { PipeMsgType.UpdateSetting, Handler_UpdateSetting},
@@ -180,8 +180,8 @@ namespace USBNotifyLib
 
         // Receive Message  handler
 
-        #region + private void Handler_UpdateAgent()
-        private void Handler_UpdateAgent()
+        #region + private void Handler_UpdateAgent(PipeMsg pipeMsg)
+        private void Handler_UpdateAgent(PipeMsg pipeMsg)
         {
             Task.Run(() =>
             {
@@ -206,11 +206,11 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + private void Handler_UpdateSetting()
+        #region + private void Handler_UpdateSetting(PipeMsg pipeMsg)
         /// <summary>
         /// update AgentSetting and UsbWhitelist
         /// </summary>
-        private void Handler_UpdateSetting()
+        private void Handler_UpdateSetting(PipeMsg pipeMsg)
         {
             Task.Run(() =>
             {
@@ -233,8 +233,8 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + private void Handler_CloseAgent()
-        private void Handler_CloseAgent()
+        #region + private void Handler_CloseAgent(PipeMsg pipeMsg)
+        private void Handler_CloseAgent(PipeMsg pipeMsg)
         {
             try
             {
@@ -247,8 +247,8 @@ namespace USBNotifyLib
         }
         #endregion
 
-        #region + private void Handler_CloseTray()
-        private void Handler_CloseTray()
+        #region + private void Handler_CloseTray(PipeMsg pipeMsg)
+        private void Handler_CloseTray(PipeMsg pipeMsg)
         {
             try
             {
@@ -261,14 +261,15 @@ namespace USBNotifyLib
         #endregion
 
         #region + private void Handler_AddPrintTemplate()
-        private void Handler_AddPrintTemplate()
+        private void Handler_AddPrintTemplate(PipeMsg pipeMsg)
         {
             Task.Run(() =>
             {
                 //Debugger.Break();
                 try
                 {
-                    var output = PrintTemplateHelp.Start();
+                    var output = PrintTemplateHelp.Start(pipeMsg.PrintTemplateFile);
+ 
                     PushMsg_ToTray_AddPrintTemplateCompleted(output);
                 }
                 catch (Exception ex)

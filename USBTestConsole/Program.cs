@@ -225,7 +225,7 @@ namespace USBTestConsole
         #region Template()
         static void Template()
         {
-            PrintTemplateHelp.Start();
+            //PrintTemplateHelp.Start();
         }
         #endregion
     }

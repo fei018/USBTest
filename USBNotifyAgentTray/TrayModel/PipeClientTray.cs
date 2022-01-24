@@ -257,9 +257,9 @@ namespace USBNotifyAgentTray
                 }
 
                 // copy template file from unc to local data dir
-                PrintTemplateHelp.CopyTemplateFileToLocal(templateFile);
+                var localTemplate = PrintTemplateHelp.CopyTemplateFileToLocal(templateFile);
 
-                var json = JsonConvert.SerializeObject(new PipeMsg(PipeMsgType.AddPrintTemplate));
+                var json = JsonConvert.SerializeObject(new PipeMsg(PipeMsgType.AddPrintTemplate) { PrintTemplateFile = localTemplate });
                 _client?.PushMessage(json);
             }
             catch (Exception)
